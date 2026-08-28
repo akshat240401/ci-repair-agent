@@ -17,6 +17,6 @@ E         Use -v to get more diff
 tests\test_profile.py:5: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_profile.py::test_profile_uses_display_name - AssertionError...
-1 failed in 0.10s
+1 failed in 0.08s
 
 [exit_code=1]

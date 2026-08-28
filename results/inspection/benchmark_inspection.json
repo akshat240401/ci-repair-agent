@@ -1,0 +1,178 @@
+{
+  "total_cases": 5,
+  "targeted_failures_reproduced": 5,
+  "full_suites_with_failure": 5,
+  "all_targeted_failures_reproduced": true,
+  "cases": [
+    {
+      "case_id": "case_001",
+      "targeted": {
+        "kind": "targeted",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_pagination.py::test_exact_multiple_has_no_extra_page"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5298532999586314,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n____________________ test_exact_multiple_has_no_extra_page ____________________\n\n>   def test_exact_multiple_has_no_extra_page(): assert page_count(20,10)==2\nE   assert 3 == 2\nE    +  where 3 = page_count(20, 10)\n\ntests\\test_pagination.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pagination.py::test_exact_multiple_has_no_extra_page - asse...\n1 failed in 0.10s\n",
+        "stderr": ""
+      },
+      "full_suite": {
+        "kind": "full",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5543571999296546,
+        "stdout": ".F.                                                                      [100%]\n================================== FAILURES ===================================\n____________________ test_exact_multiple_has_no_extra_page ____________________\n\n>   def test_exact_multiple_has_no_extra_page(): assert page_count(20,10)==2\nE   assert 3 == 2\nE    +  where 3 = page_count(20, 10)\n\ntests\\test_pagination.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pagination.py::test_exact_multiple_has_no_extra_page - asse...\n1 failed, 2 passed in 0.10s\n",
+        "stderr": ""
+      },
+      "targeted_failure_reproduced": true,
+      "full_suite_has_failure": true
+    },
+    {
+      "case_id": "case_002",
+      "targeted": {
+        "kind": "targeted",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_users.py::test_missing_user_returns_none"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5466838001739234,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_missing_user_returns_none ________________________\n\n>   def test_missing_user_returns_none(): assert get_user_name(999) is None\n\ntests\\test_users.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nuser_id = 999\n\n    def get_user_name(user_id: int) -> str | None:\n        user=USERS.get(user_id)\n>       return user[\"name\"]\nE       TypeError: 'NoneType' object is not subscriptable\n\nsrc\\users.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_users.py::test_missing_user_returns_none - TypeError: 'None...\n1 failed in 0.09s\n",
+        "stderr": ""
+      },
+      "full_suite": {
+        "kind": "full",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.53047059988603,
+        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_______________________ test_missing_user_returns_none ________________________\n\n>   def test_missing_user_returns_none(): assert get_user_name(999) is None\n\ntests\\test_users.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nuser_id = 999\n\n    def get_user_name(user_id: int) -> str | None:\n        user=USERS.get(user_id)\n>       return user[\"name\"]\nE       TypeError: 'NoneType' object is not subscriptable\n\nsrc\\users.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_users.py::test_missing_user_returns_none - TypeError: 'None...\n1 failed, 1 passed in 0.10s\n",
+        "stderr": ""
+      },
+      "targeted_failure_reproduced": true,
+      "full_suite_has_failure": true
+    },
+    {
+      "case_id": "case_003",
+      "targeted": {
+        "kind": "targeted",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_auth.py::test_default_token_ttl"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5372021999210119,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________________ test_default_token_ttl ____________________________\n\n>   def test_default_token_ttl(): assert token_expiry_seconds()==3600\n\ntests\\test_auth.py:3: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def token_expiry_seconds() -> int:\n>       return int(TOKEN_TTL)\nE       TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\n\nsrc\\auth.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_auth.py::test_default_token_ttl - TypeError: int() argument...\n1 failed in 0.08s\n",
+        "stderr": ""
+      },
+      "full_suite": {
+        "kind": "full",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5339343000669032,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________________ test_default_token_ttl ____________________________\n\n>   def test_default_token_ttl(): assert token_expiry_seconds()==3600\n\ntests\\test_auth.py:3: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def token_expiry_seconds() -> int:\n>       return int(TOKEN_TTL)\nE       TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\n\nsrc\\auth.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_auth.py::test_default_token_ttl - TypeError: int() argument...\n1 failed in 0.10s\n",
+        "stderr": ""
+      },
+      "targeted_failure_reproduced": true,
+      "full_suite_has_failure": true
+    },
+    {
+      "case_id": "case_004",
+      "targeted": {
+        "kind": "targeted",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_profile.py::test_profile_uses_display_name"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5340571999549866,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_profile_uses_display_name ________________________\n\n    def test_profile_uses_display_name():\n        r={\"id\":7,\"username\":\"araval\",\"display_name\":\"A. Raval\"}\n>       assert serialize_profile(r)=={\"id\":7,\"name\":\"A. Raval\"}\nE       AssertionError: assert {'id': 7, 'name': 'araval'} == {'id': 7, 'name': 'A. Raval'}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Differing items:\nE         {'name': 'araval'} != {'name': 'A. Raval'}\nE         Use -v to get more diff\n\ntests\\test_profile.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_profile.py::test_profile_uses_display_name - AssertionError...\n1 failed in 0.08s\n",
+        "stderr": ""
+      },
+      "full_suite": {
+        "kind": "full",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.6258994999807328,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_profile_uses_display_name ________________________\n\n    def test_profile_uses_display_name():\n        r={\"id\":7,\"username\":\"araval\",\"display_name\":\"A. Raval\"}\n>       assert serialize_profile(r)=={\"id\":7,\"name\":\"A. Raval\"}\nE       AssertionError: assert {'id': 7, 'name': 'araval'} == {'id': 7, 'name': 'A. Raval'}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Differing items:\nE         {'name': 'araval'} != {'name': 'A. Raval'}\nE         Use -v to get more diff\n\ntests\\test_profile.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_profile.py::test_profile_uses_display_name - AssertionError...\n1 failed in 0.13s\n",
+        "stderr": ""
+      },
+      "targeted_failure_reproduced": true,
+      "full_suite_has_failure": true
+    },
+    {
+      "case_id": "case_005",
+      "targeted": {
+        "kind": "targeted",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q",
+          "tests/test_cart.py::test_total_does_not_mutate_cart"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5866700999904424,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_total_does_not_mutate_cart _______________________\n\n    def test_total_does_not_mutate_cart():\n>       prices=[30.0,10.0,20.0]; original=list(prices); discounted_total(prices,0.10); assert prices==original\nE       assert [10.0, 20.0, 30.0] == [30.0, 10.0, 20.0]\nE         \nE         At index 0 diff: 10.0 != 30.0\nE         Use -v to get more diff\n\ntests\\test_cart.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_cart.py::test_total_does_not_mutate_cart - assert [10.0, 20...\n1 failed in 0.09s\n",
+        "stderr": ""
+      },
+      "full_suite": {
+        "kind": "full",
+        "command": [
+          "C:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "exit_code": 1,
+        "status": "FAIL",
+        "duration_seconds": 0.5553374998271465,
+        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_______________________ test_total_does_not_mutate_cart _______________________\n\n    def test_total_does_not_mutate_cart():\n>       prices=[30.0,10.0,20.0]; original=list(prices); discounted_total(prices,0.10); assert prices==original\nE       assert [10.0, 20.0, 30.0] == [30.0, 10.0, 20.0]\nE         \nE         At index 0 diff: 10.0 != 30.0\nE         Use -v to get more diff\n\ntests\\test_cart.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_cart.py::test_total_does_not_mutate_cart - assert [10.0, 20...\n1 failed, 1 passed in 0.09s\n",
+        "stderr": ""
+      },
+      "targeted_failure_reproduced": true,
+      "full_suite_has_failure": true
+    }
+  ]
+}
