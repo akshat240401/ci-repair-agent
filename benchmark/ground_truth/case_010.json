@@ -1,0 +1,5 @@
+{
+  "case_id": "case_010",
+  "root_cause": "The parser strips everything after the first # even when the # is inside a quoted value; comment detection must be quote-aware",
+  "root_cause_file": "src/config_parser.py"
+}

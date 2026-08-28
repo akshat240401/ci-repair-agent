@@ -1,0 +1,5 @@
+{
+  "case_id": "case_009",
+  "root_cause": "max_retries is treated as total attempts; the implementation needs one initial attempt plus max_retries retries",
+  "root_cause_file": "src/retry.py"
+}

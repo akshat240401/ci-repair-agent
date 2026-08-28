@@ -1,0 +1,13 @@
+{
+  "case_id": "case_009",
+  "title": "Retry budget excludes the initial attempt",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "retry_semantics",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_retry.py::test_two_retries_allows_three_total_attempts",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "expanded synthetic benchmark"
+}

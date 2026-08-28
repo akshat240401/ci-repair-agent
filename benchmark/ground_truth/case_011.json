@@ -1,0 +1,5 @@
+{
+  "case_id": "case_011",
+  "root_cause": "The path is assembled with string concatenation, producing a duplicate separator when root already ends with /",
+  "root_cause_file": "src/artifact.py"
+}

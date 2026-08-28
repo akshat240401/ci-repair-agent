@@ -14,6 +14,6 @@ E         Use -v to get more diff
 tests\test_cart.py:5: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_cart.py::test_total_does_not_mutate_cart - assert [10.0, 20...
-1 failed in 0.09s
+1 failed in 0.10s
 
 [exit_code=1]

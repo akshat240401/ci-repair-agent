@@ -1,0 +1,5 @@
+{
+  "case_id": "case_007",
+  "root_cause": "Version strings are compared lexicographically instead of by numeric semantic-version components",
+  "root_cause_file": "src/release.py"
+}

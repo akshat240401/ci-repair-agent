@@ -1,5 +1,16 @@
 from evaluation.case_loader import get_case, load_cases
-def test_loads_all_five_starter_cases():
-    cases=load_cases(); assert len(cases)==5; assert [c.case_id for c in cases]==["case_001","case_002","case_003","case_004","case_005"]
+
+
+EXPECTED_CASE_IDS = [f"case_{i:03d}" for i in range(1, 13)]
+
+
+def test_loads_all_benchmark_cases():
+    cases = load_cases()
+    assert len(cases) == 12
+    assert [case.case_id for case in cases] == EXPECTED_CASE_IDS
+
+
 def test_get_challenging_case():
-    case=get_case("case_003"); assert case.metadata.challenging is True; assert case.metadata.python_version=="3.11"
+    case = get_case("case_003")
+    assert case.metadata.challenging is True
+    assert case.metadata.python_version == "3.11"

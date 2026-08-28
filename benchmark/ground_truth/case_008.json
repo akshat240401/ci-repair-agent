@@ -1,0 +1,5 @@
+{
+  "case_id": "case_008",
+  "root_cause": "The cache key uses only product_id, so requests for the same product in different regions collide",
+  "root_cause_file": "src/pricing.py"
+}

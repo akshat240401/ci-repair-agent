@@ -1,0 +1,20 @@
+$ python -m pytest -q tests/test_settings.py::test_environment_overrides_file_configuration
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_environment_overrides_file_configuration ________________
+
+    def test_environment_overrides_file_configuration():
+        resolved = resolve_settings(
+            {"port": 9000, "debug": False},
+            {"port": 7000},
+        )
+>       assert resolved["port"] == 7000
+E       assert 9000 == 7000
+
+tests\test_settings.py:8: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_settings.py::test_environment_overrides_file_configuration
+1 failed in 0.10s
+
+[exit_code=1]

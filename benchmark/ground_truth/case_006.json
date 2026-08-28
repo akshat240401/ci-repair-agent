@@ -1,0 +1,5 @@
+{
+  "case_id": "case_006",
+  "root_cause": "bool(\"false\") is True, so the environment string is parsed by Python truthiness instead of explicit boolean values",
+  "root_cause_file": "src/flags.py"
+}

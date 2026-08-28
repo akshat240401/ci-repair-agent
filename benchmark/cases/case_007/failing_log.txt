@@ -1,0 +1,19 @@
+$ python -m pytest -q tests/test_release.py::test_latest_version_handles_two_digit_minor
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_latest_version_handles_two_digit_minor _________________
+
+    def test_latest_version_handles_two_digit_minor():
+>       assert latest_version(["2.9.0", "2.10.0", "2.8.7"]) == "2.10.0"
+E       AssertionError: assert '2.9.0' == '2.10.0'
+E         
+E         - 2.10.0
+E         + 2.9.0
+
+tests\test_release.py:4: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_release.py::test_latest_version_handles_two_digit_minor - A...
+1 failed in 0.15s
+
+[exit_code=1]
