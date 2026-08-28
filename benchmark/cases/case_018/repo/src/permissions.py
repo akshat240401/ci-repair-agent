@@ -1,2 +1,2 @@
 def merge_permissions(primary, inherited):
-    return list(set(primary + inherited))
+    return sorted(set(primary + inherited))

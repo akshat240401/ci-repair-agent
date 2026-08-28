@@ -17,6 +17,6 @@ E         Use -v to get more diff
 tests\test_config_parser.py:4: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_config_parser.py::test_hash_inside_quotes_is_preserved - As...
-1 failed in 0.08s
+1 failed in 0.10s
 
 [exit_code=1]

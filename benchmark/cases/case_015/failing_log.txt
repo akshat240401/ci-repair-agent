@@ -15,6 +15,6 @@ E         Use -v to get more diff
 tests\test_timeout.py:6: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_timeout.py::test_config_serializes_timeout_in_milliseconds
-1 failed in 0.11s
+1 failed in 0.10s
 
 [exit_code=1]

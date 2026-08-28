@@ -4,7 +4,7 @@ F                                                                        [100%]
 ================================== FAILURES ===================================
 ______________________ test_false_string_disables_cache _______________________
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D00591D490>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000015A90DD1410>
 
     def test_false_string_disables_cache(monkeypatch):
         monkeypatch.setenv("USE_CACHE", "false")

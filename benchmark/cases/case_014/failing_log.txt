@@ -12,6 +12,6 @@ E        +  where None = get_header({'Content-Type': 'application/json'}, 'conte
 tests\test_headers.py:4: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_headers.py::test_lookup_accepts_lowercase_request - Asserti...
-1 failed in 0.10s
+1 failed in 0.08s
 
 [exit_code=1]

@@ -19,6 +19,6 @@ E         Use -v to get more diff
 tests\test_api_contract.py:6: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_api_contract.py::test_payload_uses_display_name_contract - ...
-1 failed in 0.10s
+1 failed in 0.09s
 
 [exit_code=1]

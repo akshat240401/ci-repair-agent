@@ -1,0 +1,17 @@
+{
+  "experiment": "investigation_agent",
+  "cases": 20,
+  "root_file_hit_rate": 1.0,
+  "all_root_files_found_rate": 0.85,
+  "mean_tool_calls": 2.2,
+  "verified_repairs": 17,
+  "verified_repair_rate": 0.85,
+  "unresolved_cases": [
+    "case_010",
+    "case_013",
+    "case_015"
+  ],
+  "total_input_tokens": 105023,
+  "total_output_tokens": 20899,
+  "estimated_total_cost_usd": 0.046083400000000004
+}

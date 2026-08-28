@@ -16,6 +16,6 @@ E         ?                    ^^^^^^
 tests\test_time_contract.py:5: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_time_contract.py::test_round_trip_uses_z_suffix - Assertion...
-1 failed in 0.11s
+1 failed in 0.10s
 
 [exit_code=1]

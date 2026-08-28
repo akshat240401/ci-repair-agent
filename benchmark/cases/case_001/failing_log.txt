@@ -11,6 +11,6 @@ E    +  where 3 = page_count(20, 10)
 tests\test_pagination.py:4: AssertionError
 =========================== short test summary info ===========================
 FAILED tests\test_pagination.py::test_exact_multiple_has_no_extra_page - asse...
-1 failed in 0.11s
+1 failed in 0.09s
 
 [exit_code=1]
