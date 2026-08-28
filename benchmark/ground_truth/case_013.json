@@ -1,0 +1,8 @@
+{
+  "case_id": "case_013",
+  "root_cause": "The contract migrated from username to display_name, but producer and consumer still use the old field.",
+  "root_cause_files": [
+    "src/producer.py",
+    "src/consumer.py"
+  ]
+}

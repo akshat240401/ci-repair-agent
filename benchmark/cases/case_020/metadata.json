@@ -1,0 +1,13 @@
+{
+  "case_id": "case_020",
+  "title": "Token issuer default and validation drifted apart",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "multi_file_default_validation",
+  "expected_failure_type": "ENVIRONMENT_CONFIG",
+  "targeted_test": "tests/test_token_config.py::test_missing_issuer_uses_default",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "hard benchmark expansion"
+}

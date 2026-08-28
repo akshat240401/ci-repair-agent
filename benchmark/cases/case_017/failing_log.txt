@@ -1,0 +1,23 @@
+$ python -m pytest -q tests/test_paths.py::test_sibling_with_shared_prefix_is_rejected
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_sibling_with_shared_prefix_is_rejected _________________
+
+tmp_path = WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-6/test_sibling_with_shared_prefi0')
+
+    def test_sibling_with_shared_prefix_is_rejected(tmp_path):
+        workspace = tmp_path / "work"
+        sibling = tmp_path / "work_backup" / "secret.txt"
+        sibling.parent.mkdir(parents=True)
+        sibling.write_text("secret")
+>       assert is_within_workspace(workspace, sibling) is False
+E       AssertionError: assert True is False
+E        +  where True = is_within_workspace(WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-6/test_sibling_with_shared_prefi0/work'), WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-6/test_sibling_with_shared_prefi0/work_backup/secret.txt'))
+
+tests\test_paths.py:15: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_paths.py::test_sibling_with_shared_prefix_is_rejected - Ass...
+1 failed in 0.12s
+
+[exit_code=1]

@@ -16,6 +16,6 @@ E       TypeError: int() argument must be a string, a bytes-like object or a rea
 src\auth.py:3: TypeError
 =========================== short test summary info ===========================
 FAILED tests\test_auth.py::test_default_token_ttl - TypeError: int() argument...
-1 failed in 0.11s
+1 failed in 0.10s
 
 [exit_code=1]

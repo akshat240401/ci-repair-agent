@@ -1,0 +1,21 @@
+$ python -m pytest -q tests/test_users_cache.py::test_update_is_visible_after_cached_read
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_update_is_visible_after_cached_read ___________________
+
+    def test_update_is_visible_after_cached_read():
+        assert get_user("u1")["name"] == "Ada"
+        update_user("u1", {"name": "Grace"})
+>       assert get_user("u1")["name"] == "Grace"
+E       AssertionError: assert 'Ada' == 'Grace'
+E         
+E         - Grace
+E         + Ada
+
+tests\test_users_cache.py:9: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_users_cache.py::test_update_is_visible_after_cached_read - ...
+1 failed in 0.10s
+
+[exit_code=1]

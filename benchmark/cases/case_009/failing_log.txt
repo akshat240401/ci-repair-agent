@@ -32,6 +32,6 @@ E           RuntimeError: temporary
 tests\test_retry.py:9: RuntimeError
 =========================== short test summary info ===========================
 FAILED tests\test_retry.py::test_two_retries_allows_three_total_attempts - Ru...
-1 failed in 0.10s
+1 failed in 0.11s
 
 [exit_code=1]

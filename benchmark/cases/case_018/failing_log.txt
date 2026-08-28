@@ -1,0 +1,19 @@
+$ python -m pytest -q tests/test_permissions.py::test_first_source_wins_and_order_is_preserved
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________ test_first_source_wins_and_order_is_preserved ________________
+
+    def test_first_source_wins_and_order_is_preserved():
+>       assert merge_permissions(["read", "write"], ["read", "audit"]) == ["read", "write", "audit"]
+E       AssertionError: assert ['audit', 'write', 'read'] == ['read', 'write', 'audit']
+E         
+E         At index 0 diff: 'audit' != 'read'
+E         Use -v to get more diff
+
+tests\test_permissions.py:4: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_permissions.py::test_first_source_wins_and_order_is_preserved
+1 failed in 0.11s
+
+[exit_code=1]

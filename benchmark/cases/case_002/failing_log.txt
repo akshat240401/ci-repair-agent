@@ -19,6 +19,6 @@ E       TypeError: 'NoneType' object is not subscriptable
 src\users.py:4: TypeError
 =========================== short test summary info ===========================
 FAILED tests\test_users.py::test_missing_user_returns_none - TypeError: 'None...
-1 failed in 0.09s
+1 failed in 0.10s
 
 [exit_code=1]

@@ -1,0 +1,13 @@
+{
+  "case_id": "case_015",
+  "title": "Timeout unit migration is inconsistent across writer and validator",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "multi_file_unit_migration",
+  "expected_failure_type": "ENVIRONMENT_CONFIG",
+  "targeted_test": "tests/test_timeout.py::test_config_serializes_timeout_in_milliseconds",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "hard benchmark expansion"
+}

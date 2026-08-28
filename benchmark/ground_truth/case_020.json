@@ -1,0 +1,8 @@
+{
+  "case_id": "case_020",
+  "root_cause": "Settings omits DEFAULT_ISSUER and validator omits that default from its allowlist.",
+  "root_cause_files": [
+    "src/settings.py",
+    "src/validator.py"
+  ]
+}

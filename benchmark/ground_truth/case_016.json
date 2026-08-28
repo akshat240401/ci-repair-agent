@@ -1,0 +1,7 @@
+{
+  "case_id": "case_016",
+  "root_cause": "update_user writes persistent state but leaves the in-memory cache stale.",
+  "root_cause_files": [
+    "src/users.py"
+  ]
+}

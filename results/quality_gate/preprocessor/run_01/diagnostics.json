@@ -5,7 +5,7 @@
     "processed_context_chars": 1272,
     "context_chars_removed": 80,
     "proposal": {
-      "root_cause": "The page count always adds one after integer division, creating an extra page when total_items is an exact multiple of page_size.",
+      "root_cause": "The function always adds one page after floor division, creating an extra page when total_items is an exact multiple of page_size.",
       "file": "src/pagination.py",
       "search": "return total_items // page_size + 1",
       "replace": "return (total_items + page_size - 1) // page_size",
@@ -21,7 +21,7 @@
     "processed_context_chars": 1338,
     "context_chars_removed": 81,
     "proposal": {
-      "root_cause": "get_user_name subscripts the result of USERS.get() even when the user is missing and the result is None.",
+      "root_cause": "get_user_name subscripts the result of USERS.get() even when the user ID is missing and the result is None.",
       "file": "src/users.py",
       "search": "    return user[\"name\"]",
       "replace": "    return user[\"name\"] if user is not None else None",
@@ -37,14 +37,14 @@
     "processed_context_chars": 1275,
     "context_chars_removed": 81,
     "proposal": {
-      "root_cause": "TOKEN_TTL is None when the environment variable is unset, so converting it with int() raises TypeError instead of using the expected default of 3600.",
+      "root_cause": "TOKEN_TTL is None when the environment variable is unset, so converting it to int raises TypeError instead of using the expected default of 3600.",
       "file": "src/settings.py",
       "search": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\")",
       "replace": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\", \"3600\")",
       "confidence": 0.99
     },
     "patch_error": null,
-    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
     "regression_stderr": ""
   },
   {
@@ -60,7 +60,7 @@
       "confidence": 0.99
     },
     "patch_error": null,
-    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
     "regression_stderr": ""
   },
   {
@@ -69,14 +69,14 @@
     "processed_context_chars": 1420,
     "context_chars_removed": 91,
     "proposal": {
-      "root_cause": "discounted_total sorts the caller-provided prices list in place, mutating the cart.",
+      "root_cause": "discounted_total sorts the input list in place, mutating the caller's cart.",
       "file": "src/cart.py",
-      "search": "    prices.sort()",
-      "replace": "    sorted_prices = sorted(prices)",
+      "search": "    prices.sort()\n",
+      "replace": "    prices = sorted(prices)\n",
       "confidence": 0.99
     },
     "patch_error": null,
-    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
     "regression_stderr": ""
   },
   {
@@ -85,14 +85,14 @@
     "processed_context_chars": 1442,
     "context_chars_removed": 80,
     "proposal": {
-      "root_cause": "bool() treats the non-empty string \"false\" as True instead of parsing the environment value.",
+      "root_cause": "bool() treats the non-empty string \"false\" as True instead of parsing its value.",
       "file": "src/flags.py",
-      "search": "return bool(os.getenv(\"USE_CACHE\", \"false\"))",
-      "replace": "return os.getenv(\"USE_CACHE\", \"false\").lower() == \"true\"",
+      "search": "    return bool(os.getenv(\"USE_CACHE\", \"false\"))",
+      "replace": "    return os.getenv(\"USE_CACHE\", \"false\").lower() == \"true\"",
       "confidence": 0.99
     },
     "patch_error": null,
-    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
     "regression_stderr": ""
   },
   {
@@ -101,14 +101,14 @@
     "processed_context_chars": 1369,
     "context_chars_removed": 91,
     "proposal": {
-      "root_cause": "latest_version compares version strings lexicographically, so minor and patch numbers with two digits sort incorrectly.",
+      "root_cause": "latest_version compares version strings lexicographically, so minor and patch numbers are ordered as text rather than numeric components.",
       "file": "src/release.py",
       "search": "return max(versions)",
-      "replace": "return max(versions, key=lambda version: tuple(map(int, version.split(\".\"))))",
+      "replace": "return max(versions, key=lambda version: tuple(map(int, version.split('.'))))",
       "confidence": 0.99
     },
     "patch_error": null,
-    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
     "regression_stderr": ""
   },
   {
@@ -117,7 +117,7 @@
     "processed_context_chars": 1696,
     "context_chars_removed": 80,
     "proposal": {
-      "root_cause": "The cache key uses only product_id, so prices for different regions share the same cached value.",
+      "root_cause": "The cache key uses only product_id, so prices for different regions incorrectly share the same cached value.",
       "file": "src/pricing.py",
       "search": "    key = product_id",
       "replace": "    key = (product_id, region)",
@@ -133,14 +133,14 @@
     "processed_context_chars": 2348,
     "context_chars_removed": 89,
     "proposal": {
-      "root_cause": "The retry loop performs max_retries total attempts instead of allowing one initial attempt plus max_retries retries.",
+      "root_cause": "The retry loop performs only max_retries total attempts instead of allowing the initial attempt plus max_retries retries.",
       "file": "src/retry.py",
       "search": "for _ in range(max_retries):",
       "replace": "for _ in range(max_retries + 1):",
       "confidence": 0.99
     },
     "patch_error": null,
-    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
     "regression_stderr": ""
   },
   {
@@ -149,10 +149,10 @@
     "processed_context_chars": 1971,
     "context_chars_removed": 91,
     "proposal": {
-      "root_cause": "The parser removes everything after the first '#' without accounting for whether the hash is inside quoted text.",
+      "root_cause": "The parser removes everything after the first '#' without accounting for whether the hash is inside a quoted value.",
       "file": "src/config_parser.py",
-      "search": "def parse_line(line):\n    clean = line.split(\"#\", 1)[0].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')",
-      "replace": "def parse_line(line):\n    in_quotes = False\n    for index, char in enumerate(line):\n        if char == '\"':\n            in_quotes = not in_quotes\n        elif char == '#' and not in_quotes:\n            line = line[:index]\n            break\n    clean = line.strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')",
+      "search": "    clean = line.split(\"#\", 1)[0].strip()",
+      "replace": "    in_quotes = False\n    comment_at = None\n    for index, char in enumerate(line):\n        if char == '\"':\n            in_quotes = not in_quotes\n        elif char == '#' and not in_quotes:\n            comment_at = index\n            break\n    clean = line[:comment_at] if comment_at is not None else line\n    clean = clean.strip()",
       "confidence": 0.99
     },
     "patch_error": null,
@@ -165,7 +165,7 @@
     "processed_context_chars": 1543,
     "context_chars_removed": 91,
     "proposal": {
-      "root_cause": "output_path always inserts a separator, producing a double slash when root already ends with one.",
+      "root_cause": "output_path always inserts a slash, producing a double separator when root already ends with one.",
       "file": "src/artifact.py",
       "search": "return f\"{root}/{filename}\"",
       "replace": "return f\"{root.rstrip('/')}/{filename}\"",
@@ -181,11 +181,139 @@
     "processed_context_chars": 1871,
     "context_chars_removed": 80,
     "proposal": {
-      "root_cause": "resolve_settings merges file_config after env_config, so file values incorrectly override environment values.",
+      "root_cause": "Configuration dictionaries are merged in the wrong precedence order, so file settings override environment settings instead of environment settings overriding file settings.",
       "file": "src/settings.py",
       "search": "return {**DEFAULTS, **env_config, **file_config}",
       "replace": "return {**DEFAULTS, **file_config, **env_config}",
+      "confidence": 1.0
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_013",
+    "raw_context_chars": 2023,
+    "processed_context_chars": 1932,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "The producer creates the payload with the legacy 'username' key, while the API contract and consumer tests require 'display_name'.",
+      "file": "src/producer.py",
+      "search": "return {\"id\": user[\"id\"], \"username\": user[\"name\"]}",
+      "replace": "return {\"id\": user[\"id\"], \"display_name\": user[\"name\"]}",
       "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_014",
+    "raw_context_chars": 1758,
+    "processed_context_chars": 1678,
+    "context_chars_removed": 80,
+    "proposal": {
+      "root_cause": "get_header performs case-sensitive dictionary lookup, but HTTP header names are case-insensitive.",
+      "file": "src/headers.py",
+      "search": "    return headers.get(name)",
+      "replace": "    return next((value for key, value in headers.items() if key.lower() == name.lower()), None)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_015",
+    "raw_context_chars": 2003,
+    "processed_context_chars": 1912,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "build_config validates and returns a timeout serialized in seconds instead of milliseconds.",
+      "file": "src/service.py",
+      "search": "    config = serialize_timeout(seconds)\n    validate_timeout(config)\n    return config",
+      "replace": "    return {\"timeout_ms\": seconds * 1000}",
+      "confidence": 0.84
+    },
+    "patch_error": null,
+    "regression_stdout": ".F.                                                                      [100%]\n================================== FAILURES ===================================\n__________________ test_validator_accepts_millisecond_range ___________________\n\n    def test_validator_accepts_millisecond_range():\n>       assert validate_timeout({\"timeout_ms\": 30000}) is True\n\nC:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\benchmark\\cases\\case_015\\repo\\tests\\test_timeout.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nconfig = {'timeout_ms': 30000}\n\n    def validate_timeout(config):\n        timeout = config[\"timeout_ms\"]\n        if not 1 <= timeout <= 120:\n>           raise ValueError(\"timeout out of range\")\nE           ValueError: timeout out of range\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests/test_timeout.py::test_validator_accepts_millisecond_range - Valu...\n1 failed, 2 passed in 0.11s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_016",
+    "raw_context_chars": 1931,
+    "processed_context_chars": 1840,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "update_user writes the new data to the store but leaves the previously cached user unchanged, so subsequent reads return stale data.",
+      "file": "src/users.py",
+      "search": "    write_user(user_id, data)",
+      "replace": "    write_user(user_id, data)\n    _CACHE.pop(user_id, None)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_017",
+    "raw_context_chars": 2256,
+    "processed_context_chars": 2176,
+    "context_chars_removed": 80,
+    "proposal": {
+      "root_cause": "The string prefix check treats sibling paths such as work_backup as being inside work.",
+      "file": "src/paths.py",
+      "search": "    return candidate.startswith(workspace)",
+      "replace": "    return Path(candidate).is_relative_to(Path(workspace))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_018",
+    "raw_context_chars": 1459,
+    "processed_context_chars": 1368,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "Using set() removes duplicates but does not preserve the order of permissions, so the result order is nondeterministic.",
+      "file": "src/permissions.py",
+      "search": "    return list(set(primary + inherited))",
+      "replace": "    return list(dict.fromkeys(primary + inherited))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_019",
+    "raw_context_chars": 1860,
+    "processed_context_chars": 1769,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "format_timestamp uses datetime.isoformat(), which renders UTC as +00:00 instead of the required Z suffix.",
+      "file": "src/formatter.py",
+      "search": "    return dt.isoformat()",
+      "replace": "    return dt.isoformat().replace(\"+00:00\", \"Z\")",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_020",
+    "raw_context_chars": 2338,
+    "processed_context_chars": 2257,
+    "context_chars_removed": 81,
+    "proposal": {
+      "root_cause": "The missing environment variable produces None, which is rejected instead of being normalized to the configured default issuer; the default issuer is also not accepted by validation.",
+      "file": "src/validator.py",
+      "search": "if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "replace": "if value is None or value == \"ci-repair\":\n        return \"ci-repair\"\n    if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "confidence": 0.98
     },
     "patch_error": null,
     "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",

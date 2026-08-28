@@ -1,0 +1,13 @@
+{
+  "case_id": "case_014",
+  "title": "Header lookup must be case-insensitive without mutating stored keys",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "normalization_regression",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_headers.py::test_lookup_accepts_lowercase_request",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "hard benchmark expansion"
+}

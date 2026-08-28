@@ -1,0 +1,17 @@
+$ python -m pytest -q tests/test_headers.py::test_lookup_accepts_lowercase_request
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_lookup_accepts_lowercase_request ____________________
+
+    def test_lookup_accepts_lowercase_request():
+>       assert get_header({"Content-Type": "application/json"}, "content-type") == "application/json"
+E       AssertionError: assert None == 'application/json'
+E        +  where None = get_header({'Content-Type': 'application/json'}, 'content-type')
+
+tests\test_headers.py:4: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_headers.py::test_lookup_accepts_lowercase_request - Asserti...
+1 failed in 0.10s
+
+[exit_code=1]
