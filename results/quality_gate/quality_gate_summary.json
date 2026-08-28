@@ -1,0 +1,36 @@
+{
+  "benchmark_cases": 12,
+  "baseline": {
+    "system": "baseline",
+    "runs": 3,
+    "mean_vrr": 1.0,
+    "min_vrr": 1.0,
+    "max_vrr": 1.0,
+    "stddev_vrr": 0.0,
+    "mean_verified_repairs": 12,
+    "total_estimated_cost_usd": 0.009564,
+    "unresolved_cases_by_run": {
+      "run_01": [],
+      "run_02": [],
+      "run_03": []
+    }
+  },
+  "preprocessor": {
+    "system": "log_preprocessor",
+    "runs": 3,
+    "mean_vrr": 0.9722222222222222,
+    "min_vrr": 0.9166666666666666,
+    "max_vrr": 1.0,
+    "stddev_vrr": 0.039283710065919325,
+    "mean_verified_repairs": 11.666666666666666,
+    "total_estimated_cost_usd": 0.0096282,
+    "unresolved_cases_by_run": {
+      "run_01": [],
+      "run_02": [],
+      "run_03": [
+        "case_010"
+      ]
+    }
+  },
+  "delta_mean_vrr_pp": -2.777777777777779
+}

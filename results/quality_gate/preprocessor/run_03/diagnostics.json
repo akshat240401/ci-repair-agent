@@ -1,0 +1,194 @@
+[
+  {
+    "case_id": "case_001",
+    "raw_context_chars": 1352,
+    "processed_context_chars": 1272,
+    "context_chars_removed": 80,
+    "proposal": {
+      "root_cause": "The page count always adds one after integer division, creating an extra page when total_items is an exact multiple of page_size.",
+      "file": "src/pagination.py",
+      "search": "return total_items // page_size + 1",
+      "replace": "return (total_items + page_size - 1) // page_size",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_002",
+    "raw_context_chars": 1419,
+    "processed_context_chars": 1338,
+    "context_chars_removed": 81,
+    "proposal": {
+      "root_cause": "get_user_name indexes into None when the requested user ID is missing instead of returning None.",
+      "file": "src/users.py",
+      "search": "    return user[\"name\"]",
+      "replace": "    return user[\"name\"] if user is not None else None",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_003",
+    "raw_context_chars": 1356,
+    "processed_context_chars": 1275,
+    "context_chars_removed": 81,
+    "proposal": {
+      "root_cause": "TOKEN_TTL is None when the environment variable is unset, so converting it to int raises TypeError instead of using the expected default of 3600 seconds.",
+      "file": "src/settings.py",
+      "search": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\")",
+      "replace": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\", \"3600\")",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_004",
+    "raw_context_chars": 1499,
+    "processed_context_chars": 1408,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "serialize_profile uses the username field instead of the record's display_name field for the name value.",
+      "file": "src/profile.py",
+      "search": "return {\"id\":record[\"id\"],\"name\":record[\"username\"]}",
+      "replace": "return {\"id\":record[\"id\"],\"name\":record[\"display_name\"]}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_005",
+    "raw_context_chars": 1511,
+    "processed_context_chars": 1420,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "discounted_total sorts the input list in place, mutating the cart passed by the caller.",
+      "file": "src/cart.py",
+      "search": "    prices.sort()\n    return sum(prices)*(1-discount)",
+      "replace": "    return sum(prices)*(1-discount)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_006",
+    "raw_context_chars": 1522,
+    "processed_context_chars": 1442,
+    "context_chars_removed": 80,
+    "proposal": {
+      "root_cause": "bool() treats any non-empty environment string, including \"false\", as True.",
+      "file": "src/flags.py",
+      "search": "    return bool(os.getenv(\"USE_CACHE\", \"false\"))",
+      "replace": "    return os.getenv(\"USE_CACHE\", \"false\").lower() == \"true\"",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_007",
+    "raw_context_chars": 1460,
+    "processed_context_chars": 1369,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "latest_version compares version strings lexicographically, so minor and patch numbers with multiple digits are ordered incorrectly.",
+      "file": "src/release.py",
+      "search": "return max(versions)",
+      "replace": "return max(versions, key=lambda version: tuple(map(int, version.split('.'))))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_008",
+    "raw_context_chars": 1776,
+    "processed_context_chars": 1696,
+    "context_chars_removed": 80,
+    "proposal": {
+      "root_cause": "The cache key uses only product_id, so prices for different regions share the same cached value.",
+      "file": "src/pricing.py",
+      "search": "    key = product_id",
+      "replace": "    key = (product_id, region)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_009",
+    "raw_context_chars": 2437,
+    "processed_context_chars": 2348,
+    "context_chars_removed": 89,
+    "proposal": {
+      "root_cause": "The retry loop performs max_retries total attempts instead of allowing one initial attempt plus max_retries retries.",
+      "file": "src/retry.py",
+      "search": "for _ in range(max_retries):",
+      "replace": "for _ in range(max_retries + 1):",
+      "confidence": 1.0
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_010",
+    "raw_context_chars": 2062,
+    "processed_context_chars": 1971,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "The parser removes everything after the first '#' without accounting for whether the hash is inside quoted text.",
+      "file": "src/config_parser.py",
+      "search": "    clean = line.split(\"#\", 1)[0].strip()",
+      "replace": "    clean = line.split(\"#\", 1)[0].strip() if line.split('\"', 1)[0].count('\"') % 2 == 0 else line.strip()",
+      "confidence": 0.98
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_011",
+    "raw_context_chars": 1634,
+    "processed_context_chars": 1543,
+    "context_chars_removed": 91,
+    "proposal": {
+      "root_cause": "output_path always inserts a separator, producing a double slash when root already ends with one.",
+      "file": "src/artifact.py",
+      "search": "return f\"{root}/{filename}\"",
+      "replace": "return f\"{root.rstrip('/')}/{filename}\"",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_012",
+    "raw_context_chars": 1951,
+    "processed_context_chars": 1871,
+    "context_chars_removed": 80,
+    "proposal": {
+      "root_cause": "resolve_settings merges file_config after env_config, so file values incorrectly override environment values instead of following defaults < file < environment precedence.",
+      "file": "src/settings.py",
+      "search": "return {**DEFAULTS, **env_config, **file_config}",
+      "replace": "return {**DEFAULTS, **file_config, **env_config}",
+      "confidence": 1.0
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "regression_stderr": ""
+  }
+]
