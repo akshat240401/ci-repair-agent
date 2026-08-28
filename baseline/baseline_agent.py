@@ -36,12 +36,16 @@ def _extract_json(text: str) -> dict:
     return json.loads(text)
 
 
-def propose_patch(case: BenchmarkCase) -> tuple[BaselinePatchProposal, dict]:
+def propose_patch(
+    case: BenchmarkCase,
+    *,
+    preprocess_failure_log: bool = False,
+) -> tuple[BaselinePatchProposal, dict]:
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError(
             "OPENAI_API_KEY is not set. Set it in the current PowerShell session "
-            "before running the baseline."
+            "before running the experiment."
         )
 
     model = os.environ.get("MODEL_NAME", "gpt-5.6-luna")
@@ -49,7 +53,10 @@ def propose_patch(case: BenchmarkCase) -> tuple[BaselinePatchProposal, dict]:
 
     client = OpenAI(api_key=api_key)
     instructions = PROMPT_PATH.read_text(encoding="utf-8")
-    user_input = build_baseline_input(case)
+    user_input = build_baseline_input(
+        case,
+        preprocess_failure_log=preprocess_failure_log,
+    )
 
     response = client.responses.create(
         model=model,
@@ -63,7 +70,7 @@ def propose_patch(case: BenchmarkCase) -> tuple[BaselinePatchProposal, dict]:
         proposal = BaselinePatchProposal.model_validate(raw)
     except (json.JSONDecodeError, ValidationError) as exc:
         raise RuntimeError(
-            f"Baseline model returned invalid patch JSON: {exc}\n"
+            f"Model returned invalid patch JSON: {exc}\n"
             f"Raw output:\n{response.output_text}"
         ) from exc
 

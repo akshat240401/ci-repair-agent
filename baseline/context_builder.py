@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from evaluation.case_loader import BenchmarkCase
+from src.preprocessing.log_preprocessor import preprocess_log
 
 
-ALLOWED_SUFFIXES = {".py", ".json", ".toml", ".yaml", ".yml", ".ini", ".cfg", ".txt"}
+ALLOWED_SUFFIXES = {
+    ".py", ".json", ".toml", ".yaml", ".yml", ".ini", ".cfg", ".txt"
+}
 MAX_FILE_CHARS = 20_000
 
 
@@ -26,13 +27,21 @@ def build_repository_context(case: BenchmarkCase) -> str:
     return "\n\n".join(sections)
 
 
-def build_baseline_input(case: BenchmarkCase) -> str:
+def build_baseline_input(
+    case: BenchmarkCase,
+    *,
+    preprocess_failure_log: bool = False,
+) -> str:
     failing_log = case.log_path.read_text(encoding="utf-8", errors="replace")
+
+    if preprocess_failure_log:
+        failing_log = preprocess_log(failing_log)
+
     repo_context = build_repository_context(case)
 
     return (
         "===== FAILING CI LOG =====\n"
-        f"{failing_log}\n\n"
+        f"{failing_log}\n"
         "===== REPOSITORY =====\n"
         f"{repo_context}"
     )
