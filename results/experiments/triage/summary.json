@@ -1,0 +1,16 @@
+{
+  "experiment": "triage_agent",
+  "cases": 20,
+  "triage_type_correct": 15,
+  "triage_accuracy": 0.75,
+  "verified_repairs": 17,
+  "verified_repair_rate": 0.85,
+  "unresolved_cases": [
+    "case_010",
+    "case_013",
+    "case_015"
+  ],
+  "total_input_tokens": 29186,
+  "total_output_tokens": 6267,
+  "estimated_total_cost_usd": 0.013357599999999997
+}

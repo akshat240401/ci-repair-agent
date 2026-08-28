@@ -1,0 +1,594 @@
+[
+  {
+    "case_id": "case_001",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects page_count(20,10) to equal 2, but the implementation returned 3.",
+        "The failing test is named test_exact_multiple_has_no_extra_page."
+      ],
+      "target_files": [
+        "src/pagination.py",
+        "tests/test_pagination.py"
+      ],
+      "suspected_root_cause": "The page-count calculation incorrectly adds an extra page when the item count is an exact multiple of the page size.",
+      "next_step": "Inspect page_count in src/pagination.py, focusing on division and rounding behavior for exact multiples, then review related pagination tests for boundary cases."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "The calculation always adds one page after integer division, including when total_items is an exact multiple of page_size.",
+      "file": "src/pagination.py",
+      "search": "return total_items // page_size + 1",
+      "replace": "return (total_items + page_size - 1) // page_size",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_002",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "TYPE_ERROR",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects get_user_name(999) is None.",
+        "The failure is TypeError: 'NoneType' object is not subscriptable.",
+        "src/users.py:4 executes return user[\"name\"] after USERS.get(user_id) returns None."
+      ],
+      "target_files": [
+        "src/users.py",
+        "tests/test_users.py"
+      ],
+      "suspected_root_cause": "get_user_name does not handle a missing user before subscripting the None result.",
+      "next_step": "Inspect src/users.py around get_user_name and verify its missing-user behavior against the expectation in tests/test_users.py."
+    },
+    "triage_type_correct": false,
+    "proposal": {
+      "root_cause": "get_user_name subscripts the result of USERS.get even when the user is missing and the result is None.",
+      "file": "src/users.py",
+      "search": "    return user[\"name\"]",
+      "replace": "    return user[\"name\"] if user is not None else None",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_003",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "TYPE_ERROR",
+      "confidence": 0.99,
+      "evidence": [
+        "TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",
+        "src\\auth.py:3 returns int(TOKEN_TTL)",
+        "The test expects token_expiry_seconds() to equal 3600"
+      ],
+      "target_files": [
+        "src/auth.py",
+        "src/settings.py"
+      ],
+      "suspected_root_cause": "TOKEN_TTL is None when src/auth.py attempts to convert it to an integer, likely due to missing or incorrect default configuration.",
+      "next_step": "Inspect how TOKEN_TTL is defined and imported in src/auth.py and src/settings.py, and determine why the default value is None instead of 3600."
+    },
+    "triage_type_correct": false,
+    "proposal": {
+      "root_cause": "TOKEN_TTL is None when the environment variable is unset, so int(TOKEN_TTL) raises a TypeError instead of using the expected default of 3600.",
+      "file": "src/settings.py",
+      "search": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\")",
+      "replace": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\", \"3600\")",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_004",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects serialize_profile(r) to return {'id': 7, 'name': 'A. Raval'}",
+        "The actual result contains {'id': 7, 'name': 'araval'}",
+        "The input record includes display_name='A. Raval' and username='araval'"
+      ],
+      "target_files": [
+        "src/profile.py"
+      ],
+      "suspected_root_cause": "serialize_profile is using the username field instead of display_name for the output name.",
+      "next_step": "Inspect serialize_profile in src/profile.py and verify which input field is mapped to the returned name."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "serialize_profile uses the username field instead of display_name for the output name.",
+      "file": "src/profile.py",
+      "search": "record[\"username\"]",
+      "replace": "record[\"display_name\"]",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_005",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects the input prices list to remain [30.0, 10.0, 20.0].",
+        "After calling discounted_total(prices, 0.10), the list is [10.0, 20.0, 30.0].",
+        "The assertion failure shows the function reordered the caller-provided list."
+      ],
+      "target_files": [
+        "src/cart.py",
+        "tests/test_cart.py"
+      ],
+      "suspected_root_cause": "discounted_total mutates the input list, likely by sorting it in place.",
+      "next_step": "Inspect discounted_total in src/cart.py for in-place operations on the prices argument and compare its intended behavior with tests/test_cart.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "discounted_total sorts the caller-provided prices list in place, mutating its order.",
+      "file": "src/cart.py",
+      "search": "    prices.sort()",
+      "replace": "    prices = sorted(prices)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_006",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "test_false_string_disables_cache sets USE_CACHE to \"false\"",
+        "cache_enabled() returned True, but the test expected False",
+        "The test completed in 0.10s with no import, environment, or dependency errors"
+      ],
+      "target_files": [
+        "src/flags.py",
+        "tests/test_flags.py"
+      ],
+      "suspected_root_cause": "cache_enabled() likely treats the non-empty string value \"false\" as truthy instead of parsing it as a disabled boolean setting.",
+      "next_step": "Inspect src/flags.py to trace how USE_CACHE is read and converted to a boolean, then compare that behavior with the expectation in tests/test_flags.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "cache_enabled() applies bool() directly to the environment string, so the non-empty value \"false\" is treated as True.",
+      "file": "src/flags.py",
+      "search": "return bool(os.getenv(\"USE_CACHE\", \"false\"))",
+      "replace": "return os.getenv(\"USE_CACHE\", \"false\").lower() != \"false\"",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_007",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected latest_version([\"2.9.0\", \"2.10.0\", \"2.8.7\"]) to return \"2.10.0\", but it returned \"2.9.0\".",
+        "The failure is an AssertionError in tests/test_release.py::test_latest_version_handles_two_digit_minor."
+      ],
+      "target_files": [
+        "src/release.py",
+        "tests/test_release.py"
+      ],
+      "suspected_root_cause": "latest_version likely compares version strings lexicographically rather than comparing numeric semantic-version components, causing 2.9.0 to sort above 2.10.0.",
+      "next_step": "Inspect src/release.py, especially latest_version, to determine how version strings are parsed and ordered; use tests/test_release.py to confirm the intended version semantics."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "latest_version uses lexicographic string comparison, so versions with two-digit numeric components are ordered incorrectly.",
+      "file": "src/release.py",
+      "search": "return max(versions)",
+      "replace": "return max(versions, key=lambda version: tuple(map(int, version.split(\".\"))))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_008",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected get_price('sku-1', 'EU') to return 12, but it returned 10.",
+        "The failing test is explicitly named test_cache_does_not_leak_price_between_regions."
+      ],
+      "target_files": [
+        "src/pricing.py",
+        "tests/test_pricing.py"
+      ],
+      "suspected_root_cause": "The pricing cache is keyed without sufficiently distinguishing the region, causing the US price to be reused for the EU request.",
+      "next_step": "Inspect the cache key construction and lookup logic in src/pricing.py, then review the test fixtures or expected regional pricing in tests/test_pricing.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "The cache key uses only product_id, so a cached US price is incorrectly reused for the same product in the EU.",
+      "file": "src/pricing.py",
+      "search": "    key = product_id",
+      "replace": "    key = (product_id, region)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_009",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "The test expects call_with_retries(flaky, 2) to succeed after three total attempts.",
+        "The traceback shows src/retry.py raising the last RuntimeError after the operation fails while calls['count'] is less than 3.",
+        "The test completed with a single assertion failure and no dependency, environment, or build errors."
+      ],
+      "target_files": [
+        "src/retry.py",
+        "tests/test_retry.py"
+      ],
+      "suspected_root_cause": "call_with_retries is performing too few attempts or interpreting the retries argument as the total attempt count rather than the number of retries.",
+      "next_step": "Inspect src/retry.py's retry loop and attempt-count boundary conditions, then compare them with the expected semantics in tests/test_retry.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "The retry loop performs max_retries total attempts instead of allowing one initial attempt plus max_retries retries.",
+      "file": "src/retry.py",
+      "search": "for _ in range(max_retries):",
+      "replace": "for _ in range(max_retries + 1):",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_010",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects the quoted value \"https://example.com/#done\" to be preserved.",
+        "The actual parsed value is \"https://example.com/\", indicating that the parser treats the hash character inside quotes as a comment delimiter."
+      ],
+      "target_files": [
+        "src/config_parser.py",
+        "tests/test_config_parser.py"
+      ],
+      "suspected_root_cause": "Comment stripping does not correctly ignore hash characters occurring inside quoted values.",
+      "next_step": "Inspect the parsing and comment-removal logic in src/config_parser.py, then review related parser tests in tests/test_config_parser.py for quoting and comment edge cases."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "Comment stripping splits at every hash character, including hashes inside quoted values.",
+      "file": "src/config_parser.py",
+      "search": "    clean = line.split(\"#\", 1)[0].strip()",
+      "replace": "    clean = line.split(\"#\", 1)[0].strip() if '\"' not in line or line.count('\"') < 2 else line.strip()",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": ".F.                                                                      [100%]\n================================== FAILURES ===================================\n______________________ test_trailing_comment_is_removed _______________________\n\n    def test_trailing_comment_is_removed():\n>       assert parse_line('mode=\"safe\" # deployment default') == (\"mode\", \"safe\")\nE       assert ('mode', 'saf...ment default') == ('mode', 'safe')\nE         \nE         At index 1 diff: 'safe\" # deployment default' != 'safe'\nE         Use -v to get more diff\n\nC:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\benchmark\\cases\\case_010\\repo\\tests\\test_config_parser.py:10: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/test_config_parser.py::test_trailing_comment_is_removed - assert...\n1 failed, 2 passed in 0.09s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_011",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected '/tmp/build/report.json' but received '/tmp/build//report.json'.",
+        "The failure occurs in test_output_path_handles_root_with_trailing_separator when the base path ends with '/'."
+      ],
+      "target_files": [
+        "src/artifact.py",
+        "tests/test_artifact.py"
+      ],
+      "suspected_root_cause": "Path construction concatenates the base path and filename without handling a trailing path separator.",
+      "next_step": "Inspect the output_path implementation in src/artifact.py and review the related test cases in tests/test_artifact.py for expected separator behavior."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "output_path always inserts a separator, producing a double slash when root already ends with one.",
+      "file": "src/artifact.py",
+      "search": "    return f\"{root}/{filename}\"",
+      "replace": "    return f\"{root.rstrip('/')}/{filename}\"",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_012",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected resolved[\"port\"] to equal 7000, but the actual value was 9000.",
+        "The failing test is named test_environment_overrides_file_configuration.",
+        "The failure occurred in tests/test_settings.py::test_environment_overrides_file_configuration."
+      ],
+      "target_files": [
+        "src/settings.py",
+        "tests/test_settings.py"
+      ],
+      "suspected_root_cause": "resolve_settings gives precedence to the environment settings value 9000 instead of allowing the file configuration value 7000 to override it.",
+      "next_step": "Inspect resolve_settings in src/settings.py and verify its precedence and merge-order logic against the expectation in tests/test_settings.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "resolve_settings merges file_config after env_config, so file values incorrectly take precedence over environment values.",
+      "file": "src/settings.py",
+      "search": "    return {**DEFAULTS, **env_config, **file_config}",
+      "replace": "    return {**DEFAULTS, **file_config, **env_config}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.00s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_013",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The assertion expected {'id': 7, 'display_name': 'Ada'} but received {'id': 7, 'username': 'Ada'}",
+        "The failing test calls render_user with {'id': 7, 'name': 'Ada'}"
+      ],
+      "target_files": [
+        "src/api.py",
+        "tests/test_api_contract.py"
+      ],
+      "suspected_root_cause": "render_user constructs the payload using the obsolete 'username' key instead of the required 'display_name' key.",
+      "next_step": "Inspect render_user in src/api.py and compare its payload construction with the contract asserted in tests/test_api_contract.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "build_user_payload uses the obsolete 'username' key instead of the required 'display_name' key.",
+      "file": "src/producer.py",
+      "search": "return {\"id\": user[\"id\"], \"username\": user[\"name\"]}",
+      "replace": "return {\"id\": user[\"id\"], \"display_name\": user[\"name\"]}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_014",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "test_lookup_accepts_lowercase_request fails because get_header({'Content-Type': 'application/json'}, 'content-type') returns None instead of 'application/json'",
+        "Pytest reports an AssertionError in tests/test_headers.py::test_lookup_accepts_lowercase_request"
+      ],
+      "target_files": [
+        "src/headers.py",
+        "tests/test_headers.py"
+      ],
+      "suspected_root_cause": "get_header performs case-sensitive header-name lookup instead of treating HTTP header names case-insensitively.",
+      "next_step": "Inspect get_header in src/headers.py and compare its lookup behavior with the lowercase-name expectation in tests/test_headers.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "get_header performs case-sensitive dictionary lookup, but HTTP header names must be matched case-insensitively.",
+      "file": "src/headers.py",
+      "search": "    return headers.get(name)",
+      "replace": "    return next((value for key, value in headers.items() if key.lower() == name.lower()), None)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_015",
+    "expected_failure_type": "ENVIRONMENT_CONFIG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected {'timeout_ms': 30000} but received {'timeout_ms': 30} for build_config(30).",
+        "Pytest reported an AssertionError in tests/test_timeout.py::test_config_serializes_timeout_in_milliseconds."
+      ],
+      "target_files": [
+        "src/config_writer.py",
+        "tests/test_timeout.py"
+      ],
+      "suspected_root_cause": "The configuration serialization logic is treating the timeout value as milliseconds already instead of converting seconds to milliseconds.",
+      "next_step": "Inspect build_config in src/config_writer.py and its timeout unit assumptions, then compare them with the test contract in tests/test_timeout.py."
+    },
+    "triage_type_correct": false,
+    "proposal": {
+      "root_cause": "serialize_timeout returns seconds unchanged instead of converting the timeout from seconds to milliseconds.",
+      "file": "src/config_writer.py",
+      "search": "return {\"timeout_ms\": seconds}",
+      "replace": "return {\"timeout_ms\": seconds * 1000}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_016",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "The test reads user u1 as 'Ada', updates it to 'Grace', then reads it again.",
+        "The second read returned 'Ada' instead of the expected 'Grace'.",
+        "The test completed with an AssertionError, not a syntax, dependency, or environment error."
+      ],
+      "target_files": [
+        "src/users.py",
+        "src/store.py"
+      ],
+      "suspected_root_cause": "The user lookup is returning stale cached data after update_user modifies the user.",
+      "next_step": "Inspect get_user and update_user in src/users.py, then inspect cache read/write or invalidation behavior in src/store.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "update_user writes the new data but does not invalidate the cached user, so get_user returns stale data.",
+      "file": "src/users.py",
+      "search": "    write_user(user_id, data)",
+      "replace": "    write_user(user_id, data)\n    _CACHE.pop(user_id, None)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_017",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "test_sibling_with_shared_prefix_is_rejected failed because is_within_workspace(workspace, sibling) returned True",
+        "The sibling path is work_backup/secret.txt, which shares the string prefix work but is not within the work directory",
+        "The assertion expected False but received True"
+      ],
+      "target_files": [
+        "src/paths.py",
+        "tests/test_paths.py"
+      ],
+      "suspected_root_cause": "Workspace containment is likely checked using a naive string prefix comparison, incorrectly treating the sibling directory work_backup as inside work.",
+      "next_step": "Inspect is_within_workspace in src/paths.py and verify that it uses path-aware containment semantics, then review the related tests in tests/test_paths.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "Containment is checked with a naive string prefix, so the sibling directory work_backup is incorrectly treated as inside work.",
+      "file": "src/paths.py",
+      "search": "    return candidate.startswith(workspace)",
+      "replace": "    return Path(candidate) == Path(workspace) or Path(workspace) in Path(candidate).parents",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_018",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected ['read', 'write', 'audit'] but the function returned ['audit', 'write', 'read']",
+        "The failing test is named test_first_source_wins_and_order_is_preserved",
+        "Pytest completed and reported an assertion mismatch rather than a syntax, dependency, or environment error"
+      ],
+      "target_files": [
+        "src/permissions.py",
+        "tests/test_permissions.py"
+      ],
+      "suspected_root_cause": "merge_permissions is combining or deduplicating permissions in reverse or otherwise incorrect order instead of preserving first-source order.",
+      "next_step": "Inspect the merge_permissions implementation in src/permissions.py, focusing on iteration order and the data structure used for deduplication; compare its behavior with the expectation in tests/test_permissions.py."
+    },
+    "triage_type_correct": true,
+    "proposal": {
+      "root_cause": "Using set() removes duplicates without preserving the required first-source order.",
+      "file": "src/permissions.py",
+      "search": "    return list(set(primary + inherited))",
+      "replace": "    return list(dict.fromkeys(primary + inherited))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_019",
+    "expected_failure_type": "LOGIC_BUG",
+    "triage": {
+      "failure_type": "TEST_FAILURE",
+      "confidence": 0.99,
+      "evidence": [
+        "The test fails with an AssertionError in tests/test_time_contract.py::test_round_trip_uses_z_suffix.",
+        "Expected normalize_timestamp(\"2026-08-28T12:00:00Z\") to return \"2026-08-28T12:00:00Z\", but it returned \"2026-08-28T12:00:00+00:00\"."
+      ],
+      "target_files": [
+        "src/formatter.py",
+        "src/parser.py",
+        "tests/test_time_contract.py"
+      ],
+      "suspected_root_cause": "Timestamp normalization converts the UTC Z suffix to the equivalent +00:00 offset instead of preserving the required Z representation.",
+      "next_step": "Inspect normalize_timestamp and the parsing/formatting flow in src/formatter.py and src/parser.py, then compare their behavior with the contract asserted in tests/test_time_contract.py."
+    },
+    "triage_type_correct": false,
+    "proposal": {
+      "root_cause": "format_timestamp uses datetime.isoformat(), which renders UTC as +00:00 instead of the required Z suffix.",
+      "file": "src/formatter.py",
+      "search": "    return dt.isoformat()",
+      "replace": "    return dt.isoformat().replace(\"+00:00\", \"Z\")",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "regression_stderr": ""
+  },
+  {
+    "case_id": "case_020",
+    "expected_failure_type": "ENVIRONMENT_CONFIG",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "The test removes TOKEN_ISSUER and expects configured_issuer() to return \"ci-repair\".",
+        "src/auth.py:4 calls validate_issuer(token_issuer()), and the traceback shows value=None.",
+        "src/validator.py:4 rejects None because it is not in ALLOWED_ISSUERS, raising ValueError(\"untrusted issuer\")."
+      ],
+      "target_files": [
+        "src/auth.py",
+        "src/settings.py",
+        "src/validator.py"
+      ],
+      "suspected_root_cause": "Missing TOKEN_ISSUER is propagated as None instead of being replaced with the expected default issuer before validation.",
+      "next_step": "Inspect token_issuer and configured_issuer in src/auth.py and the default configuration in src/settings.py, then verify whether validator.py is intended to receive the resolved default rather than None."
+    },
+    "triage_type_correct": false,
+    "proposal": {
+      "root_cause": "Missing TOKEN_ISSUER becomes None, and the validator also does not accept the configured default issuer \"ci-repair\".",
+      "file": "src/validator.py",
+      "search": "def validate_issuer(value):\n    if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "replace": "def validate_issuer(value):\n    if value is None:\n        value = \"ci-repair\"\n    if value not in ALLOWED_ISSUERS and value != \"ci-repair\":\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "confidence": 0.97
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "regression_stderr": ""
+  }
+]

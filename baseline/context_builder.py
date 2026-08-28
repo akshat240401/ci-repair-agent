@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import json
+
 from evaluation.case_loader import BenchmarkCase
 from src.preprocessing.log_preprocessor import preprocess_log
+from src.schemas.triage import TriageResult
 
 
 ALLOWED_SUFFIXES = {
@@ -31,17 +34,28 @@ def build_baseline_input(
     case: BenchmarkCase,
     *,
     preprocess_failure_log: bool = False,
+    triage: TriageResult | None = None,
 ) -> str:
     failing_log = case.log_path.read_text(encoding="utf-8", errors="replace")
-
     if preprocess_failure_log:
         failing_log = preprocess_log(failing_log)
 
     repo_context = build_repository_context(case)
 
-    return (
-        "===== FAILING CI LOG =====\n"
-        f"{failing_log}\n"
-        "===== REPOSITORY =====\n"
-        f"{repo_context}"
-    )
+    parts = [
+        "===== FAILING CI LOG =====",
+        failing_log,
+    ]
+
+    if triage is not None:
+        parts.extend([
+            "===== TRIAGE REPORT =====",
+            json.dumps(triage.model_dump(), indent=2),
+        ])
+
+    parts.extend([
+        "===== REPOSITORY =====",
+        repo_context,
+    ])
+
+    return "\n".join(parts)

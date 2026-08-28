@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, ValidationError
 
 from baseline.context_builder import build_baseline_input
 from evaluation.case_loader import BenchmarkCase
+from src.schemas.triage import TriageResult
 
 
 PROMPT_PATH = Path(__file__).with_name("prompt.txt")
@@ -40,13 +41,11 @@ def propose_patch(
     case: BenchmarkCase,
     *,
     preprocess_failure_log: bool = False,
+    triage: TriageResult | None = None,
 ) -> tuple[BaselinePatchProposal, dict]:
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        raise RuntimeError(
-            "OPENAI_API_KEY is not set. Set it in the current PowerShell session "
-            "before running the experiment."
-        )
+        raise RuntimeError("OPENAI_API_KEY is not set.")
 
     model = os.environ.get("MODEL_NAME", "gpt-5.6-luna")
     effort = os.environ.get("MODEL_REASONING_EFFORT", "low")
@@ -56,6 +55,7 @@ def propose_patch(
     user_input = build_baseline_input(
         case,
         preprocess_failure_log=preprocess_failure_log,
+        triage=triage,
     )
 
     response = client.responses.create(
@@ -66,19 +66,18 @@ def propose_patch(
     )
 
     try:
-        raw = _extract_json(response.output_text)
-        proposal = BaselinePatchProposal.model_validate(raw)
+        proposal = BaselinePatchProposal.model_validate(
+            _extract_json(response.output_text)
+        )
     except (json.JSONDecodeError, ValidationError) as exc:
         raise RuntimeError(
-            f"Model returned invalid patch JSON: {exc}\n"
+            f"Repair model returned invalid patch JSON: {exc}\n"
             f"Raw output:\n{response.output_text}"
         ) from exc
 
     usage = getattr(response, "usage", None)
-    usage_info = {
+    return proposal, {
         "model": model,
         "input_tokens": int(getattr(usage, "input_tokens", 0) or 0),
         "output_tokens": int(getattr(usage, "output_tokens", 0) or 0),
     }
-
-    return proposal, usage_info
