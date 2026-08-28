@@ -1,0 +1,13 @@
+{
+  "case_id": "case_002",
+  "title": "User lookup does not handle None",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "none_handling",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_users.py::test_missing_user_returns_none",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "synthetic starter benchmark"
+}

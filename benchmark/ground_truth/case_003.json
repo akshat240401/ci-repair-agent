@@ -1,0 +1,6 @@
+{
+  "case_id": "case_003",
+  "root_cause": "settings.py removed the TOKEN_TTL fallback, causing auth.py to call int(None)",
+  "root_cause_file": "src/settings.py",
+  "symptom_file": "src/auth.py"
+}

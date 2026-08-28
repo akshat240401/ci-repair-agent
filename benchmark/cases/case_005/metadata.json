@@ -1,0 +1,13 @@
+{
+  "case_id": "case_005",
+  "title": "Discount calculation mutates caller state",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "state_mutation",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_cart.py::test_total_does_not_mutate_cart",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "synthetic starter benchmark"
+}

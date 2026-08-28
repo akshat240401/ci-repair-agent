@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ci-repair-agent"
+version = "0.1.0"
+description = "Agentic CI Failure Investigator & Verified Repair System"
+requires-python = ">=3.11,<3.12"
+dependencies = ["pydantic==2.10.6"]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.5"]
+
+[tool.setuptools]
+packages = ["src", "src.agents", "src.preprocessing", "src.tools", "src.patching", "src.verification", "src.tracing", "src.state", "src.schemas", "evaluation"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

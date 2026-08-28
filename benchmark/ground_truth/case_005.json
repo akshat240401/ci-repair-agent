@@ -1,0 +1,5 @@
+{
+  "case_id": "case_005",
+  "root_cause": "discounted_total sorts caller-owned input in place",
+  "root_cause_file": "src/cart.py"
+}

@@ -1,0 +1,13 @@
+{
+  "case_id": "case_001",
+  "title": "Pagination last-page off-by-one",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "off_by_one",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_pagination.py::test_exact_multiple_has_no_extra_page",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "synthetic starter benchmark"
+}

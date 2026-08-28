@@ -1,0 +1,24 @@
+$ python -m pytest -q tests/test_users.py::test_missing_user_returns_none
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________________ test_missing_user_returns_none ________________________
+
+>   def test_missing_user_returns_none(): assert get_user_name(999) is None
+
+tests\test_users.py:4: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+user_id = 999
+
+    def get_user_name(user_id: int) -> str | None:
+        user=USERS.get(user_id)
+>       return user["name"]
+E       TypeError: 'NoneType' object is not subscriptable
+
+src\users.py:4: TypeError
+=========================== short test summary info ===========================
+FAILED tests\test_users.py::test_missing_user_returns_none - TypeError: 'None...
+1 failed in 0.10s
+
+[exit_code=1]

@@ -1,0 +1,13 @@
+{
+  "case_id": "case_004",
+  "title": "Profile serializer uses wrong mapping key",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "mapping_key",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_profile.py::test_profile_uses_display_name",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "synthetic starter benchmark"
+}

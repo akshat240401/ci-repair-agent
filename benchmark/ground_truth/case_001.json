@@ -1,0 +1,5 @@
+{
+  "case_id": "case_001",
+  "root_cause": "unconditional +1 adds an extra page for exact multiples",
+  "root_cause_file": "src/pagination.py"
+}

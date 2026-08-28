@@ -1,0 +1,13 @@
+{
+  "case_id": "case_003",
+  "title": "Upstream token TTL fallback removed",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "upstream_configuration",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_auth.py::test_default_token_ttl",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "synthetic starter benchmark"
+}
