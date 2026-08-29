@@ -15,6 +15,8 @@ from src.state.hashing import repo_state_hash
 from src.state.failure_signature import failure_signature
 from src.state.loop_detector import LoopDetector
 from src.verification.verifier import verify_patch
+from src.orchestration.no_code_policy import evaluate_no_code_patch
+from src.orchestration.no_code_result import build_no_code_result
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESULTS_DIR = PROJECT_ROOT / "results" / "experiments" / "repair_loop"
@@ -41,6 +43,28 @@ def feedback(v):
 def run_case(case):
     started = time.perf_counter()
     triage, tu = run_triage(case)
+    no_code = evaluate_no_code_patch(triage)
+    if no_code is not None:
+        total_in = tu["input_tokens"]
+        total_out = tu["output_tokens"]
+        result = build_no_code_result(
+            case_id=case.case_id,
+            decision=no_code,
+            started=started,
+            input_tokens=total_in,
+            output_tokens=total_out,
+            estimated_cost_usd=estimate_cost(total_in, total_out),
+        )
+        diagnostics = {
+            "case_id": case.case_id,
+            "attempts": [],
+            "stopped_reason": "NO_CODE_PATCH_REQUIRED",
+            "no_code_patch": {
+                "reason": no_code.reason,
+                "triage": triage.model_dump(),
+            },
+        }
+        return result, diagnostics
     investigation, iu, trajectory = run_investigation(case, triage)
     plan, pu = propose_patch_plan(case, triage, investigation)
 
@@ -147,6 +171,7 @@ def run_case(case):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--case", default=None)
+    parser.add_argument("--output-dir", default=None)
     args = parser.parse_args()
     cases = load_cases()
     if args.case:
@@ -154,7 +179,10 @@ def main():
         if not cases:
             raise SystemExit(f"Unknown case: {args.case}")
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir = Path(args.output_dir) if args.output_dir else RESULTS_DIR
+    if not output_dir.is_absolute():
+        output_dir = PROJECT_ROOT / output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
     results, diagnostics = [], []
 
     for case in cases:
@@ -163,10 +191,10 @@ def main():
         results.append(r); diagnostics.append(d)
         print(f"  -> {r.final_status} | attempts={r.attempts} | stop={d['stopped_reason']}")
 
-    (RESULTS_DIR / "results.json").write_text(
+    (output_dir / "results.json").write_text(
         json.dumps([r.model_dump() for r in results], indent=2), encoding="utf-8"
     )
-    (RESULTS_DIR / "diagnostics.json").write_text(
+    (output_dir / "diagnostics.json").write_text(
         json.dumps(diagnostics, indent=2), encoding="utf-8"
     )
 
@@ -180,7 +208,7 @@ def main():
         "unresolved_cases": [r.case_id for r in results if r.final_status != "VERIFIED_REPAIR"],
         "estimated_total_cost_usd": sum(r.estimated_cost_usd for r in results),
     }
-    (RESULTS_DIR / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (output_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
     print("=" * 60)
     print("VERIFIED REPAIR LOOP EXPERIMENT")

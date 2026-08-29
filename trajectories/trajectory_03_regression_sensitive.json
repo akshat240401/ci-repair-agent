@@ -103,18 +103,18 @@
     "attempts": [
       {
         "attempt": 1,
-        "patch_hash": "8d00a234f681e4afdb8f033aee7c46c9d395e368c6fc3236915441690fdd6622",
+        "patch_hash": "4af963eb1e56972a19c01c23ac2f627d469a1539ebbcf023fab3cca94147fa43",
         "patch_plan": {
-          "root_cause": "parse_line removes text after the first # before processing quotes, so hashes inside quoted values are incorrectly treated as comment delimiters.",
+          "root_cause": "parse_line splits at the first '#' without tracking whether it is inside a quoted value, removing quoted URL fragments.",
           "edits": [
             {
               "file": "src/config_parser.py",
               "search": "def parse_line(line):\n    clean = line.split(\"#\", 1)[0].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
-              "replace": "def parse_line(line):\n    in_quotes = False\n    comment_start = len(line)\n    for index, character in enumerate(line):\n        if character == '\"':\n            in_quotes = not in_quotes\n        elif character == '#' and not in_quotes:\n            comment_start = index\n            break\n    clean = line[:comment_start].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
-              "reason": "Only treat # as a comment delimiter when it appears outside quoted text, preserving hashes in quoted values while still removing trailing and full-line comments."
+              "replace": "def parse_line(line):\n    in_quotes = False\n    comment_start = len(line)\n    for index, character in enumerate(line):\n        if character == '\"':\n            in_quotes = not in_quotes\n        elif character == \"#\" and not in_quotes:\n            comment_start = index\n            break\n    clean = line[:comment_start].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
+              "reason": "Only treat '#' as a comment delimiter when it occurs outside quoted values, preserving fragments such as '#done' while retaining trailing-comment behavior."
             }
           ],
-          "confidence": 0.99
+          "confidence": 1.0
         },
         "verification": {
           "syntax_passed": true,
@@ -140,10 +140,10 @@
     "targeted_test_passed": true,
     "full_suite_passed": true,
     "attempts": 1,
-    "latency_seconds": 18.824960000114515,
-    "input_tokens": 4692,
-    "output_tokens": 1013,
-    "estimated_cost_usd": 0.002154,
+    "latency_seconds": 36.58594530005939,
+    "input_tokens": 6118,
+    "output_tokens": 1305,
+    "estimated_cost_usd": 0.0027895999999999997,
     "files_modified": 1,
     "lines_added": 0,
     "lines_removed": 0

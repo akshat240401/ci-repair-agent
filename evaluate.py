@@ -76,7 +76,11 @@ def deterministic_evaluation() -> None:
 
 def api_smoke(case_id: str) -> None:
     require_api_key()
-    run_module("evaluation.repair_loop_experiment", "--case", case_id)
+    run_module(
+        "evaluation.repair_loop_experiment",
+        "--case", case_id,
+        "--output-dir", "results/smoke/repair_loop",
+    )
 
 
 def full_agent_evaluation() -> None:

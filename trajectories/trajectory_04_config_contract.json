@@ -121,15 +121,15 @@
     "attempts": [
       {
         "attempt": 1,
-        "patch_hash": "66f3413ddad6e49b076cab5d2129eadab7641c548dc75f20a4dc4efb8a3d4ec5",
+        "patch_hash": "cbba6be58c33aa693e5793d622638d392f5dc967bc64d62f9fa298fe9f102c40",
         "patch_plan": {
-          "root_cause": "An unset TOKEN_ISSUER returns None instead of DEFAULT_ISSUER, and the default issuer is not included in the validator's allowed set.",
+          "root_cause": "A missing TOKEN_ISSUER returns None instead of the configured default, and the default issuer is not included in the validator allowlist.",
           "edits": [
             {
               "file": "src/settings.py",
               "search": "    return os.getenv(\"TOKEN_ISSUER\")",
               "replace": "    return os.getenv(\"TOKEN_ISSUER\", DEFAULT_ISSUER)",
-              "reason": "Use the declared default issuer when TOKEN_ISSUER is unset."
+              "reason": "Use DEFAULT_ISSUER when TOKEN_ISSUER is absent."
             },
             {
               "file": "src/validator.py",
@@ -146,9 +146,9 @@
           "full_suite_passed": true,
           "syntax_stdout": "",
           "syntax_stderr": "",
-          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
           "targeted_stderr": "",
-          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
           "full_suite_stderr": ""
         }
       }
@@ -164,10 +164,10 @@
     "targeted_test_passed": true,
     "full_suite_passed": true,
     "attempts": 1,
-    "latency_seconds": 33.76386329997331,
-    "input_tokens": 7250,
-    "output_tokens": 1258,
-    "estimated_cost_usd": 0.0029596,
+    "latency_seconds": 30.764727900037542,
+    "input_tokens": 7281,
+    "output_tokens": 1227,
+    "estimated_cost_usd": 0.0029286,
     "files_modified": 2,
     "lines_added": 0,
     "lines_removed": 0

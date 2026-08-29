@@ -44,8 +44,8 @@
     "verified_repairs": 20,
     "mean_attempts": 1.0,
     "retry_cases": [],
-    "input_tokens": 104531,
-    "output_tokens": 19985,
-    "estimated_cost_usd": 0.044888199999999996
+    "input_tokens": 106836,
+    "output_tokens": 22816,
+    "estimated_cost_usd": 0.048746399999999995
   }
 }

@@ -96,7 +96,7 @@ try {
             & $python -m evaluation.repair_loop_experiment --case case_010
         }
 
-        $summaryPath = Join-Path $WorkDir "results\experiments\repair_loop\summary.json"
+        $summaryPath = Join-Path $WorkDir "results\smoke\repair_loop\summary.json"
         if (-not (Test-Path $summaryPath)) {
             throw "API smoke summary was not created: $summaryPath"
         }
