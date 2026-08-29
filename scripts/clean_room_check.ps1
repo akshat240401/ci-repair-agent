@@ -93,7 +93,7 @@ try {
 
         Write-Host "Running one API-backed advanced repair smoke case"
         Invoke-Checked -Label "API smoke runner" -Command {
-            & $python -m evaluation.repair_loop_experiment --case case_010
+            & $python -m evaluation.repair_loop_experiment --case case_010 "--output-dir" "results/smoke/repair_loop"
         }
 
         $summaryPath = Join-Path $WorkDir "results\smoke\repair_loop\summary.json"
