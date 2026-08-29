@@ -1,0 +1,51 @@
+{
+  "note": "Costs are approximate evaluator estimates, not billing statements. Baseline cost comparison includes only the repeated 20-case quality-gate runs used to compute the development baseline mean VRR. Final frozen submission numbers must be regenerated from the tagged main commit.",
+  "baseline": {
+    "benchmark_cases": 20,
+    "mean_vrr": 0.8833333333333333,
+    "min_vrr": 0.85,
+    "max_vrr": 0.9,
+    "costed_runs": [
+      {
+        "file": "results\\quality_gate\\baseline\\run_01\\results.json",
+        "cases": 20,
+        "verified_repairs": 17,
+        "vrr": 0.85,
+        "input_tokens": 12664,
+        "output_tokens": 2771,
+        "estimated_cost_usd": 0.0058579999999999995
+      },
+      {
+        "file": "results\\quality_gate\\baseline\\run_02\\results.json",
+        "cases": 20,
+        "verified_repairs": 18,
+        "vrr": 0.9,
+        "input_tokens": 12664,
+        "output_tokens": 3269,
+        "estimated_cost_usd": 0.006455600000000001
+      },
+      {
+        "file": "results\\quality_gate\\baseline\\run_03\\results.json",
+        "cases": 20,
+        "verified_repairs": 18,
+        "vrr": 0.9,
+        "input_tokens": 12664,
+        "output_tokens": 4281,
+        "estimated_cost_usd": 0.00767
+      }
+    ],
+    "mean_cost_usd": 0.0066612,
+    "mean_input_tokens": 12664.0,
+    "mean_output_tokens": 3440.3333333333335
+  },
+  "final_current_dev_run": {
+    "vrr": 1.0,
+    "cases": 20,
+    "verified_repairs": 20,
+    "mean_attempts": 1.0,
+    "retry_cases": [],
+    "input_tokens": 104531,
+    "output_tokens": 19985,
+    "estimated_cost_usd": 0.044888199999999996
+  }
+}

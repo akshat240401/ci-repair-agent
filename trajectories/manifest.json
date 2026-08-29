@@ -1,0 +1,36 @@
+{
+  "trajectories": [
+    {
+      "file": "trajectory_01_simple_repair.json",
+      "case_id": "case_001",
+      "source": "recorded benchmark diagnostics"
+    },
+    {
+      "file": "trajectory_02_multi_file_repair.json",
+      "case_id": "case_013",
+      "source": "recorded benchmark diagnostics"
+    },
+    {
+      "file": "trajectory_03_regression_sensitive.json",
+      "case_id": "case_010",
+      "source": "recorded benchmark diagnostics"
+    },
+    {
+      "file": "trajectory_04_config_contract.json",
+      "case_id": "case_020",
+      "source": "recorded benchmark diagnostics"
+    },
+    {
+      "file": "trajectory_05_retry_recovery_proof.json",
+      "source": "tests/test_repair_loop_retry.py"
+    },
+    {
+      "file": "trajectory_06_circuit_breaker_proof.json",
+      "source": "tests/test_repair_loop_circuit_breaker.py and tests/test_loop_detector.py"
+    },
+    {
+      "file": "trajectory_07_config_only_no_code_bypass_proof.json",
+      "source": "tests/test_no_code_patch_policy.py"
+    }
+  ]
+}

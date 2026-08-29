@@ -1,0 +1,13 @@
+{
+  "artifact_type": "deterministic_behavioral_proof",
+  "source": "tests/test_repair_loop_circuit_breaker.py and tests/test_loop_detector.py",
+  "profile": "unresolved/circuit-breaker safety",
+  "demonstrated_guards": [
+    "duplicate patch detection",
+    "repeated repository state detection",
+    "no-progress repeated failure detection",
+    "A -> B -> A oscillation detection",
+    "maximum three repair attempts"
+  ],
+  "note": "Deterministic safety proof; not presented as a live LLM failure."
+}

@@ -1,0 +1,172 @@
+{
+  "artifact_type": "representative_agent_trajectory",
+  "source": "recorded benchmark diagnostics",
+  "case_id": "case_013",
+  "agents": [
+    "triage",
+    "investigation",
+    "patch"
+  ],
+  "investigation": {
+    "case_id": "case_013",
+    "triage": {
+      "failure_type": "TEST_FAILURE",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected {'id': 7, 'display_name': 'Ada'} but received {'id': 7, 'username': 'Ada'}",
+        "pytest reported an AssertionError in tests/test_api_contract.py::test_payload_uses_display_name_contract"
+      ],
+      "target_files": [
+        "src/api.py",
+        "src/producer.py",
+        "tests/test_api_contract.py"
+      ],
+      "suspected_root_cause": "The payload rendering implementation uses the key 'username' while the API contract requires 'display_name'.",
+      "next_step": "Inspect the render_user implementation and its callers in src/api.py and src/producer.py, then compare them with the contract asserted in tests/test_api_contract.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "src/producer.py::build_user_payload constructs the user payload with the key \"username\", but the API contract and failing test require \"display_name\". src/api.py delegates payload construction to this helper, while greeting already supports the display_name contract.",
+      "evidence": [
+        "src/producer.py line 2 returns {\"id\": user[\"id\"], \"username\": user[\"name\"]}.",
+        "tests/test_api_contract.py lines 5-7 require payload {\"id\": 7, \"display_name\": \"Ada\"} and message \"Hello Ada\".",
+        "tests/test_api_contract.py line 10 confirms greeting accepts {\"display_name\": \"Grace\"}.",
+        "src/api.py delegates directly to build_user_payload and does not independently construct the payload."
+      ],
+      "target_files": [
+        "src/producer.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/consumer.py",
+      "src/producer.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": false,
+    "proposal": {
+      "root_cause": "The payload builder uses the outdated key \"username\" instead of the API contract's required \"display_name\" key.",
+      "file": "src/producer.py",
+      "search": "return {\"id\": user[\"id\"], \"username\": user[\"name\"]}",
+      "replace": "return {\"id\": user[\"id\"], \"display_name\": user[\"name\"]}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/api.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the payload rendering implementation implicated by the failing contract test.",
+        "output": "0001: from src.producer import build_user_payload\n0002: from src.consumer import greeting\n0003: def render_user(user):\n0004:     payload = build_user_payload(user)\n0005:     return payload, greeting(payload)"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/producer.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the helper that constructs the failing payload key and determine whether the defect is localized there.",
+        "output": "0001: def build_user_payload(user):\n0002:     return {\"id\": user[\"id\"], \"username\": user[\"name\"]}"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_api_contract.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Confirm the complete expected payload and greeting contract before identifying the smallest safe change.",
+        "output": "0001: from src.api import render_user\n0002: from src.consumer import greeting\n0003: \n0004: def test_payload_uses_display_name_contract():\n0005:     payload, message = render_user({\"id\": 7, \"name\": \"Ada\"})\n0006:     assert payload == {\"id\": 7, \"display_name\": \"Ada\"}\n0007:     assert message == \"Hello Ada\"\n0008: \n0009: def test_consumer_accepts_new_contract_directly():\n0010:     assert greeting({\"display_name\": \"Grace\"}) == \"Hello Grace\""
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "src/producer.py::build_user_payload constructs the user payload with the key \"username\", but the API contract and failing test require \"display_name\". src/api.py delegates payload construction to this helper, while greeting already supports the display_name contract.",
+          "evidence": [
+            "src/producer.py line 2 returns {\"id\": user[\"id\"], \"username\": user[\"name\"]}.",
+            "tests/test_api_contract.py lines 5-7 require payload {\"id\": 7, \"display_name\": \"Ada\"} and message \"Hello Ada\".",
+            "tests/test_api_contract.py line 10 confirms greeting accepts {\"display_name\": \"Grace\"}.",
+            "src/api.py delegates directly to build_user_payload and does not independently construct the payload."
+          ],
+          "target_files": [
+            "src/producer.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  "repair_loop": {
+    "case_id": "case_013",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "141fb9c0dc7b31534be254c6d6a208bcc6a3eb86af3c57b0242d88ca53104d88",
+        "patch_plan": {
+          "root_cause": "The API contract uses `display_name`, but payload construction and greeting still reference `username`.",
+          "edits": [
+            {
+              "file": "src/producer.py",
+              "search": "    return {\"id\": user[\"id\"], \"username\": user[\"name\"]}",
+              "replace": "    return {\"id\": user[\"id\"], \"display_name\": user[\"name\"]}",
+              "reason": "Construct payloads using the required `display_name` field."
+            },
+            {
+              "file": "src/consumer.py",
+              "search": "    return f\"Hello {payload['username']}\"",
+              "replace": "    return f\"Hello {payload['display_name']}\"",
+              "reason": "Make greeting consume the updated display-name contract."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  "result": {
+    "case_id": "case_013",
+    "mode": "advanced",
+    "final_status": "VERIFIED_REPAIR",
+    "patch_applied": true,
+    "syntax_passed": true,
+    "targeted_test_passed": true,
+    "full_suite_passed": true,
+    "attempts": 1,
+    "latency_seconds": 22.19704949995503,
+    "input_tokens": 5264,
+    "output_tokens": 967,
+    "estimated_cost_usd": 0.0022132000000000002,
+    "files_modified": 2,
+    "lines_added": 0,
+    "lines_removed": 0
+  }
+}

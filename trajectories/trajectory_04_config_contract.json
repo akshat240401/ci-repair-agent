@@ -1,0 +1,175 @@
+{
+  "artifact_type": "representative_agent_trajectory",
+  "source": "recorded benchmark diagnostics",
+  "case_id": "case_020",
+  "agents": [
+    "triage",
+    "investigation",
+    "patch"
+  ],
+  "investigation": {
+    "case_id": "case_020",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "test_missing_issuer_uses_default expects configured_issuer() to return \"ci-repair\" when TOKEN_ISSUER is absent",
+        "src/auth.py:4 calls validate_issuer(token_issuer())",
+        "validate_issuer receives value=None and raises ValueError(\"untrusted issuer\")"
+      ],
+      "target_files": [
+        "src/auth.py",
+        "src/settings.py",
+        "src/validator.py"
+      ],
+      "suspected_root_cause": "Missing TOKEN_ISSUER is converted to None and passed directly to validation instead of resolving the expected default issuer \"ci-repair\".",
+      "next_step": "Inspect token_issuer and configured_issuer in src/auth.py and the default configuration in src/settings.py, then verify whether validation should receive the resolved default."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "When TOKEN_ISSUER is absent, token_issuer() returns None because it calls os.getenv without a default. configured_issuer() passes that None directly to validate_issuer(), which rejects it. The configured DEFAULT_ISSUER constant is therefore unused, and it is also not currently included among ALLOWED_ISSUERS.",
+      "evidence": [
+        "src/settings.py defines DEFAULT_ISSUER = \"ci-repair\" but token_issuer() returns os.getenv(\"TOKEN_ISSUER\") with no fallback, yielding None when the variable is absent.",
+        "src/auth.py passes token_issuer() directly to validate_issuer().",
+        "src/validator.py rejects any value not in {\"internal\", \"partner\"}, so the expected default \"ci-repair\" would also fail validation unless the validation contract is updated.",
+        "The failing test expects configured_issuer() to return \"ci-repair\" when TOKEN_ISSUER is unset."
+      ],
+      "target_files": [
+        "src/settings.py",
+        "src/validator.py"
+      ],
+      "recommended_change_scope": "multi_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/settings.py",
+      "src/validator.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "The default issuer is not used when TOKEN_ISSUER is missing, and validation does not recognize the expected default.",
+      "file": "src/validator.py",
+      "search": "ALLOWED_ISSUERS = {\"internal\", \"partner\"}\ndef validate_issuer(value):\n    if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "replace": "ALLOWED_ISSUERS = {\"internal\", \"partner\", \"ci-repair\"}\ndef validate_issuer(value):\n    if value is None:\n        return \"ci-repair\"\n    if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/auth.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect issuer resolution and validation flow.",
+        "output": "0001: from src.settings import token_issuer\n0002: from src.validator import validate_issuer\n0003: def configured_issuer():\n0004:     return validate_issuer(token_issuer())"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/settings.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect the configured default and behavior when TOKEN_ISSUER is absent.",
+        "output": "0001: import os\n0002: DEFAULT_ISSUER = \"ci-repair\"\n0003: def token_issuer():\n0004:     return os.getenv(\"TOKEN_ISSUER\")"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/validator.py",
+          "target_line": 1,
+          "window": 30
+        },
+        "reason": "Confirm the validator contract and whether it already permits or normalizes missing values.",
+        "output": "0001: ALLOWED_ISSUERS = {\"internal\", \"partner\"}\n0002: def validate_issuer(value):\n0003:     if value not in ALLOWED_ISSUERS:\n0004:         raise ValueError(\"untrusted issuer\")\n0005:     return value"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "When TOKEN_ISSUER is absent, token_issuer() returns None because it calls os.getenv without a default. configured_issuer() passes that None directly to validate_issuer(), which rejects it. The configured DEFAULT_ISSUER constant is therefore unused, and it is also not currently included among ALLOWED_ISSUERS.",
+          "evidence": [
+            "src/settings.py defines DEFAULT_ISSUER = \"ci-repair\" but token_issuer() returns os.getenv(\"TOKEN_ISSUER\") with no fallback, yielding None when the variable is absent.",
+            "src/auth.py passes token_issuer() directly to validate_issuer().",
+            "src/validator.py rejects any value not in {\"internal\", \"partner\"}, so the expected default \"ci-repair\" would also fail validation unless the validation contract is updated.",
+            "The failing test expects configured_issuer() to return \"ci-repair\" when TOKEN_ISSUER is unset."
+          ],
+          "target_files": [
+            "src/settings.py",
+            "src/validator.py"
+          ],
+          "recommended_change_scope": "multi_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  "repair_loop": {
+    "case_id": "case_020",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "66f3413ddad6e49b076cab5d2129eadab7641c548dc75f20a4dc4efb8a3d4ec5",
+        "patch_plan": {
+          "root_cause": "An unset TOKEN_ISSUER returns None instead of DEFAULT_ISSUER, and the default issuer is not included in the validator's allowed set.",
+          "edits": [
+            {
+              "file": "src/settings.py",
+              "search": "    return os.getenv(\"TOKEN_ISSUER\")",
+              "replace": "    return os.getenv(\"TOKEN_ISSUER\", DEFAULT_ISSUER)",
+              "reason": "Use the declared default issuer when TOKEN_ISSUER is unset."
+            },
+            {
+              "file": "src/validator.py",
+              "search": "ALLOWED_ISSUERS = {\"internal\", \"partner\"}",
+              "replace": "ALLOWED_ISSUERS = {\"internal\", \"partner\", \"ci-repair\"}",
+              "reason": "Allow the configured default issuer to pass validation."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  "result": {
+    "case_id": "case_020",
+    "mode": "advanced",
+    "final_status": "VERIFIED_REPAIR",
+    "patch_applied": true,
+    "syntax_passed": true,
+    "targeted_test_passed": true,
+    "full_suite_passed": true,
+    "attempts": 1,
+    "latency_seconds": 33.76386329997331,
+    "input_tokens": 7250,
+    "output_tokens": 1258,
+    "estimated_cost_usd": 0.0029596,
+    "files_modified": 2,
+    "lines_added": 0,
+    "lines_removed": 0
+  }
+}

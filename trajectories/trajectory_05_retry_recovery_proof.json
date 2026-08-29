@@ -1,0 +1,16 @@
+{
+  "artifact_type": "deterministic_behavioral_proof",
+  "source": "tests/test_repair_loop_retry.py",
+  "profile": "forced retry recovery",
+  "expected_sequence": [
+    "attempt_1_patch_applies",
+    "targeted_test_fails",
+    "verification_feedback_generated",
+    "retry_patch_requested",
+    "attempt_2_patch_applies",
+    "targeted_test_passes",
+    "full_suite_passes",
+    "VERIFIED_REPAIR"
+  ],
+  "note": "Deterministic proof; current live 20-case run repaired all cases on attempt 1."
+}
