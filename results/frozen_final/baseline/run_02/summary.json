@@ -1,0 +1,8 @@
+{
+  "cases": 20,
+  "verified_repairs": 18,
+  "verified_repair_rate": 0.9,
+  "total_input_tokens": 12666,
+  "total_output_tokens": 4259,
+  "estimated_total_cost_usd": 0.0076440000000000015
+}

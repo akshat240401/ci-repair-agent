@@ -2,7 +2,7 @@
 
 This document records the experiments that shaped the final CI repair workflow.
 
-Every meaningful iteration is kept here, including changes that were later rejected. Development metrics below will be replaced or reconfirmed by the final frozen/tagged evaluation before submission.
+Every meaningful iteration is kept here, including changes that were later rejected. Development metrics are retained as historical evidence; the authoritative submission metrics are reported separately in the frozen final evaluation section below.
 
 | Stage | What we tried and why | Evidence | Decision / learning |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Every meaningful iteration is kept here, including changes that were later rejec
 - Current advanced development run: **100.0%**
 - Development delta: **+11.7 percentage points**
 
-These numbers are not yet labeled as the final frozen submission result.
+These values are retained as **development history only** and are not the final submission headline.
 
 ## What contributed most?
 
@@ -59,3 +59,22 @@ That is why the final workflow uses multi-file transactional edits and requires 
 Use the model where ambiguity exists: interpreting symptoms, choosing evidence, identifying the contract, and proposing a repair. Use deterministic software where correctness can be checked: applying edits, running tests, hashing state, enforcing limits, and declaring success.
 
 The strongest improvement came from redesigning the boundary between those two responsibilities.
+
+
+## Frozen final evaluation
+
+The final repeated evaluation was run from `v1.0.0-hackathon` at commit `01231fd92db105b1fe8be18a4e4340fcd3dc5b5a` using the same 20 benchmark cases for both systems.
+
+| Metric | Baseline | Advanced |
+|---|---:|---:|
+| Run 1 VRR | 80.0% | 100.0% |
+| Run 2 VRR | 90.0% | 100.0% |
+| Run 3 VRR | 90.0% | 100.0% |
+| **Mean VRR** | **86.7%** | **100.0%** |
+| VRR range | 80.0%-90.0% | 100.0%-100.0% |
+| Population stddev | 4.71 pp | 0.00 pp |
+| Mean estimated API cost/run | $0.007766 | $0.044514 |
+
+**Final measured improvement: +13.3 percentage points.**
+
+All six run artifacts and the aggregate report are stored under `results/frozen_final/`. Cost values are evaluator estimates rather than billing statements.

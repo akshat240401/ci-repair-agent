@@ -2,7 +2,7 @@
 
 An agentic workflow for diagnosing failed Python CI runs, proposing minimal repairs, and proving those repairs with deterministic verification.
 
-> **Current development result:** repeated baseline mean VRR **88.3%** vs current advanced development run **100.0%** on the same 20-case synthetic benchmark (**+11.7 percentage points**). Final submission numbers will be regenerated from the frozen/tagged `main` commit.
+> **Frozen final result:** baseline mean VRR **86.7%** vs advanced mean VRR **100.0%** on the same 20-case synthetic benchmark across three repeated runs (**+13.3 percentage points**). Evaluated from `v1.0.0-hackathon` at commit `01231fd92db105b1fe8be18a4e4340fcd3dc5b5a`.
 
 ## Problem & user value
 
@@ -57,17 +57,27 @@ A repair is not counted merely because an LLM says it is correct.
 
 ## Current measured development result
 
+> The development numbers below are retained for auditability. The authoritative frozen submission result follows immediately afterward.
+
+## Frozen final evaluation
+
 | Metric | Simple baseline | Advanced system |
 |---|---:|---:|
 | Benchmark cases | 20 | 20 |
-| Verified Repair Rate | 88.3% mean over 3 runs | 100.0% current development run |
-| Baseline range | 85.0%-90.0% | - |
-| Absolute improvement | - | +11.7 pp |
-| Approx. API cost | $0.006661 mean/run | $0.048746 current run |
+| Repeated runs | 3 | 3 |
+| Verified Repair Rate | **86.7% mean** | **100.0% mean** |
+| VRR range | 80.0%-90.0% | 100.0%-100.0% |
+| VRR population stddev | 4.71 pp | 0.00 pp |
+| Approx. API cost | $0.007766 mean/run | $0.044514 mean/run |
+| Absolute improvement | - | **+13.3 pp** |
 
-The baseline and advanced system use the same benchmark cases. Cost figures are evaluator estimates rather than billing statements.
+The baseline and advanced system use the same 20 benchmark cases and were each rerun three times from the frozen source tag `v1.0.0-hackathon` (`01231fd92db105b1fe8be18a4e4340fcd3dc5b5a`). Cost figures are evaluator estimates rather than billing statements.
 
-The advanced result above is a **development result**, not the final frozen submission number.
+Canonical frozen artifacts: `results/frozen_final/FROZEN_SUMMARY.md` and `results/frozen_final/frozen_summary.json`.
+
+### Development evidence retained for auditability
+
+Before the final freeze, the repeated development baseline averaged **88.3% VRR** and the current development advanced run achieved **100.0%**, a **+11.7 pp** development delta. Those values remain in the changelog as development history and are **not** the final submission headline.
 
 ## Why agents?
 
@@ -326,4 +336,4 @@ A separate clean checkout and clean Python 3.11 virtual environment has successf
 - trajectory export;
 - an API-backed verified-repair smoke case.
 
-The final benchmark will be rerun only after the finished project is merged to `main` and the exact submission commit is tagged.
+The final benchmark was rerun from the frozen/tagged `main` commit `01231fd92db105b1fe8be18a4e4340fcd3dc5b5a` (`v1.0.0-hackathon`). The six repeated-run artifacts are preserved under `results/frozen_final/`.

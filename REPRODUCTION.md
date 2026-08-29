@@ -16,15 +16,22 @@ Costs shown by the evaluator are approximate API estimates, not billing statemen
 
 ## 1. Clone
 
-During development:
+For final judging, reproduce the exact frozen source:
 
 ```powershell
 git clone https://github.com/akshat240401/ci-repair-agent.git
 cd ci-repair-agent
-git checkout feat/evaluation-harness
+git checkout v1.0.0-hackathon
+git rev-parse HEAD
 ```
 
-For final judging, use the frozen release tag from tagged main instead of the feature branch.
+Expected commit:
+
+```text
+01231fd92db105b1fe8be18a4e4340fcd3dc5b5a
+```
+
+Development history remains available in Git, but final reported metrics are tied to this frozen source tag.
 
 ## 2. Create a clean Python environment
 
@@ -133,7 +140,7 @@ Mean VRR: 88.3%
 Range:    85.0%-90.0%
 ```
 
-Because model output is stochastic, an individual rerun may not produce identical per-run values. The final submission will freeze a repeated evaluation from the exact tagged commit.
+Because model output is stochastic, an individual rerun may not produce identical per-run values. The submission therefore preserves all six repeated-run artifacts produced from the exact frozen tag.
 
 ## 6. Reproduce one advanced repair
 
@@ -179,7 +186,7 @@ Current development run:
 100.0% VRR
 ```
 
-This is not yet the frozen submission result.
+This single development run is retained for history; the authoritative frozen result is the three-run aggregate under `results/frozen_final/`.
 
 ## 8. Generate cost/token comparison
 
@@ -279,20 +286,63 @@ It must never be supplied to agent prompts or bounded repository tools.
 
 Development results are deliberately labeled as development results.
 
-Before submission:
+The final freeze has been completed:
 
-1. finish implementation and documentation;
-2. pass the full repository audit;
-3. merge the feature PR into `main`;
+1. implementation and documentation were completed;
+2. the full repository audit passed;
+3. the feature PR was merged into `main`;
 4. tag the exact submission commit;
 5. perform a fresh checkout of that tag;
 6. create a fresh Python 3.11 environment;
 7. rerun the repeated baseline/final evaluation on the same 20 cases;
 8. freeze the output artifacts;
-9. update README headline numbers only from those frozen artifacts;
-10. do not modify code after the tagged evaluation without invalidating and rerunning the results.
+9. README/changelog/reproduction headline numbers were updated only from those frozen artifacts;
+10. runtime code was not modified after the tagged evaluation.
 
-This ensures the submitted code and reported metrics refer to the same repository state.
+Final submission metrics were generated from tagged `main`.
+
+Frozen source: `v1.0.0-hackathon` at `01231fd92db105b1fe8be18a4e4340fcd3dc5b5a`.
+
+Canonical final results:
+
+```text
+Baseline VRR runs: 80.0%, 90.0%, 90.0%
+Baseline mean VRR: 86.7%
+Advanced VRR runs: 100.0%, 100.0%, 100.0%
+Advanced mean VRR: 100.0%
+Absolute improvement: +13.3 percentage points
+Baseline mean estimated cost/run: $0.007766
+Advanced mean estimated cost/run: $0.044514
+```
+
+See `results/frozen_final/FROZEN_SUMMARY.md` for the aggregate report and `results/frozen_final/` for all six preserved run artifacts.
+
+This ensures the submitted code and reported metrics refer to the same frozen repository state.
 
 
-For final submission, metrics are regenerated from tagged `main`.
+## Frozen repeated evaluation
+
+The authoritative final benchmark used `v1.0.0-hackathon` (`01231fd92db105b1fe8be18a4e4340fcd3dc5b5a`) and ran both systems three times on the same 20 cases.
+
+Recorded results:
+
+```text
+Baseline: 80.0%, 90.0%, 90.0% -> mean 86.7%
+Advanced: 100.0%, 100.0%, 100.0% -> mean 100.0%
+Improvement: +13.3 percentage points
+```
+
+Artifacts:
+
+```text
+results/frozen_final/baseline/run_01/
+results/frozen_final/baseline/run_02/
+results/frozen_final/baseline/run_03/
+results/frozen_final/advanced/run_01/
+results/frozen_final/advanced/run_02/
+results/frozen_final/advanced/run_03/
+results/frozen_final/FROZEN_SUMMARY.md
+results/frozen_final/frozen_summary.json
+```
+
+The frozen evaluation should not be rerun merely to seek a more favorable stochastic outcome.

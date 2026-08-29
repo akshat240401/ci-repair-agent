@@ -1,0 +1,35 @@
+{
+  "frozen_tag": "v1.0.0-hackathon",
+  "frozen_commit": "01231fd92db105b1fe8be18a4e4340fcd3dc5b5a",
+  "benchmark_cases": 20,
+  "runs_per_system": 3,
+  "baseline": {
+    "vrr_runs": [
+      0.8,
+      0.9,
+      0.9
+    ],
+    "mean_vrr": 0.8666666666666667,
+    "min_vrr": 0.8,
+    "max_vrr": 0.9,
+    "stddev_vrr": 0.04714045207910316,
+    "mean_input_tokens": 12666,
+    "mean_output_tokens": 4361,
+    "mean_estimated_cost_usd": 0.0077664000000000006
+  },
+  "advanced": {
+    "vrr_runs": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean_vrr": 1.0,
+    "min_vrr": 1.0,
+    "max_vrr": 1.0,
+    "stddev_vrr": 0.0,
+    "mean_input_tokens": null,
+    "mean_output_tokens": null,
+    "mean_estimated_cost_usd": 0.044514333333333336
+  },
+  "absolute_improvement_pp": 13.33333333333333
+}
