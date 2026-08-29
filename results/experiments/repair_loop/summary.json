@@ -1,0 +1,10 @@
+{
+  "experiment": "verified_repair_loop",
+  "cases": 20,
+  "verified_repairs": 20,
+  "verified_repair_rate": 1.0,
+  "mean_attempts": 1.0,
+  "retry_cases": [],
+  "unresolved_cases": [],
+  "estimated_total_cost_usd": 0.044888199999999996
+}
