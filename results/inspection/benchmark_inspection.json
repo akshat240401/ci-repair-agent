@@ -17,7 +17,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6936614001169801,
+        "duration_seconds": 0.7217449001036584,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n____________________ test_exact_multiple_has_no_extra_page ____________________\n\n>   def test_exact_multiple_has_no_extra_page(): assert page_count(20,10)==2\nE   assert 3 == 2\nE    +  where 3 = page_count(20, 10)\n\ntests\\test_pagination.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pagination.py::test_exact_multiple_has_no_extra_page - asse...\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -31,8 +31,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7670283999759704,
-        "stdout": ".F.                                                                      [100%]\n================================== FAILURES ===================================\n____________________ test_exact_multiple_has_no_extra_page ____________________\n\n>   def test_exact_multiple_has_no_extra_page(): assert page_count(20,10)==2\nE   assert 3 == 2\nE    +  where 3 = page_count(20, 10)\n\ntests\\test_pagination.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pagination.py::test_exact_multiple_has_no_extra_page - asse...\n1 failed, 2 passed in 0.10s\n",
+        "duration_seconds": 0.6866059999447316,
+        "stdout": ".F.                                                                      [100%]\n================================== FAILURES ===================================\n____________________ test_exact_multiple_has_no_extra_page ____________________\n\n>   def test_exact_multiple_has_no_extra_page(): assert page_count(20,10)==2\nE   assert 3 == 2\nE    +  where 3 = page_count(20, 10)\n\ntests\\test_pagination.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pagination.py::test_exact_multiple_has_no_extra_page - asse...\n1 failed, 2 passed in 0.11s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -51,8 +51,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6956585000734776,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_missing_user_returns_none ________________________\n\n>   def test_missing_user_returns_none(): assert get_user_name(999) is None\n\ntests\\test_users.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nuser_id = 999\n\n    def get_user_name(user_id: int) -> str | None:\n        user=USERS.get(user_id)\n>       return user[\"name\"]\nE       TypeError: 'NoneType' object is not subscriptable\n\nsrc\\users.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_users.py::test_missing_user_returns_none - TypeError: 'None...\n1 failed in 0.10s\n",
+        "duration_seconds": 0.6928936000913382,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_missing_user_returns_none ________________________\n\n>   def test_missing_user_returns_none(): assert get_user_name(999) is None\n\ntests\\test_users.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nuser_id = 999\n\n    def get_user_name(user_id: int) -> str | None:\n        user=USERS.get(user_id)\n>       return user[\"name\"]\nE       TypeError: 'NoneType' object is not subscriptable\n\nsrc\\users.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_users.py::test_missing_user_returns_none - TypeError: 'None...\n1 failed in 0.11s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -65,8 +65,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7409912999719381,
-        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_______________________ test_missing_user_returns_none ________________________\n\n>   def test_missing_user_returns_none(): assert get_user_name(999) is None\n\ntests\\test_users.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nuser_id = 999\n\n    def get_user_name(user_id: int) -> str | None:\n        user=USERS.get(user_id)\n>       return user[\"name\"]\nE       TypeError: 'NoneType' object is not subscriptable\n\nsrc\\users.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_users.py::test_missing_user_returns_none - TypeError: 'None...\n1 failed, 1 passed in 0.12s\n",
+        "duration_seconds": 0.6801947001367807,
+        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_______________________ test_missing_user_returns_none ________________________\n\n>   def test_missing_user_returns_none(): assert get_user_name(999) is None\n\ntests\\test_users.py:4: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nuser_id = 999\n\n    def get_user_name(user_id: int) -> str | None:\n        user=USERS.get(user_id)\n>       return user[\"name\"]\nE       TypeError: 'NoneType' object is not subscriptable\n\nsrc\\users.py:4: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_users.py::test_missing_user_returns_none - TypeError: 'None...\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -85,8 +85,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7495366998482496,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________________ test_default_token_ttl ____________________________\n\n>   def test_default_token_ttl(): assert token_expiry_seconds()==3600\n\ntests\\test_auth.py:3: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def token_expiry_seconds() -> int:\n>       return int(TOKEN_TTL)\nE       TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\n\nsrc\\auth.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_auth.py::test_default_token_ttl - TypeError: int() argument...\n1 failed in 0.12s\n",
+        "duration_seconds": 0.6906672001350671,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________________ test_default_token_ttl ____________________________\n\n>   def test_default_token_ttl(): assert token_expiry_seconds()==3600\n\ntests\\test_auth.py:3: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def token_expiry_seconds() -> int:\n>       return int(TOKEN_TTL)\nE       TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\n\nsrc\\auth.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_auth.py::test_default_token_ttl - TypeError: int() argument...\n1 failed in 0.10s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -99,8 +99,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7860471999738365,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________________ test_default_token_ttl ____________________________\n\n>   def test_default_token_ttl(): assert token_expiry_seconds()==3600\n\ntests\\test_auth.py:3: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def token_expiry_seconds() -> int:\n>       return int(TOKEN_TTL)\nE       TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\n\nsrc\\auth.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_auth.py::test_default_token_ttl - TypeError: int() argument...\n1 failed in 0.14s\n",
+        "duration_seconds": 0.6789651999715716,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________________ test_default_token_ttl ____________________________\n\n>   def test_default_token_ttl(): assert token_expiry_seconds()==3600\n\ntests\\test_auth.py:3: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def token_expiry_seconds() -> int:\n>       return int(TOKEN_TTL)\nE       TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'\n\nsrc\\auth.py:3: TypeError\n=========================== short test summary info ===========================\nFAILED tests\\test_auth.py::test_default_token_ttl - TypeError: int() argument...\n1 failed in 0.11s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -119,7 +119,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7312535000964999,
+        "duration_seconds": 0.6835892999079078,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_profile_uses_display_name ________________________\n\n    def test_profile_uses_display_name():\n        r={\"id\":7,\"username\":\"araval\",\"display_name\":\"A. Raval\"}\n>       assert serialize_profile(r)=={\"id\":7,\"name\":\"A. Raval\"}\nE       AssertionError: assert {'id': 7, 'name': 'araval'} == {'id': 7, 'name': 'A. Raval'}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Differing items:\nE         {'name': 'araval'} != {'name': 'A. Raval'}\nE         Use -v to get more diff\n\ntests\\test_profile.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_profile.py::test_profile_uses_display_name - AssertionError...\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -133,8 +133,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6925089999567717,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_profile_uses_display_name ________________________\n\n    def test_profile_uses_display_name():\n        r={\"id\":7,\"username\":\"araval\",\"display_name\":\"A. Raval\"}\n>       assert serialize_profile(r)=={\"id\":7,\"name\":\"A. Raval\"}\nE       AssertionError: assert {'id': 7, 'name': 'araval'} == {'id': 7, 'name': 'A. Raval'}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Differing items:\nE         {'name': 'araval'} != {'name': 'A. Raval'}\nE         Use -v to get more diff\n\ntests\\test_profile.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_profile.py::test_profile_uses_display_name - AssertionError...\n1 failed in 0.10s\n",
+        "duration_seconds": 0.8187259000260383,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_profile_uses_display_name ________________________\n\n    def test_profile_uses_display_name():\n        r={\"id\":7,\"username\":\"araval\",\"display_name\":\"A. Raval\"}\n>       assert serialize_profile(r)=={\"id\":7,\"name\":\"A. Raval\"}\nE       AssertionError: assert {'id': 7, 'name': 'araval'} == {'id': 7, 'name': 'A. Raval'}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Differing items:\nE         {'name': 'araval'} != {'name': 'A. Raval'}\nE         Use -v to get more diff\n\ntests\\test_profile.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_profile.py::test_profile_uses_display_name - AssertionError...\n1 failed in 0.15s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -153,7 +153,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6945012998767197,
+        "duration_seconds": 0.6786237999331206,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________________ test_total_does_not_mutate_cart _______________________\n\n    def test_total_does_not_mutate_cart():\n>       prices=[30.0,10.0,20.0]; original=list(prices); discounted_total(prices,0.10); assert prices==original\nE       assert [10.0, 20.0, 30.0] == [30.0, 10.0, 20.0]\nE         \nE         At index 0 diff: 10.0 != 30.0\nE         Use -v to get more diff\n\ntests\\test_cart.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_cart.py::test_total_does_not_mutate_cart - assert [10.0, 20...\n1 failed in 0.09s\n",
         "stderr": ""
       },
@@ -167,8 +167,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7104450999759138,
-        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_______________________ test_total_does_not_mutate_cart _______________________\n\n    def test_total_does_not_mutate_cart():\n>       prices=[30.0,10.0,20.0]; original=list(prices); discounted_total(prices,0.10); assert prices==original\nE       assert [10.0, 20.0, 30.0] == [30.0, 10.0, 20.0]\nE         \nE         At index 0 diff: 10.0 != 30.0\nE         Use -v to get more diff\n\ntests\\test_cart.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_cart.py::test_total_does_not_mutate_cart - assert [10.0, 20...\n1 failed, 1 passed in 0.10s\n",
+        "duration_seconds": 0.6806114001665264,
+        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_______________________ test_total_does_not_mutate_cart _______________________\n\n    def test_total_does_not_mutate_cart():\n>       prices=[30.0,10.0,20.0]; original=list(prices); discounted_total(prices,0.10); assert prices==original\nE       assert [10.0, 20.0, 30.0] == [30.0, 10.0, 20.0]\nE         \nE         At index 0 diff: 10.0 != 30.0\nE         Use -v to get more diff\n\ntests\\test_cart.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_cart.py::test_total_does_not_mutate_cart - assert [10.0, 20...\n1 failed, 1 passed in 0.11s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -187,8 +187,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6977550000883639,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n______________________ test_false_string_disables_cache _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002E4098486D0>\n\n    def test_false_string_disables_cache(monkeypatch):\n        monkeypatch.setenv(\"USE_CACHE\", \"false\")\n>       assert cache_enabled() is False\nE       assert True is False\nE        +  where True = cache_enabled()\n\ntests\\test_flags.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_flags.py::test_false_string_disables_cache - assert True is...\n1 failed in 0.11s\n",
+        "duration_seconds": 0.6782831000164151,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n______________________ test_false_string_disables_cache _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000265A09578D0>\n\n    def test_false_string_disables_cache(monkeypatch):\n        monkeypatch.setenv(\"USE_CACHE\", \"false\")\n>       assert cache_enabled() is False\nE       assert True is False\nE        +  where True = cache_enabled()\n\ntests\\test_flags.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_flags.py::test_false_string_disables_cache - assert True is...\n1 failed in 0.10s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -201,8 +201,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6981292001437396,
-        "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n______________________ test_false_string_disables_cache _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002967184A8D0>\n\n    def test_false_string_disables_cache(monkeypatch):\n        monkeypatch.setenv(\"USE_CACHE\", \"false\")\n>       assert cache_enabled() is False\nE       assert True is False\nE        +  where True = cache_enabled()\n\ntests\\test_flags.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_flags.py::test_false_string_disables_cache - assert True is...\n1 failed, 1 passed in 0.12s\n",
+        "duration_seconds": 0.6764628000091761,
+        "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n______________________ test_false_string_disables_cache _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C1FEACEC10>\n\n    def test_false_string_disables_cache(monkeypatch):\n        monkeypatch.setenv(\"USE_CACHE\", \"false\")\n>       assert cache_enabled() is False\nE       assert True is False\nE        +  where True = cache_enabled()\n\ntests\\test_flags.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_flags.py::test_false_string_disables_cache - assert True is...\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -221,7 +221,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7048185998573899,
+        "duration_seconds": 0.6853190998081118,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_________________ test_latest_version_handles_two_digit_minor _________________\n\n    def test_latest_version_handles_two_digit_minor():\n>       assert latest_version([\"2.9.0\", \"2.10.0\", \"2.8.7\"]) == \"2.10.0\"\nE       AssertionError: assert '2.9.0' == '2.10.0'\nE         \nE         - 2.10.0\nE         + 2.9.0\n\ntests\\test_release.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_release.py::test_latest_version_handles_two_digit_minor - A...\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -235,8 +235,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7052902998402715,
-        "stdout": "FF                                                                       [100%]\n================================== FAILURES ===================================\n_________________ test_latest_version_handles_two_digit_minor _________________\n\n    def test_latest_version_handles_two_digit_minor():\n>       assert latest_version([\"2.9.0\", \"2.10.0\", \"2.8.7\"]) == \"2.10.0\"\nE       AssertionError: assert '2.9.0' == '2.10.0'\nE         \nE         - 2.10.0\nE         + 2.9.0\n\ntests\\test_release.py:4: AssertionError\n__________________ test_latest_version_handles_patch_numbers __________________\n\n    def test_latest_version_handles_patch_numbers():\n>       assert latest_version([\"1.4.9\", \"1.4.11\", \"1.4.2\"]) == \"1.4.11\"\nE       AssertionError: assert '1.4.9' == '1.4.11'\nE         \nE         - 1.4.11\nE         + 1.4.9\n\ntests\\test_release.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_release.py::test_latest_version_handles_two_digit_minor - A...\nFAILED tests\\test_release.py::test_latest_version_handles_patch_numbers - Ass...\n2 failed in 0.10s\n",
+        "duration_seconds": 0.6791275998111814,
+        "stdout": "FF                                                                       [100%]\n================================== FAILURES ===================================\n_________________ test_latest_version_handles_two_digit_minor _________________\n\n    def test_latest_version_handles_two_digit_minor():\n>       assert latest_version([\"2.9.0\", \"2.10.0\", \"2.8.7\"]) == \"2.10.0\"\nE       AssertionError: assert '2.9.0' == '2.10.0'\nE         \nE         - 2.10.0\nE         + 2.9.0\n\ntests\\test_release.py:4: AssertionError\n__________________ test_latest_version_handles_patch_numbers __________________\n\n    def test_latest_version_handles_patch_numbers():\n>       assert latest_version([\"1.4.9\", \"1.4.11\", \"1.4.2\"]) == \"1.4.11\"\nE       AssertionError: assert '1.4.9' == '1.4.11'\nE         \nE         - 1.4.11\nE         + 1.4.9\n\ntests\\test_release.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_release.py::test_latest_version_handles_two_digit_minor - A...\nFAILED tests\\test_release.py::test_latest_version_handles_patch_numbers - Ass...\n2 failed in 0.12s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -255,8 +255,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7063857999164611,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________ test_cache_does_not_leak_price_between_regions ________________\n\n    def test_cache_does_not_leak_price_between_regions():\n        assert get_price(\"sku-1\", \"US\") == 10\n>       assert get_price(\"sku-1\", \"EU\") == 12\nE       AssertionError: assert 10 == 12\nE        +  where 10 = get_price('sku-1', 'EU')\n\ntests\\test_pricing.py:8: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pricing.py::test_cache_does_not_leak_price_between_regions\n1 failed in 0.10s\n",
+        "duration_seconds": 0.69063979992643,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________ test_cache_does_not_leak_price_between_regions ________________\n\n    def test_cache_does_not_leak_price_between_regions():\n        assert get_price(\"sku-1\", \"US\") == 10\n>       assert get_price(\"sku-1\", \"EU\") == 12\nE       AssertionError: assert 10 == 12\nE        +  where 10 = get_price('sku-1', 'EU')\n\ntests\\test_pricing.py:8: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pricing.py::test_cache_does_not_leak_price_between_regions\n1 failed in 0.09s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -269,7 +269,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6950580000411719,
+        "duration_seconds": 0.6749585999641567,
         "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n_______________ test_cache_does_not_leak_price_between_regions ________________\n\n    def test_cache_does_not_leak_price_between_regions():\n        assert get_price(\"sku-1\", \"US\") == 10\n>       assert get_price(\"sku-1\", \"EU\") == 12\nE       AssertionError: assert 10 == 12\nE        +  where 10 = get_price('sku-1', 'EU')\n\ntests\\test_pricing.py:8: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_pricing.py::test_cache_does_not_leak_price_between_regions\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
@@ -289,7 +289,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7177142999134958,
+        "duration_seconds": 0.6844585000071675,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________ test_two_retries_allows_three_total_attempts _________________\n\n    def test_two_retries_allows_three_total_attempts():\n        calls = {\"count\": 0}\n    \n        def flaky():\n            calls[\"count\"] += 1\n            if calls[\"count\"] < 3:\n                raise RuntimeError(\"temporary\")\n            return \"ok\"\n    \n>       assert call_with_retries(flaky, 2) == \"ok\"\n\ntests\\test_retry.py:12: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nsrc\\retry.py:8: in call_with_retries\n    raise last_error\nsrc\\retry.py:5: in call_with_retries\n    return operation()\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def flaky():\n        calls[\"count\"] += 1\n        if calls[\"count\"] < 3:\n>           raise RuntimeError(\"temporary\")\nE           RuntimeError: temporary\n\ntests\\test_retry.py:9: RuntimeError\n=========================== short test summary info ===========================\nFAILED tests\\test_retry.py::test_two_retries_allows_three_total_attempts - Ru...\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -303,7 +303,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7156832998152822,
+        "duration_seconds": 0.6637154999189079,
         "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n________________ test_two_retries_allows_three_total_attempts _________________\n\n    def test_two_retries_allows_three_total_attempts():\n        calls = {\"count\": 0}\n    \n        def flaky():\n            calls[\"count\"] += 1\n            if calls[\"count\"] < 3:\n                raise RuntimeError(\"temporary\")\n            return \"ok\"\n    \n>       assert call_with_retries(flaky, 2) == \"ok\"\n\ntests\\test_retry.py:12: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nsrc\\retry.py:8: in call_with_retries\n    raise last_error\nsrc\\retry.py:5: in call_with_retries\n    return operation()\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\n    def flaky():\n        calls[\"count\"] += 1\n        if calls[\"count\"] < 3:\n>           raise RuntimeError(\"temporary\")\nE           RuntimeError: temporary\n\ntests\\test_retry.py:9: RuntimeError\n=========================== short test summary info ===========================\nFAILED tests\\test_retry.py::test_two_retries_allows_three_total_attempts - Ru...\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
@@ -323,7 +323,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6956368000246584,
+        "duration_seconds": 0.6918717999942601,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n____________________ test_hash_inside_quotes_is_preserved _____________________\n\n    def test_hash_inside_quotes_is_preserved():\n>       assert parse_line('callback=\"https://example.com/#done\"') == (\n            \"callback\",\n            \"https://example.com/#done\",\n        )\nE       AssertionError: assert ('callback', ...example.com/') == ('callback', ...le.com/#done')\nE         \nE         At index 1 diff: 'https://example.com/' != 'https://example.com/#done'\nE         Use -v to get more diff\n\ntests\\test_config_parser.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_config_parser.py::test_hash_inside_quotes_is_preserved - As...\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -337,7 +337,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7045185000170022,
+        "duration_seconds": 0.6783985998481512,
         "stdout": "F..                                                                      [100%]\n================================== FAILURES ===================================\n____________________ test_hash_inside_quotes_is_preserved _____________________\n\n    def test_hash_inside_quotes_is_preserved():\n>       assert parse_line('callback=\"https://example.com/#done\"') == (\n            \"callback\",\n            \"https://example.com/#done\",\n        )\nE       AssertionError: assert ('callback', ...example.com/') == ('callback', ...le.com/#done')\nE         \nE         At index 1 diff: 'https://example.com/' != 'https://example.com/#done'\nE         Use -v to get more diff\n\ntests\\test_config_parser.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_config_parser.py::test_hash_inside_quotes_is_preserved - As...\n1 failed, 2 passed in 0.10s\n",
         "stderr": ""
       },
@@ -357,7 +357,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6989883000496775,
+        "duration_seconds": 0.6783549000974745,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n____________ test_output_path_handles_root_with_trailing_separator ____________\n\n    def test_output_path_handles_root_with_trailing_separator():\n>       assert output_path(\"/tmp/build/\", \"report.json\") == \"/tmp/build/report.json\"\nE       AssertionError: assert '/tmp/build//report.json' == '/tmp/build/report.json'\nE         \nE         - /tmp/build/report.json\nE         + /tmp/build//report.json\nE         ?           +\n\ntests\\test_artifact.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_artifact.py::test_output_path_handles_root_with_trailing_separator\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -371,7 +371,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6996810999698937,
+        "duration_seconds": 0.6720640999265015,
         "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n____________ test_output_path_handles_root_with_trailing_separator ____________\n\n    def test_output_path_handles_root_with_trailing_separator():\n>       assert output_path(\"/tmp/build/\", \"report.json\") == \"/tmp/build/report.json\"\nE       AssertionError: assert '/tmp/build//report.json' == '/tmp/build/report.json'\nE         \nE         - /tmp/build/report.json\nE         + /tmp/build//report.json\nE         ?           +\n\ntests\\test_artifact.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_artifact.py::test_output_path_handles_root_with_trailing_separator\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
@@ -391,7 +391,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6985976998694241,
+        "duration_seconds": 0.6793992999009788,
         "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________ test_environment_overrides_file_configuration ________________\n\n    def test_environment_overrides_file_configuration():\n        resolved = resolve_settings(\n            {\"port\": 9000, \"debug\": False},\n            {\"port\": 7000},\n        )\n>       assert resolved[\"port\"] == 7000\nE       assert 9000 == 7000\n\ntests\\test_settings.py:8: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_settings.py::test_environment_overrides_file_configuration\n1 failed in 0.10s\n",
         "stderr": ""
       },
@@ -405,8 +405,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6892893000040203,
-        "stdout": "F..                                                                      [100%]\n================================== FAILURES ===================================\n________________ test_environment_overrides_file_configuration ________________\n\n    def test_environment_overrides_file_configuration():\n        resolved = resolve_settings(\n            {\"port\": 9000, \"debug\": False},\n            {\"port\": 7000},\n        )\n>       assert resolved[\"port\"] == 7000\nE       assert 9000 == 7000\n\ntests\\test_settings.py:8: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_settings.py::test_environment_overrides_file_configuration\n1 failed, 2 passed in 0.09s\n",
+        "duration_seconds": 0.6791842000093311,
+        "stdout": "F..                                                                      [100%]\n================================== FAILURES ===================================\n________________ test_environment_overrides_file_configuration ________________\n\n    def test_environment_overrides_file_configuration():\n        resolved = resolve_settings(\n            {\"port\": 9000, \"debug\": False},\n            {\"port\": 7000},\n        )\n>       assert resolved[\"port\"] == 7000\nE       assert 9000 == 7000\n\ntests\\test_settings.py:8: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_settings.py::test_environment_overrides_file_configuration\n1 failed, 2 passed in 0.10s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -425,8 +425,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6957862998824567,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________ test_payload_uses_display_name_contract ___________________\n\n    def test_payload_uses_display_name_contract():\n        payload, message = render_user({\"id\": 7, \"name\": \"Ada\"})\n>       assert payload == {\"id\": 7, \"display_name\": \"Ada\"}\nE       AssertionError: assert {'id': 7, 'username': 'Ada'} == {'display_nam...Ada', 'id': 7}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'username': 'Ada'}\nE         Right contains 1 more item:\nE         {'display_name': 'Ada'}\nE         Use -v to get more diff\n\ntests\\test_api_contract.py:6: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_api_contract.py::test_payload_uses_display_name_contract - ...\n1 failed in 0.11s\n",
+        "duration_seconds": 0.6773417999502271,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n___________________ test_payload_uses_display_name_contract ___________________\n\n    def test_payload_uses_display_name_contract():\n        payload, message = render_user({\"id\": 7, \"name\": \"Ada\"})\n>       assert payload == {\"id\": 7, \"display_name\": \"Ada\"}\nE       AssertionError: assert {'id': 7, 'username': 'Ada'} == {'display_nam...Ada', 'id': 7}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'username': 'Ada'}\nE         Right contains 1 more item:\nE         {'display_name': 'Ada'}\nE         Use -v to get more diff\n\ntests\\test_api_contract.py:6: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_api_contract.py::test_payload_uses_display_name_contract - ...\n1 failed in 0.10s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -439,8 +439,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7009540998842567,
-        "stdout": "FF                                                                       [100%]\n================================== FAILURES ===================================\n___________________ test_payload_uses_display_name_contract ___________________\n\n    def test_payload_uses_display_name_contract():\n        payload, message = render_user({\"id\": 7, \"name\": \"Ada\"})\n>       assert payload == {\"id\": 7, \"display_name\": \"Ada\"}\nE       AssertionError: assert {'id': 7, 'username': 'Ada'} == {'display_nam...Ada', 'id': 7}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'username': 'Ada'}\nE         Right contains 1 more item:\nE         {'display_name': 'Ada'}\nE         Use -v to get more diff\n\ntests\\test_api_contract.py:6: AssertionError\n_________________ test_consumer_accepts_new_contract_directly _________________\n\n    def test_consumer_accepts_new_contract_directly():\n>       assert greeting({\"display_name\": \"Grace\"}) == \"Hello Grace\"\n\ntests\\test_api_contract.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\npayload = {'display_name': 'Grace'}\n\n    def greeting(payload):\n>       return f\"Hello {payload['username']}\"\nE       KeyError: 'username'\n\nsrc\\consumer.py:2: KeyError\n=========================== short test summary info ===========================\nFAILED tests\\test_api_contract.py::test_payload_uses_display_name_contract - ...\nFAILED tests\\test_api_contract.py::test_consumer_accepts_new_contract_directly\n2 failed in 0.10s\n",
+        "duration_seconds": 0.6965928999707103,
+        "stdout": "FF                                                                       [100%]\n================================== FAILURES ===================================\n___________________ test_payload_uses_display_name_contract ___________________\n\n    def test_payload_uses_display_name_contract():\n        payload, message = render_user({\"id\": 7, \"name\": \"Ada\"})\n>       assert payload == {\"id\": 7, \"display_name\": \"Ada\"}\nE       AssertionError: assert {'id': 7, 'username': 'Ada'} == {'display_nam...Ada', 'id': 7}\nE         \nE         Omitting 1 identical items, use -vv to show\nE         Left contains 1 more item:\nE         {'username': 'Ada'}\nE         Right contains 1 more item:\nE         {'display_name': 'Ada'}\nE         Use -v to get more diff\n\ntests\\test_api_contract.py:6: AssertionError\n_________________ test_consumer_accepts_new_contract_directly _________________\n\n    def test_consumer_accepts_new_contract_directly():\n>       assert greeting({\"display_name\": \"Grace\"}) == \"Hello Grace\"\n\ntests\\test_api_contract.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\npayload = {'display_name': 'Grace'}\n\n    def greeting(payload):\n>       return f\"Hello {payload['username']}\"\nE       KeyError: 'username'\n\nsrc\\consumer.py:2: KeyError\n=========================== short test summary info ===========================\nFAILED tests\\test_api_contract.py::test_payload_uses_display_name_contract - ...\nFAILED tests\\test_api_contract.py::test_consumer_accepts_new_contract_directly\n2 failed in 0.12s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -459,8 +459,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7228484000079334,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n____________________ test_lookup_accepts_lowercase_request ____________________\n\n    def test_lookup_accepts_lowercase_request():\n>       assert get_header({\"Content-Type\": \"application/json\"}, \"content-type\") == \"application/json\"\nE       AssertionError: assert None == 'application/json'\nE        +  where None = get_header({'Content-Type': 'application/json'}, 'content-type')\n\ntests\\test_headers.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_headers.py::test_lookup_accepts_lowercase_request - Asserti...\n1 failed in 0.10s\n",
+        "duration_seconds": 0.6906344001181424,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n____________________ test_lookup_accepts_lowercase_request ____________________\n\n    def test_lookup_accepts_lowercase_request():\n>       assert get_header({\"Content-Type\": \"application/json\"}, \"content-type\") == \"application/json\"\nE       AssertionError: assert None == 'application/json'\nE        +  where None = get_header({'Content-Type': 'application/json'}, 'content-type')\n\ntests\\test_headers.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_headers.py::test_lookup_accepts_lowercase_request - Asserti...\n1 failed in 0.11s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -473,8 +473,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6974168999586254,
-        "stdout": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n____________________ test_lookup_accepts_lowercase_request ____________________\n\n    def test_lookup_accepts_lowercase_request():\n>       assert get_header({\"Content-Type\": \"application/json\"}, \"content-type\") == \"application/json\"\nE       AssertionError: assert None == 'application/json'\nE        +  where None = get_header({'Content-Type': 'application/json'}, 'content-type')\n\ntests\\test_headers.py:4: AssertionError\n___________________ test_lookup_accepts_mixed_case_storage ____________________\n\n    def test_lookup_accepts_mixed_case_storage():\n>       assert get_header({\"x-request-id\": \"abc\"}, \"X-Request-Id\") == \"abc\"\nE       AssertionError: assert None == 'abc'\nE        +  where None = get_header({'x-request-id': 'abc'}, 'X-Request-Id')\n\ntests\\test_headers.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_headers.py::test_lookup_accepts_lowercase_request - Asserti...\nFAILED tests\\test_headers.py::test_lookup_accepts_mixed_case_storage - Assert...\n2 failed, 1 passed in 0.10s\n",
+        "duration_seconds": 0.6834044000133872,
+        "stdout": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n____________________ test_lookup_accepts_lowercase_request ____________________\n\n    def test_lookup_accepts_lowercase_request():\n>       assert get_header({\"Content-Type\": \"application/json\"}, \"content-type\") == \"application/json\"\nE       AssertionError: assert None == 'application/json'\nE        +  where None = get_header({'Content-Type': 'application/json'}, 'content-type')\n\ntests\\test_headers.py:4: AssertionError\n___________________ test_lookup_accepts_mixed_case_storage ____________________\n\n    def test_lookup_accepts_mixed_case_storage():\n>       assert get_header({\"x-request-id\": \"abc\"}, \"X-Request-Id\") == \"abc\"\nE       AssertionError: assert None == 'abc'\nE        +  where None = get_header({'x-request-id': 'abc'}, 'X-Request-Id')\n\ntests\\test_headers.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_headers.py::test_lookup_accepts_lowercase_request - Asserti...\nFAILED tests\\test_headers.py::test_lookup_accepts_mixed_case_storage - Assert...\n2 failed, 1 passed in 0.09s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -493,8 +493,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7004064999055117,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________ test_config_serializes_timeout_in_milliseconds ________________\n\n    def test_config_serializes_timeout_in_milliseconds():\n>       assert build_config(30) == {\"timeout_ms\": 30000}\nE       AssertionError: assert {'timeout_ms': 30} == {'timeout_ms': 30000}\nE         \nE         Differing items:\nE         {'timeout_ms': 30} != {'timeout_ms': 30000}\nE         Use -v to get more diff\n\ntests\\test_timeout.py:6: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_timeout.py::test_config_serializes_timeout_in_milliseconds\n1 failed in 0.10s\n",
+        "duration_seconds": 0.727471400052309,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_______________ test_config_serializes_timeout_in_milliseconds ________________\n\n    def test_config_serializes_timeout_in_milliseconds():\n>       assert build_config(30) == {\"timeout_ms\": 30000}\nE       AssertionError: assert {'timeout_ms': 30} == {'timeout_ms': 30000}\nE         \nE         Differing items:\nE         {'timeout_ms': 30} != {'timeout_ms': 30000}\nE         Use -v to get more diff\n\ntests\\test_timeout.py:6: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_timeout.py::test_config_serializes_timeout_in_milliseconds\n1 failed in 0.11s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -507,8 +507,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7062450998928398,
-        "stdout": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_______________ test_config_serializes_timeout_in_milliseconds ________________\n\n    def test_config_serializes_timeout_in_milliseconds():\n>       assert build_config(30) == {\"timeout_ms\": 30000}\nE       AssertionError: assert {'timeout_ms': 30} == {'timeout_ms': 30000}\nE         \nE         Differing items:\nE         {'timeout_ms': 30} != {'timeout_ms': 30000}\nE         Use -v to get more diff\n\ntests\\test_timeout.py:6: AssertionError\n__________________ test_validator_accepts_millisecond_range ___________________\n\n    def test_validator_accepts_millisecond_range():\n>       assert validate_timeout({\"timeout_ms\": 30000}) is True\n\ntests\\test_timeout.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nconfig = {'timeout_ms': 30000}\n\n    def validate_timeout(config):\n        timeout = config[\"timeout_ms\"]\n        if not 1 <= timeout <= 120:\n>           raise ValueError(\"timeout out of range\")\nE           ValueError: timeout out of range\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests\\test_timeout.py::test_config_serializes_timeout_in_milliseconds\nFAILED tests\\test_timeout.py::test_validator_accepts_millisecond_range - Valu...\n2 failed, 1 passed in 0.12s\n",
+        "duration_seconds": 0.7958827998954803,
+        "stdout": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n_______________ test_config_serializes_timeout_in_milliseconds ________________\n\n    def test_config_serializes_timeout_in_milliseconds():\n>       assert build_config(30) == {\"timeout_ms\": 30000}\nE       AssertionError: assert {'timeout_ms': 30} == {'timeout_ms': 30000}\nE         \nE         Differing items:\nE         {'timeout_ms': 30} != {'timeout_ms': 30000}\nE         Use -v to get more diff\n\ntests\\test_timeout.py:6: AssertionError\n__________________ test_validator_accepts_millisecond_range ___________________\n\n    def test_validator_accepts_millisecond_range():\n>       assert validate_timeout({\"timeout_ms\": 30000}) is True\n\ntests\\test_timeout.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nconfig = {'timeout_ms': 30000}\n\n    def validate_timeout(config):\n        timeout = config[\"timeout_ms\"]\n        if not 1 <= timeout <= 120:\n>           raise ValueError(\"timeout out of range\")\nE           ValueError: timeout out of range\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests\\test_timeout.py::test_config_serializes_timeout_in_milliseconds\nFAILED tests\\test_timeout.py::test_validator_accepts_millisecond_range - Valu...\n2 failed, 1 passed in 0.11s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -527,8 +527,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7575905001722276,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n__________________ test_update_is_visible_after_cached_read ___________________\n\n    def test_update_is_visible_after_cached_read():\n        assert get_user(\"u1\")[\"name\"] == \"Ada\"\n        update_user(\"u1\", {\"name\": \"Grace\"})\n>       assert get_user(\"u1\")[\"name\"] == \"Grace\"\nE       AssertionError: assert 'Ada' == 'Grace'\nE         \nE         - Grace\nE         + Ada\n\ntests\\test_users_cache.py:9: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_users_cache.py::test_update_is_visible_after_cached_read - ...\n1 failed in 0.14s\n",
+        "duration_seconds": 0.7780714000109583,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n__________________ test_update_is_visible_after_cached_read ___________________\n\n    def test_update_is_visible_after_cached_read():\n        assert get_user(\"u1\")[\"name\"] == \"Ada\"\n        update_user(\"u1\", {\"name\": \"Grace\"})\n>       assert get_user(\"u1\")[\"name\"] == \"Grace\"\nE       AssertionError: assert 'Ada' == 'Grace'\nE         \nE         - Grace\nE         + Ada\n\ntests\\test_users_cache.py:9: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_users_cache.py::test_update_is_visible_after_cached_read - ...\n1 failed in 0.13s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -541,7 +541,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6859067000914365,
+        "duration_seconds": 0.6965433999430388,
         "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n__________________ test_update_is_visible_after_cached_read ___________________\n\n    def test_update_is_visible_after_cached_read():\n        assert get_user(\"u1\")[\"name\"] == \"Ada\"\n        update_user(\"u1\", {\"name\": \"Grace\"})\n>       assert get_user(\"u1\")[\"name\"] == \"Grace\"\nE       AssertionError: assert 'Ada' == 'Grace'\nE         \nE         - Grace\nE         + Ada\n\ntests\\test_users_cache.py:9: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_users_cache.py::test_update_is_visible_after_cached_read - ...\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
@@ -561,8 +561,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7002505999989808,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_________________ test_sibling_with_shared_prefix_is_rejected _________________\n\ntmp_path = WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-33/test_sibling_with_shared_prefi0')\n\n    def test_sibling_with_shared_prefix_is_rejected(tmp_path):\n        workspace = tmp_path / \"work\"\n        sibling = tmp_path / \"work_backup\" / \"secret.txt\"\n        sibling.parent.mkdir(parents=True)\n        sibling.write_text(\"secret\")\n>       assert is_within_workspace(workspace, sibling) is False\nE       AssertionError: assert True is False\nE        +  where True = is_within_workspace(WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-33/test_sibling_with_shared_prefi0/work'), WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-33/test_sibling_with_shared_prefi0/work_backup/secret.txt'))\n\ntests\\test_paths.py:15: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_paths.py::test_sibling_with_shared_prefix_is_rejected - Ass...\n1 failed in 0.12s\n",
+        "duration_seconds": 0.7211587999481708,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n_________________ test_sibling_with_shared_prefix_is_rejected _________________\n\ntmp_path = WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-100/test_sibling_with_shared_prefi0')\n\n    def test_sibling_with_shared_prefix_is_rejected(tmp_path):\n        workspace = tmp_path / \"work\"\n        sibling = tmp_path / \"work_backup\" / \"secret.txt\"\n        sibling.parent.mkdir(parents=True)\n        sibling.write_text(\"secret\")\n>       assert is_within_workspace(workspace, sibling) is False\nE       AssertionError: assert True is False\nE        +  where True = is_within_workspace(WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-100/test_sibling_with_shared_prefi0/work'), WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-100/test_sibling_with_shared_prefi0/work_backup/secret.txt'))\n\ntests\\test_paths.py:15: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_paths.py::test_sibling_with_shared_prefix_is_rejected - Ass...\n1 failed in 0.10s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -575,8 +575,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7357920000795275,
-        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_________________ test_sibling_with_shared_prefix_is_rejected _________________\n\ntmp_path = WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-34/test_sibling_with_shared_prefi0')\n\n    def test_sibling_with_shared_prefix_is_rejected(tmp_path):\n        workspace = tmp_path / \"work\"\n        sibling = tmp_path / \"work_backup\" / \"secret.txt\"\n        sibling.parent.mkdir(parents=True)\n        sibling.write_text(\"secret\")\n>       assert is_within_workspace(workspace, sibling) is False\nE       AssertionError: assert True is False\nE        +  where True = is_within_workspace(WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-34/test_sibling_with_shared_prefi0/work'), WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-34/test_sibling_with_shared_prefi0/work_backup/secret.txt'))\n\ntests\\test_paths.py:15: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_paths.py::test_sibling_with_shared_prefix_is_rejected - Ass...\n1 failed, 1 passed in 0.10s\n",
+        "duration_seconds": 0.7172254000324756,
+        "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n_________________ test_sibling_with_shared_prefix_is_rejected _________________\n\ntmp_path = WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-101/test_sibling_with_shared_prefi0')\n\n    def test_sibling_with_shared_prefix_is_rejected(tmp_path):\n        workspace = tmp_path / \"work\"\n        sibling = tmp_path / \"work_backup\" / \"secret.txt\"\n        sibling.parent.mkdir(parents=True)\n        sibling.write_text(\"secret\")\n>       assert is_within_workspace(workspace, sibling) is False\nE       AssertionError: assert True is False\nE        +  where True = is_within_workspace(WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-101/test_sibling_with_shared_prefi0/work'), WindowsPath('C:/Users/aksha/AppData/Local/Temp/pytest-of-akshat2404/pytest-101/test_sibling_with_shared_prefi0/work_backup/secret.txt'))\n\ntests\\test_paths.py:15: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_paths.py::test_sibling_with_shared_prefix_is_rejected - Ass...\n1 failed, 1 passed in 0.11s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -595,8 +595,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.7090169000439346,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________ test_first_source_wins_and_order_is_preserved ________________\n\n    def test_first_source_wins_and_order_is_preserved():\n>       assert merge_permissions([\"read\", \"write\"], [\"read\", \"audit\"]) == [\"read\", \"write\", \"audit\"]\nE       AssertionError: assert ['audit', 'read', 'write'] == ['read', 'write', 'audit']\nE         \nE         At index 0 diff: 'audit' != 'read'\nE         Use -v to get more diff\n\ntests\\test_permissions.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_permissions.py::test_first_source_wins_and_order_is_preserved\n1 failed in 0.11s\n",
+        "duration_seconds": 0.7018889999017119,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________ test_first_source_wins_and_order_is_preserved ________________\n\n    def test_first_source_wins_and_order_is_preserved():\n>       assert merge_permissions([\"read\", \"write\"], [\"read\", \"audit\"]) == [\"read\", \"write\", \"audit\"]\nE       AssertionError: assert ['audit', 'read', 'write'] == ['read', 'write', 'audit']\nE         \nE         At index 0 diff: 'audit' != 'read'\nE         Use -v to get more diff\n\ntests\\test_permissions.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_permissions.py::test_first_source_wins_and_order_is_preserved\n1 failed in 0.10s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -609,8 +609,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6748093001078814,
-        "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n________________ test_first_source_wins_and_order_is_preserved ________________\n\n    def test_first_source_wins_and_order_is_preserved():\n>       assert merge_permissions([\"read\", \"write\"], [\"read\", \"audit\"]) == [\"read\", \"write\", \"audit\"]\nE       AssertionError: assert ['audit', 'read', 'write'] == ['read', 'write', 'audit']\nE         \nE         At index 0 diff: 'audit' != 'read'\nE         Use -v to get more diff\n\ntests\\test_permissions.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_permissions.py::test_first_source_wins_and_order_is_preserved\n1 failed, 1 passed in 0.09s\n",
+        "duration_seconds": 0.6618986998219043,
+        "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n________________ test_first_source_wins_and_order_is_preserved ________________\n\n    def test_first_source_wins_and_order_is_preserved():\n>       assert merge_permissions([\"read\", \"write\"], [\"read\", \"audit\"]) == [\"read\", \"write\", \"audit\"]\nE       AssertionError: assert ['audit', 'read', 'write'] == ['read', 'write', 'audit']\nE         \nE         At index 0 diff: 'audit' != 'read'\nE         Use -v to get more diff\n\ntests\\test_permissions.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_permissions.py::test_first_source_wins_and_order_is_preserved\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
@@ -629,8 +629,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.684750699903816,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________________ test_round_trip_uses_z_suffix ________________________\n\n    def test_round_trip_uses_z_suffix():\n>       assert normalize_timestamp(\"2026-08-28T12:00:00Z\") == \"2026-08-28T12:00:00Z\"\nE       AssertionError: assert '2026-08-28T12:00:00+00:00' == '2026-08-28T12:00:00Z'\nE         \nE         - 2026-08-28T12:00:00Z\nE         ?                    ^\nE         + 2026-08-28T12:00:00+00:00\nE         ?                    ^^^^^^\n\ntests\\test_time_contract.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_time_contract.py::test_round_trip_uses_z_suffix - Assertion...\n1 failed in 0.10s\n",
+        "duration_seconds": 0.7057484998367727,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________________ test_round_trip_uses_z_suffix ________________________\n\n    def test_round_trip_uses_z_suffix():\n>       assert normalize_timestamp(\"2026-08-28T12:00:00Z\") == \"2026-08-28T12:00:00Z\"\nE       AssertionError: assert '2026-08-28T12:00:00+00:00' == '2026-08-28T12:00:00Z'\nE         \nE         - 2026-08-28T12:00:00Z\nE         ?                    ^\nE         + 2026-08-28T12:00:00+00:00\nE         ?                    ^^^^^^\n\ntests\\test_time_contract.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_time_contract.py::test_round_trip_uses_z_suffix - Assertion...\n1 failed in 0.11s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -643,7 +643,7 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6807295000180602,
+        "duration_seconds": 0.6793951999861747,
         "stdout": "F.                                                                       [100%]\n================================== FAILURES ===================================\n________________________ test_round_trip_uses_z_suffix ________________________\n\n    def test_round_trip_uses_z_suffix():\n>       assert normalize_timestamp(\"2026-08-28T12:00:00Z\") == \"2026-08-28T12:00:00Z\"\nE       AssertionError: assert '2026-08-28T12:00:00+00:00' == '2026-08-28T12:00:00Z'\nE         \nE         - 2026-08-28T12:00:00Z\nE         ?                    ^\nE         + 2026-08-28T12:00:00+00:00\nE         ?                    ^^^^^^\n\ntests\\test_time_contract.py:5: AssertionError\n=========================== short test summary info ===========================\nFAILED tests\\test_time_contract.py::test_round_trip_uses_z_suffix - Assertion...\n1 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
@@ -663,8 +663,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.679708199808374,
-        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n______________________ test_missing_issuer_uses_default _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001612F3E3CD0>\n\n    def test_missing_issuer_uses_default(monkeypatch):\n        monkeypatch.delenv(\"TOKEN_ISSUER\", raising=False)\n>       assert configured_issuer() == \"ci-repair\"\n\ntests\\test_token_config.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nsrc\\auth.py:4: in configured_issuer\n    return validate_issuer(token_issuer())\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nvalue = None\n\n    def validate_issuer(value):\n        if value not in ALLOWED_ISSUERS:\n>           raise ValueError(\"untrusted issuer\")\nE           ValueError: untrusted issuer\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests\\test_token_config.py::test_missing_issuer_uses_default - ValueEr...\n1 failed in 0.11s\n",
+        "duration_seconds": 0.7022246001288295,
+        "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n______________________ test_missing_issuer_uses_default _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000245187E3D90>\n\n    def test_missing_issuer_uses_default(monkeypatch):\n        monkeypatch.delenv(\"TOKEN_ISSUER\", raising=False)\n>       assert configured_issuer() == \"ci-repair\"\n\ntests\\test_token_config.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nsrc\\auth.py:4: in configured_issuer\n    return validate_issuer(token_issuer())\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nvalue = None\n\n    def validate_issuer(value):\n        if value not in ALLOWED_ISSUERS:\n>           raise ValueError(\"untrusted issuer\")\nE           ValueError: untrusted issuer\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests\\test_token_config.py::test_missing_issuer_uses_default - ValueEr...\n1 failed in 0.10s\n",
         "stderr": ""
       },
       "full_suite": {
@@ -677,8 +677,8 @@
         ],
         "exit_code": 1,
         "status": "FAIL",
-        "duration_seconds": 0.6857193999458104,
-        "stdout": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n______________________ test_missing_issuer_uses_default _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002217F430210>\n\n    def test_missing_issuer_uses_default(monkeypatch):\n        monkeypatch.delenv(\"TOKEN_ISSUER\", raising=False)\n>       assert configured_issuer() == \"ci-repair\"\n\ntests\\test_token_config.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nsrc\\auth.py:4: in configured_issuer\n    return validate_issuer(token_issuer())\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nvalue = None\n\n    def validate_issuer(value):\n        if value not in ALLOWED_ISSUERS:\n>           raise ValueError(\"untrusted issuer\")\nE           ValueError: untrusted issuer\n\nsrc\\validator.py:4: ValueError\n________________________ test_default_issuer_is_valid _________________________\n\n    def test_default_issuer_is_valid():\n>       assert validate_issuer(\"ci-repair\") == \"ci-repair\"\n\ntests\\test_token_config.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nvalue = 'ci-repair'\n\n    def validate_issuer(value):\n        if value not in ALLOWED_ISSUERS:\n>           raise ValueError(\"untrusted issuer\")\nE           ValueError: untrusted issuer\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests\\test_token_config.py::test_missing_issuer_uses_default - ValueEr...\nFAILED tests\\test_token_config.py::test_default_issuer_is_valid - ValueError:...\n2 failed, 1 passed in 0.11s\n",
+        "duration_seconds": 0.6991290999576449,
+        "stdout": "FF.                                                                      [100%]\n================================== FAILURES ===================================\n______________________ test_missing_issuer_uses_default _______________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001BDB0AC0650>\n\n    def test_missing_issuer_uses_default(monkeypatch):\n        monkeypatch.delenv(\"TOKEN_ISSUER\", raising=False)\n>       assert configured_issuer() == \"ci-repair\"\n\ntests\\test_token_config.py:7: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\nsrc\\auth.py:4: in configured_issuer\n    return validate_issuer(token_issuer())\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nvalue = None\n\n    def validate_issuer(value):\n        if value not in ALLOWED_ISSUERS:\n>           raise ValueError(\"untrusted issuer\")\nE           ValueError: untrusted issuer\n\nsrc\\validator.py:4: ValueError\n________________________ test_default_issuer_is_valid _________________________\n\n    def test_default_issuer_is_valid():\n>       assert validate_issuer(\"ci-repair\") == \"ci-repair\"\n\ntests\\test_token_config.py:10: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nvalue = 'ci-repair'\n\n    def validate_issuer(value):\n        if value not in ALLOWED_ISSUERS:\n>           raise ValueError(\"untrusted issuer\")\nE           ValueError: untrusted issuer\n\nsrc\\validator.py:4: ValueError\n=========================== short test summary info ===========================\nFAILED tests\\test_token_config.py::test_missing_issuer_uses_default - ValueEr...\nFAILED tests\\test_token_config.py::test_default_issuer_is_valid - ValueError:...\n2 failed, 1 passed in 0.10s\n",
         "stderr": ""
       },
       "targeted_failure_reproduced": true,
