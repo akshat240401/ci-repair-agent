@@ -1,0 +1,7 @@
+{
+  "case_id": "case_014",
+  "root_cause": "Lookup must compare names case-insensitively while preserving original keys.",
+  "root_cause_files": [
+    "src/headers.py"
+  ]
+}

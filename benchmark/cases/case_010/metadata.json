@@ -1,0 +1,13 @@
+{
+  "case_id": "case_010",
+  "title": "Inline comment parser corrupts hash inside quoted values",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "quoted_comment_parsing",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_config_parser.py::test_hash_inside_quotes_is_preserved",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "expanded synthetic benchmark"
+}

@@ -1,0 +1,7 @@
+{
+  "case_id": "case_017",
+  "root_cause": "String prefix comparison is not a safe path-containment test.",
+  "root_cause_files": [
+    "src/paths.py"
+  ]
+}

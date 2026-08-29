@@ -1,0 +1,1883 @@
+[
+  {
+    "case_id": "case_001",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects page_count(20,10) == 2, but the implementation returned 3.",
+        "The failing test is test_exact_multiple_has_no_extra_page."
+      ],
+      "target_files": [
+        "src/pagination.py",
+        "tests/test_pagination.py"
+      ],
+      "suspected_root_cause": "The page-count calculation incorrectly adds an extra page when the item count is an exact multiple of the page size.",
+      "next_step": "Inspect page_count in src/pagination.py, then review the test expectations in tests/test_pagination.py for boundary cases involving exact multiples."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "page_count unconditionally adds 1 after integer division for every nonzero total, so exact multiples such as 20 // 10 produce 3 instead of 2. Partial-page behavior and the empty-collection special case are otherwise covered by the tests.",
+      "evidence": [
+        "src/pagination.py line 6 returns total_items // page_size + 1 for all nonzero totals.",
+        "tests/test_pagination.py expects page_count(20,10) == 2.",
+        "tests/test_pagination.py expects page_count(21,10) == 3 and page_count(0,10) == 0."
+      ],
+      "target_files": [
+        "src/pagination.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/pagination.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "page_count adds 1 after floor division, creating an extra page when total_items is an exact multiple of page_size.",
+      "file": "src/pagination.py",
+      "search": "return total_items // page_size + 1",
+      "replace": "return (total_items + page_size - 1) // page_size",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/pagination.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the failing page_count implementation and surrounding behavior.",
+        "output": "0001: def page_count(total_items: int, page_size: int) -> int:\n0002:     if page_size <= 0:\n0003:         raise ValueError(\"page_size must be positive\")\n0004:     if total_items == 0:\n0005:         return 0\n0006:     return total_items // page_size + 1"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_pagination.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Review all pagination expectations, including boundary cases, before determining the smallest change scope.",
+        "output": "0001: from src.pagination import page_count\n0002: \n0003: def test_partial_page_rounds_up(): assert page_count(21,10)==3\n0004: def test_exact_multiple_has_no_extra_page(): assert page_count(20,10)==2\n0005: def test_empty_collection(): assert page_count(0,10)==0"
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "page_count unconditionally adds 1 after integer division for every nonzero total, so exact multiples such as 20 // 10 produce 3 instead of 2. Partial-page behavior and the empty-collection special case are otherwise covered by the tests.",
+          "evidence": [
+            "src/pagination.py line 6 returns total_items // page_size + 1 for all nonzero totals.",
+            "tests/test_pagination.py expects page_count(20,10) == 2.",
+            "tests/test_pagination.py expects page_count(21,10) == 3 and page_count(0,10) == 0."
+          ],
+          "target_files": [
+            "src/pagination.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_002",
+    "triage": {
+      "failure_type": "TYPE_ERROR",
+      "confidence": 0.99,
+      "evidence": [
+        "TypeError: 'NoneType' object is not subscriptable",
+        "The traceback shows user=USERS.get(user_id) followed by return user[\"name\"]",
+        "The failing test expects get_user_name(999) is None"
+      ],
+      "target_files": [
+        "src/users.py",
+        "tests/test_users.py"
+      ],
+      "suspected_root_cause": "get_user_name indexes into the result of USERS.get(user_id) without handling the missing-user None case.",
+      "next_step": "Inspect src/users.py and compare its missing-user behavior with the expectation in tests/test_users.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "get_user_name retrieves a user with USERS.get(user_id), which returns None for an unknown ID, then unconditionally indexes user[\"name\"], causing the TypeError. The function\u2019s declared return type and missing-user test require returning None when no user exists.",
+      "evidence": [
+        "src/users.py line 3 assigns the result of USERS.get(user_id), which is None for user ID 999.",
+        "src/users.py line 4 unconditionally subscripts user[\"name\"].",
+        "tests/test_users.py expects get_user_name(999) is None and get_user_name(1) == \"Ada\"."
+      ],
+      "target_files": [
+        "src/users.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/users.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "get_user_name unconditionally indexes the result of USERS.get(), which is None for an unknown user ID.",
+      "file": "src/users.py",
+      "search": "    return user[\"name\"]",
+      "replace": "    return user[\"name\"] if user is not None else None",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/users.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect the implementation and surrounding context for the missing-user handling.",
+        "output": "0001: USERS={1:{\"id\":1,\"name\":\"Ada\"},2:{\"id\":2,\"name\":\"Grace\"}}\n0002: def get_user_name(user_id: int) -> str | None:\n0003:     user=USERS.get(user_id)\n0004:     return user[\"name\"]"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_users.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Confirm the complete expected contract and whether any additional cases constrain the smallest change.",
+        "output": "0001: from src.users import get_user_name\n0002: \n0003: def test_known_user(): assert get_user_name(1)==\"Ada\"\n0004: def test_missing_user_returns_none(): assert get_user_name(999) is None"
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "get_user_name retrieves a user with USERS.get(user_id), which returns None for an unknown ID, then unconditionally indexes user[\"name\"], causing the TypeError. The function\u2019s declared return type and missing-user test require returning None when no user exists.",
+          "evidence": [
+            "src/users.py line 3 assigns the result of USERS.get(user_id), which is None for user ID 999.",
+            "src/users.py line 4 unconditionally subscripts user[\"name\"].",
+            "tests/test_users.py expects get_user_name(999) is None and get_user_name(1) == \"Ada\"."
+          ],
+          "target_files": [
+            "src/users.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_003",
+    "triage": {
+      "failure_type": "TYPE_ERROR",
+      "confidence": 0.99,
+      "evidence": [
+        "TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",
+        "The failure occurs at src/auth.py:3 in return int(TOKEN_TTL)",
+        "The test expects token_expiry_seconds() to equal 3600"
+      ],
+      "target_files": [
+        "src/auth.py",
+        "src/settings.py",
+        "tests/test_auth.py"
+      ],
+      "suspected_root_cause": "TOKEN_TTL resolves to None instead of a numeric or string value, likely due to missing or incorrect default configuration.",
+      "next_step": "Inspect how TOKEN_TTL is defined and imported in src/auth.py and src/settings.py, then compare that configuration with the 3600-second expectation in tests/test_auth.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "src/settings.py assigns TOKEN_TTL directly from os.getenv(\"TOKEN_TTL\"), which returns None when the environment variable is unset. src/auth.py then calls int(TOKEN_TTL), causing the TypeError. The test requires an unset TOKEN_TTL to default to 3600 seconds.",
+      "evidence": [
+        "src/settings.py: TOKEN_TTL = os.getenv(\"TOKEN_TTL\") returns None when TOKEN_TTL is absent.",
+        "src/auth.py: token_expiry_seconds() calls int(TOKEN_TTL), which fails for None.",
+        "tests/test_auth.py expects token_expiry_seconds() == 3600 without setting TOKEN_TTL."
+      ],
+      "target_files": [
+        "src/settings.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/settings.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "TOKEN_TTL is None when the environment variable is unset, so int(TOKEN_TTL) raises TypeError instead of using the required 3600-second default.",
+      "file": "src/settings.py",
+      "search": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\")",
+      "replace": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\", \"3600\")",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/auth.py",
+          "target_line": 1,
+          "window": 30
+        },
+        "reason": "Inspect TOKEN_TTL import/use and determine whether the failure is local or configuration-driven.",
+        "output": "0001: from src.settings import TOKEN_TTL\n0002: def token_expiry_seconds() -> int:\n0003:     return int(TOKEN_TTL)"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/settings.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect the definition and defaulting logic for TOKEN_TTL.",
+        "output": "0001: import os\n0002: TOKEN_TTL = os.getenv(\"TOKEN_TTL\")"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_auth.py",
+          "target_line": 1,
+          "window": 20
+        },
+        "reason": "Confirm the expected default behavior and whether the test sets or clears TOKEN_TTL.",
+        "output": "0001: from src.auth import token_expiry_seconds\n0002: \n0003: def test_default_token_ttl(): assert token_expiry_seconds()==3600"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "src/settings.py assigns TOKEN_TTL directly from os.getenv(\"TOKEN_TTL\"), which returns None when the environment variable is unset. src/auth.py then calls int(TOKEN_TTL), causing the TypeError. The test requires an unset TOKEN_TTL to default to 3600 seconds.",
+          "evidence": [
+            "src/settings.py: TOKEN_TTL = os.getenv(\"TOKEN_TTL\") returns None when TOKEN_TTL is absent.",
+            "src/auth.py: token_expiry_seconds() calls int(TOKEN_TTL), which fails for None.",
+            "tests/test_auth.py expects token_expiry_seconds() == 3600 without setting TOKEN_TTL."
+          ],
+          "target_files": [
+            "src/settings.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_004",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected serialize_profile(r) to return {'id': 7, 'name': 'A. Raval'}",
+        "The actual result was {'id': 7, 'name': 'araval'}",
+        "The input contains both username 'araval' and display_name 'A. Raval'"
+      ],
+      "target_files": [
+        "src/profile.py",
+        "tests/test_profile.py"
+      ],
+      "suspected_root_cause": "serialize_profile is using the username field instead of preferring display_name for the output name.",
+      "next_step": "Inspect serialize_profile in src/profile.py and verify its field-selection behavior against the failing test."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "serialize_profile in src/profile.py unconditionally maps the output name to record['username'], but the failing contract requires using the provided display_name value.",
+      "evidence": [
+        "src/profile.py line 2 returns {'id': record['id'], 'name': record['username']}.",
+        "The failing input contains username 'araval' and display_name 'A. Raval', while the expected output uses 'A. Raval'.",
+        "The actual output name 'araval' exactly matches the implementation's username selection."
+      ],
+      "target_files": [
+        "src/profile.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 1.0
+    },
+    "tool_calls": 1,
+    "ground_truth_root_files": [
+      "src/profile.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "serialize_profile uses the username field instead of the record's display_name field for the output name.",
+      "file": "src/profile.py",
+      "search": "return {\"id\":record[\"id\"],\"name\":record[\"username\"]}",
+      "replace": "return {\"id\":record[\"id\"],\"name\":record[\"display_name\"]}",
+      "confidence": 1.0
+    },
+    "patch_error": null,
+    "regression_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/profile.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect serialize_profile implementation and determine the exact field-selection bug.",
+        "output": "0001: def serialize_profile(record: dict) -> dict:\n0002:     return {\"id\":record[\"id\"],\"name\":record[\"username\"]}"
+      },
+      {
+        "turn": 2,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "serialize_profile in src/profile.py unconditionally maps the output name to record['username'], but the failing contract requires using the provided display_name value.",
+          "evidence": [
+            "src/profile.py line 2 returns {'id': record['id'], 'name': record['username']}.",
+            "The failing input contains username 'araval' and display_name 'A. Raval', while the expected output uses 'A. Raval'.",
+            "The actual output name 'araval' exactly matches the implementation's username selection."
+          ],
+          "target_files": [
+            "src/profile.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 1.0
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_005",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "test_total_does_not_mutate_cart failed because prices changed from [30.0, 10.0, 20.0] to [10.0, 20.0, 30.0] after discounted_total(prices, 0.10)",
+        "The assertion specifically expects the input cart list to remain unchanged"
+      ],
+      "target_files": [
+        "src/cart.py",
+        "tests/test_cart.py"
+      ],
+      "suspected_root_cause": "discounted_total mutates the input prices list, likely by sorting it in place.",
+      "next_step": "Inspect discounted_total in src/cart.py for in-place list operations, especially sorting or reassignment of the input list, and compare its behavior with the immutability requirement in tests/test_cart.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "discounted_total calls prices.sort(), which sorts the caller-provided list in place and changes its order. The function should calculate the total without mutating the input list.",
+      "evidence": [
+        "The failing test shows prices changed from [30.0, 10.0, 20.0] to [10.0, 20.0, 30.0] after discounted_total(prices, 0.10).",
+        "src/cart.py line 3 explicitly calls prices.sort(), an in-place mutation.",
+        "src/cart.py line 4 only needs the sum of prices, so sorting is not required for the returned total."
+      ],
+      "target_files": [
+        "src/cart.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 1.0
+    },
+    "tool_calls": 1,
+    "ground_truth_root_files": [
+      "src/cart.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "discounted_total sorts the caller-provided prices list in place, mutating its order.",
+      "file": "src/cart.py",
+      "search": "    prices.sort()\n",
+      "replace": "",
+      "confidence": 1.0
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/cart.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect discounted_total for the mutation causing the observed list reorder.",
+        "output": "0001: def discounted_total(prices: list[float], discount: float) -> float:\n0002:     if not 0 <= discount <= 1: raise ValueError(\"discount must be between 0 and 1\")\n0003:     prices.sort()\n0004:     return sum(prices)*(1-discount)"
+      },
+      {
+        "turn": 2,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "discounted_total calls prices.sort(), which sorts the caller-provided list in place and changes its order. The function should calculate the total without mutating the input list.",
+          "evidence": [
+            "The failing test shows prices changed from [30.0, 10.0, 20.0] to [10.0, 20.0, 30.0] after discounted_total(prices, 0.10).",
+            "src/cart.py line 3 explicitly calls prices.sort(), an in-place mutation.",
+            "src/cart.py line 4 only needs the sum of prices, so sorting is not required for the returned total."
+          ],
+          "target_files": [
+            "src/cart.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 1.0
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_006",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test sets USE_CACHE to \"false\".",
+        "cache_enabled() returns True, but the assertion requires False.",
+        "The test completes quickly with exit code 1, with no dependency or environment errors."
+      ],
+      "target_files": [
+        "src/flags.py",
+        "tests/test_flags.py"
+      ],
+      "suspected_root_cause": "cache_enabled() likely treats the non-empty string \"false\" as truthy instead of parsing it as a disabled flag.",
+      "next_step": "Inspect src/flags.py to verify how USE_CACHE is read and converted to a boolean, then review tests/test_flags.py for the expected accepted flag values."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "`cache_enabled()` applies Python's `bool()` directly to the environment-variable string. Any non-empty string, including the value `\"false\"`, is truthy, so `USE_CACHE=\"false\"` incorrectly returns `True`.",
+      "evidence": [
+        "`src/flags.py:4` returns `bool(os.getenv(\"USE_CACHE\", \"false\"))`.",
+        "The failing test sets `USE_CACHE` to `\"false\"` and expects `cache_enabled()` to be `False`.",
+        "The string `\"false\"` is non-empty, so Python evaluates it as `True` when passed to `bool()`."
+      ],
+      "target_files": [
+        "src/flags.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 1,
+    "ground_truth_root_files": [
+      "src/flags.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "cache_enabled() applies bool() directly to the environment-variable string, so the non-empty string \"false\" is treated as true.",
+      "file": "src/flags.py",
+      "search": "return bool(os.getenv(\"USE_CACHE\", \"false\"))",
+      "replace": "return os.getenv(\"USE_CACHE\", \"false\").lower() == \"true\"",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/flags.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Verify how USE_CACHE is converted to a boolean.",
+        "output": "0001: import os\n0002: \n0003: def cache_enabled():\n0004:     return bool(os.getenv(\"USE_CACHE\", \"false\"))"
+      },
+      {
+        "turn": 2,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "`cache_enabled()` applies Python's `bool()` directly to the environment-variable string. Any non-empty string, including the value `\"false\"`, is truthy, so `USE_CACHE=\"false\"` incorrectly returns `True`.",
+          "evidence": [
+            "`src/flags.py:4` returns `bool(os.getenv(\"USE_CACHE\", \"false\"))`.",
+            "The failing test sets `USE_CACHE` to `\"false\"` and expects `cache_enabled()` to be `False`.",
+            "The string `\"false\"` is non-empty, so Python evaluates it as `True` when passed to `bool()`."
+          ],
+          "target_files": [
+            "src/flags.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_007",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects latest_version([\"2.9.0\", \"2.10.0\", \"2.8.7\"]) to return \"2.10.0\", but the function returned \"2.9.0\".",
+        "The failure is an AssertionError in tests/test_release.py::test_latest_version_handles_two_digit_minor."
+      ],
+      "target_files": [
+        "src/release.py",
+        "tests/test_release.py"
+      ],
+      "suspected_root_cause": "Version strings are likely being compared lexicographically or otherwise without parsing numeric minor-version components, causing 2.9.0 to sort above 2.10.0.",
+      "next_step": "Inspect src/release.py, especially latest_version, to verify how version components are parsed and ordered; review tests/test_release.py for expected version semantics."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "latest_version uses Python's default max() on version strings, which compares them lexicographically rather than by numeric version components. Consequently, \"2.9.0\" is considered greater than \"2.10.0\", and the same issue affects patch comparisons such as \"1.4.9\" versus \"1.4.11\".",
+      "evidence": [
+        "src/release.py line 2 returns max(versions) without parsing version components.",
+        "tests/test_release.py expects numeric ordering for both two-digit minor versions and two-digit patch versions."
+      ],
+      "target_files": [
+        "src/release.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 1.0
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/release.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "latest_version compares version strings lexicographically, so numeric components such as 9 and 10 are ordered incorrectly.",
+      "file": "src/release.py",
+      "search": "    return max(versions)",
+      "replace": "    return max(versions, key=lambda version: tuple(map(int, version.split('.'))))",
+      "confidence": 1.0
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/release.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect latest_version implementation and determine how version components are compared.",
+        "output": "0001: def latest_version(versions):\n0002:     return max(versions)"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_release.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Confirm the expected version ordering and whether additional cases define the required behavior.",
+        "output": "0001: from src.release import latest_version\n0002: \n0003: def test_latest_version_handles_two_digit_minor():\n0004:     assert latest_version([\"2.9.0\", \"2.10.0\", \"2.8.7\"]) == \"2.10.0\"\n0005: \n0006: def test_latest_version_handles_patch_numbers():\n0007:     assert latest_version([\"1.4.9\", \"1.4.11\", \"1.4.2\"]) == \"1.4.11\""
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "latest_version uses Python's default max() on version strings, which compares them lexicographically rather than by numeric version components. Consequently, \"2.9.0\" is considered greater than \"2.10.0\", and the same issue affects patch comparisons such as \"1.4.9\" versus \"1.4.11\".",
+          "evidence": [
+            "src/release.py line 2 returns max(versions) without parsing version components.",
+            "tests/test_release.py expects numeric ordering for both two-digit minor versions and two-digit patch versions."
+          ],
+          "target_files": [
+            "src/release.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 1.0
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_008",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "The test expects get_price(\"sku-1\", \"EU\") to return 12, but it returned 10.",
+        "The failing test is named test_cache_does_not_leak_price_between_regions.",
+        "The US lookup passed before the EU lookup failed, indicating likely cache key or region-handling behavior."
+      ],
+      "target_files": [
+        "src/pricing.py",
+        "tests/test_pricing.py"
+      ],
+      "suspected_root_cause": "The pricing cache likely keys entries only by SKU or otherwise reuses the US price for the EU region.",
+      "next_step": "Inspect get_price and its cache implementation in src/pricing.py, then review the test fixtures and expected regional prices in tests/test_pricing.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "get_price() uses only product_id as the cache key, so the first US lookup stores 10 under \"sku-1\" and the subsequent EU lookup incorrectly reuses that cached value instead of looking up the regional price.",
+      "evidence": [
+        "PRICE_TABLE contains separate entries for (\"sku-1\", \"US\") = 10 and (\"sku-1\", \"EU\") = 12.",
+        "In src/pricing.py line 10, the cache key is assigned as product_id \u05d1\u05dc\u05d1\u05d3, excluding region.",
+        "Lines 11-13 return the existing cached value without consulting PRICE_TABLE when the product ID is already cached.",
+        "The failing sequence performs the US lookup first, then receives the cached US value for the EU lookup."
+      ],
+      "target_files": [
+        "src/pricing.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/pricing.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "get_price() uses only product_id as the cache key, causing the cached US price to be reused for the EU region.",
+      "file": "src/pricing.py",
+      "search": "    key = product_id",
+      "replace": "    key = (product_id, region)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/pricing.py",
+          "target_line": 1,
+          "window": 120
+        },
+        "reason": "Inspect the pricing lookup and cache key implementation implicated by the regional leakage.",
+        "output": "TOOL_ERROR: window must be between 1 and 80"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/pricing.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the pricing lookup and cache key implementation implicated by the regional leakage.",
+        "output": "0001: PRICE_TABLE = {\n0002:     (\"sku-1\", \"US\"): 10,\n0003:     (\"sku-1\", \"EU\"): 12,\n0004:     (\"sku-2\", \"US\"): 7,\n0005: }\n0006: \n0007: _CACHE = {}\n0008: \n0009: def get_price(product_id, region):\n0010:     key = product_id\n0011:     if key not in _CACHE:\n0012:         _CACHE[key] = PRICE_TABLE[(product_id, region)]\n0013:     return _CACHE[key]\n0014: \n0015: def clear_cache():\n0016:     _CACHE.clear()"
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "get_price() uses only product_id as the cache key, so the first US lookup stores 10 under \"sku-1\" and the subsequent EU lookup incorrectly reuses that cached value instead of looking up the regional price.",
+          "evidence": [
+            "PRICE_TABLE contains separate entries for (\"sku-1\", \"US\") = 10 and (\"sku-1\", \"EU\") = 12.",
+            "In src/pricing.py line 10, the cache key is assigned as product_id \u05d1\u05dc\u05d1\u05d3, excluding region.",
+            "Lines 11-13 return the existing cached value without consulting PRICE_TABLE when the product ID is already cached.",
+            "The failing sequence performs the US lookup first, then receives the cached US value for the EU lookup."
+          ],
+          "target_files": [
+            "src/pricing.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_009",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expects call_with_retries(flaky, 2) to succeed after three total attempts.",
+        "The traceback shows src/retry.py raises the last RuntimeError after the operation fails twice, instead of performing the expected third attempt.",
+        "The flaky operation returns successfully when calls['count'] reaches 3, but that success is never observed."
+      ],
+      "target_files": [
+        "src/retry.py",
+        "tests/test_retry.py"
+      ],
+      "suspected_root_cause": "call_with_retries interprets the retry count incorrectly and performs fewer than two retries, likely allowing only two total attempts.",
+      "next_step": "Inspect the retry loop and its attempt bounds in src/retry.py, then compare them with the retry semantics asserted in tests/test_retry.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "call_with_retries uses range(max_retries), so max_retries=2 permits only two total operation calls. The function therefore raises after the second RuntimeError instead of performing the third attempt allowed by the retry-count semantics.",
+      "evidence": [
+        "src/retry.py line 3 iterates with range(max_retries), which yields two iterations when max_retries is 2.",
+        "tests/test_retry.py expects call_with_retries(flaky, 2) to make three total calls and succeed on the third.",
+        "The success-path test expects an operation that succeeds immediately to be called only once, which is already compatible with a corrected retry loop."
+      ],
+      "target_files": [
+        "src/retry.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/retry.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "The retry loop performs only max_retries total attempts instead of allowing the initial attempt plus max_retries retries.",
+      "file": "src/retry.py",
+      "search": "for _ in range(max_retries):",
+      "replace": "for _ in range(max_retries + 1):",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/retry.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect the retry loop and attempt-count bounds causing the failed test.",
+        "output": "0001: def call_with_retries(operation, max_retries):\n0002:     last_error = None\n0003:     for _ in range(max_retries):\n0004:         try:\n0005:             return operation()\n0006:         except RuntimeError as exc:\n0007:             last_error = exc\n0008:     raise last_error"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "search_symbol",
+        "arguments": {
+          "symbol": "call_with_retries",
+          "max_results": 10
+        },
+        "reason": "Check all call sites and tests to confirm retry-count semantics and whether any cross-file contract is affected.",
+        "output": "src/retry.py:1: def call_with_retries(operation, max_retries):"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_retry.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Confirm the asserted retry semantics and any edge-case expectations in the targeted test file.",
+        "output": "0001: from src.retry import call_with_retries\n0002: \n0003: def test_two_retries_allows_three_total_attempts():\n0004:     calls = {\"count\": 0}\n0005: \n0006:     def flaky():\n0007:         calls[\"count\"] += 1\n0008:         if calls[\"count\"] < 3:\n0009:             raise RuntimeError(\"temporary\")\n0010:         return \"ok\"\n0011: \n0012:     assert call_with_retries(flaky, 2) == \"ok\"\n0013:     assert calls[\"count\"] == 3\n0014: \n0015: def test_success_does_not_consume_extra_attempts():\n0016:     calls = {\"count\": 0}\n0017: \n0018:     def ok():\n0019:         calls[\"count\"] += 1\n0020:         return \"ok\"\n0021: \n0022:     assert call_with_retries(ok, 4) == \"ok\"\n0023:     assert calls[\"count\"] == 1"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "call_with_retries uses range(max_retries), so max_retries=2 permits only two total operation calls. The function therefore raises after the second RuntimeError instead of performing the third attempt allowed by the retry-count semantics.",
+          "evidence": [
+            "src/retry.py line 3 iterates with range(max_retries), which yields two iterations when max_retries is 2.",
+            "tests/test_retry.py expects call_with_retries(flaky, 2) to make three total calls and succeed on the third.",
+            "The success-path test expects an operation that succeeds immediately to be called only once, which is already compatible with a corrected retry loop."
+          ],
+          "target_files": [
+            "src/retry.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_010",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The assertion expected 'https://example.com/#done' but the parser returned 'https://example.com/'.",
+        "The failing test is named test_hash_inside_quotes_is_preserved.",
+        "The test command completed with one assertion failure in 0.10s, without syntax, dependency, or environment errors."
+      ],
+      "target_files": [
+        "src/config_parser.py",
+        "tests/test_config_parser.py"
+      ],
+      "suspected_root_cause": "The configuration parser treats '#' as a comment delimiter even when it appears inside a quoted value.",
+      "next_step": "Inspect the parsing logic in src/config_parser.py for comment stripping and verify its quote-handling behavior against the failing test and nearby parser tests."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "`parse_line` unconditionally splits the input at the first `#` (`line.split(\"#\", 1)`), so a hash inside a quoted value is incorrectly treated as a comment delimiter and removed before value parsing.",
+      "evidence": [
+        "`src/config_parser.py:2` uses `line.split(\"#\", 1)[0]`, with no quote-state handling.",
+        "The failing input `callback=\"https://example.com/#done\"` is therefore truncated to `callback=\"https://example.com/`, producing `https://example.com/` instead of the expected `https://example.com/#done`.",
+        "The value is stripped of surrounding double quotes only after comment removal at `src/config_parser.py:6`."
+      ],
+      "target_files": [
+        "src/config_parser.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/config_parser.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "parse_line unconditionally treats the first '#' as a comment delimiter, removing hashes that occur inside quoted values.",
+      "file": "src/config_parser.py",
+      "search": "    clean = line.split(\"#\", 1)[0].strip()",
+      "replace": "    clean = line.split('\"', 2)[0] if line.count('\"') < 2 else line[:line.rfind('\"') + 1] + line[line.rfind('\"') + 1:].split('#', 1)[0]\n    clean = clean.strip()",
+      "confidence": 0.98
+    },
+    "patch_error": null,
+    "regression_stdout": "..F                                                                      [100%]\n================================== FAILURES ===================================\n______________________ test_full_line_comment_is_ignored ______________________\n\n    def test_full_line_comment_is_ignored():\n>       assert parse_line(\"# comment only\") is None\n\nC:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\benchmark\\cases\\case_010\\repo\\tests\\test_config_parser.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nline = '# comment only'\n\n    def parse_line(line):\n        clean = line.split('\"', 2)[0] if line.count('\"') < 2 else line[:line.rfind('\"') + 1] + line[line.rfind('\"') + 1:].split('#', 1)[0]\n        clean = clean.strip()\n        if not clean:\n            return None\n>       key, value = clean.split(\"=\", 1)\nE       ValueError: not enough values to unpack (expected 2, got 1)\n\nsrc\\config_parser.py:6: ValueError\n=========================== short test summary info ===========================\nFAILED tests/test_config_parser.py::test_full_line_comment_is_ignored - Value...\n1 failed, 2 passed in 0.10s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/config_parser.py",
+          "target_line": 1,
+          "window": 120
+        },
+        "reason": "Inspect the parser's comment and quote handling to confirm the suspected root cause.",
+        "output": "TOOL_ERROR: window must be between 1 and 80"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/config_parser.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the parser's comment and quote handling to confirm the suspected root cause.",
+        "output": "0001: def parse_line(line):\n0002:     clean = line.split(\"#\", 1)[0].strip()\n0003:     if not clean:\n0004:         return None\n0005:     key, value = clean.split(\"=\", 1)\n0006:     return key.strip(), value.strip().strip('\"')"
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "`parse_line` unconditionally splits the input at the first `#` (`line.split(\"#\", 1)`), so a hash inside a quoted value is incorrectly treated as a comment delimiter and removed before value parsing.",
+          "evidence": [
+            "`src/config_parser.py:2` uses `line.split(\"#\", 1)[0]`, with no quote-state handling.",
+            "The failing input `callback=\"https://example.com/#done\"` is therefore truncated to `callback=\"https://example.com/`, producing `https://example.com/` instead of the expected `https://example.com/#done`.",
+            "The value is stripped of surrounding double quotes only after comment removal at `src/config_parser.py:6`."
+          ],
+          "target_files": [
+            "src/config_parser.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_011",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected '/tmp/build/report.json' but received '/tmp/build//report.json'.",
+        "The failing test is named 'test_output_path_handles_root_with_trailing_separator'.",
+        "Pytest reports an AssertionError in tests/test_artifact.py:4."
+      ],
+      "target_files": [
+        "src/artifact.py",
+        "tests/test_artifact.py"
+      ],
+      "suspected_root_cause": "output_path concatenates a directory ending in a separator with the filename without normalizing or conditionally inserting the separator.",
+      "next_step": "Inspect the output_path implementation in src/artifact.py and its related test expectations in tests/test_artifact.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "`output_path` unconditionally inserts `/` between `root` and `filename`. When `root` already ends with `/`, this produces a doubled separator, such as `/tmp/build//report.json`.",
+      "evidence": [
+        "`src/artifact.py:1-2` implements `return f\"{root}/{filename}\"` without removing or conditionally handling a trailing separator.",
+        "The failing test expects `/tmp/build/report.json` for root `/tmp/build/` but receives `/tmp/build//report.json`.",
+        "The failure is specifically `tests/test_artifact.py::test_output_path_handles_root_with_trailing_separator`. "
+      ],
+      "target_files": [
+        "src/artifact.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 1,
+    "ground_truth_root_files": [
+      "src/artifact.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "output_path unconditionally adds a slash, producing a doubled separator when root already ends with one.",
+      "file": "src/artifact.py",
+      "search": "return f\"{root}/{filename}\"",
+      "replace": "return f\"{root.rstrip('/')}/{filename}\"",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/artifact.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the implementation of output_path and determine how separator handling currently works.",
+        "output": "0001: def output_path(root, filename):\n0002:     return f\"{root}/{filename}\""
+      },
+      {
+        "turn": 2,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "`output_path` unconditionally inserts `/` between `root` and `filename`. When `root` already ends with `/`, this produces a doubled separator, such as `/tmp/build//report.json`.",
+          "evidence": [
+            "`src/artifact.py:1-2` implements `return f\"{root}/{filename}\"` without removing or conditionally handling a trailing separator.",
+            "The failing test expects `/tmp/build/report.json` for root `/tmp/build/` but receives `/tmp/build//report.json`.",
+            "The failure is specifically `tests/test_artifact.py::test_output_path_handles_root_with_trailing_separator`. "
+          ],
+          "target_files": [
+            "src/artifact.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_012",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected resolved[\"port\"] to equal 7000 but received 9000.",
+        "The failing test is test_environment_overrides_file_configuration in tests/test_settings.py.",
+        "The failure occurred during an assertion, not during test collection, import, or dependency setup."
+      ],
+      "target_files": [
+        "src/settings.py",
+        "tests/test_settings.py"
+      ],
+      "suspected_root_cause": "resolve_settings is prioritizing the first configuration argument over the second, contrary to the expected environment-over-file precedence.",
+      "next_step": "Inspect resolve_settings in src/settings.py and compare its merge precedence with the inputs and expectation in tests/test_settings.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "resolve_settings merges configurations in the wrong precedence order: `{**DEFAULTS, **env_config, **file_config}` causes file_config values to override env_config values. Thus port=9000 from file_config replaces port=7000 from env_config, contrary to the required environment-over-file precedence.",
+      "evidence": [
+        "src/settings.py line 7 defines resolve_settings(file_config, env_config) as `{**DEFAULTS, **env_config, **file_config}`.",
+        "The failing test passes file_config `{\"port\": 9000, \"debug\": False}` and env_config `{\"port\": 7000}`, then expects the resolved port to be 7000 but receives 9000.",
+        "The merge order means later file_config keys override earlier env_config keys."
+      ],
+      "target_files": [
+        "src/settings.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 1,
+    "ground_truth_root_files": [
+      "src/settings.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "resolve_settings applies file_config after env_config, so file values incorrectly override environment values.",
+      "file": "src/settings.py",
+      "search": "return {**DEFAULTS, **env_config, **file_config}",
+      "replace": "return {**DEFAULTS, **file_config, **env_config}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/settings.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect resolve_settings implementation and determine which argument currently takes precedence.",
+        "output": "0001: DEFAULTS = {\n0002:     \"host\": \"127.0.0.1\",\n0003:     \"port\": 8000,\n0004:     \"debug\": False,\n0005: }\n0006: \n0007: def resolve_settings(file_config, env_config):\n0008:     return {**DEFAULTS, **env_config, **file_config}"
+      },
+      {
+        "turn": 2,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "resolve_settings merges configurations in the wrong precedence order: `{**DEFAULTS, **env_config, **file_config}` causes file_config values to override env_config values. Thus port=9000 from file_config replaces port=7000 from env_config, contrary to the required environment-over-file precedence.",
+          "evidence": [
+            "src/settings.py line 7 defines resolve_settings(file_config, env_config) as `{**DEFAULTS, **env_config, **file_config}`.",
+            "The failing test passes file_config `{\"port\": 9000, \"debug\": False}` and env_config `{\"port\": 7000}`, then expects the resolved port to be 7000 but receives 9000.",
+            "The merge order means later file_config keys override earlier env_config keys."
+          ],
+          "target_files": [
+            "src/settings.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_013",
+    "triage": {
+      "failure_type": "TEST_FAILURE",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected {'id': 7, 'display_name': 'Ada'} but received {'id': 7, 'username': 'Ada'}",
+        "pytest reported an AssertionError in tests/test_api_contract.py::test_payload_uses_display_name_contract"
+      ],
+      "target_files": [
+        "src/api.py",
+        "src/producer.py",
+        "tests/test_api_contract.py"
+      ],
+      "suspected_root_cause": "The payload rendering implementation uses the key 'username' while the API contract requires 'display_name'.",
+      "next_step": "Inspect the render_user implementation and its callers in src/api.py and src/producer.py, then compare them with the contract asserted in tests/test_api_contract.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "src/producer.py::build_user_payload constructs the user payload with the key \"username\", but the API contract and failing test require \"display_name\". src/api.py delegates payload construction to this helper, while greeting already supports the display_name contract.",
+      "evidence": [
+        "src/producer.py line 2 returns {\"id\": user[\"id\"], \"username\": user[\"name\"]}.",
+        "tests/test_api_contract.py lines 5-7 require payload {\"id\": 7, \"display_name\": \"Ada\"} and message \"Hello Ada\".",
+        "tests/test_api_contract.py line 10 confirms greeting accepts {\"display_name\": \"Grace\"}.",
+        "src/api.py delegates directly to build_user_payload and does not independently construct the payload."
+      ],
+      "target_files": [
+        "src/producer.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/consumer.py",
+      "src/producer.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": false,
+    "proposal": {
+      "root_cause": "The payload builder uses the outdated key \"username\" instead of the API contract's required \"display_name\" key.",
+      "file": "src/producer.py",
+      "search": "return {\"id\": user[\"id\"], \"username\": user[\"name\"]}",
+      "replace": "return {\"id\": user[\"id\"], \"display_name\": user[\"name\"]}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/api.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the payload rendering implementation implicated by the failing contract test.",
+        "output": "0001: from src.producer import build_user_payload\n0002: from src.consumer import greeting\n0003: def render_user(user):\n0004:     payload = build_user_payload(user)\n0005:     return payload, greeting(payload)"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/producer.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the helper that constructs the failing payload key and determine whether the defect is localized there.",
+        "output": "0001: def build_user_payload(user):\n0002:     return {\"id\": user[\"id\"], \"username\": user[\"name\"]}"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_api_contract.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Confirm the complete expected payload and greeting contract before identifying the smallest safe change.",
+        "output": "0001: from src.api import render_user\n0002: from src.consumer import greeting\n0003: \n0004: def test_payload_uses_display_name_contract():\n0005:     payload, message = render_user({\"id\": 7, \"name\": \"Ada\"})\n0006:     assert payload == {\"id\": 7, \"display_name\": \"Ada\"}\n0007:     assert message == \"Hello Ada\"\n0008: \n0009: def test_consumer_accepts_new_contract_directly():\n0010:     assert greeting({\"display_name\": \"Grace\"}) == \"Hello Grace\""
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "src/producer.py::build_user_payload constructs the user payload with the key \"username\", but the API contract and failing test require \"display_name\". src/api.py delegates payload construction to this helper, while greeting already supports the display_name contract.",
+          "evidence": [
+            "src/producer.py line 2 returns {\"id\": user[\"id\"], \"username\": user[\"name\"]}.",
+            "tests/test_api_contract.py lines 5-7 require payload {\"id\": 7, \"display_name\": \"Ada\"} and message \"Hello Ada\".",
+            "tests/test_api_contract.py line 10 confirms greeting accepts {\"display_name\": \"Grace\"}.",
+            "src/api.py delegates directly to build_user_payload and does not independently construct the payload."
+          ],
+          "target_files": [
+            "src/producer.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_014",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected get_header({'Content-Type': 'application/json'}, 'content-type') to return 'application/json', but it returned None.",
+        "The failing test is test_lookup_accepts_lowercase_request, indicating case-insensitive header lookup is not working."
+      ],
+      "target_files": [
+        "src/headers.py",
+        "tests/test_headers.py"
+      ],
+      "suspected_root_cause": "get_header likely performs case-sensitive key lookup instead of normalizing header names.",
+      "next_step": "Inspect src/headers.py, especially get_header, to verify how request and stored header names are compared; review tests/test_headers.py for expected case-insensitive behavior."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "get_header performs a direct case-sensitive dictionary lookup via headers.get(name), so differently cased HTTP header names are not matched.",
+      "evidence": [
+        "src/headers.py line 2 returns headers.get(name) without normalizing or comparing keys case-insensitively.",
+        "tests/test_headers.py requires lowercase lookup of stored 'Content-Type' and mixed-case lookup of stored 'x-request-id'.",
+        "normalized_headers is tested to preserve original keys, so changing that function is outside the failure scope."
+      ],
+      "target_files": [
+        "src/headers.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/headers.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "get_header performs a case-sensitive dictionary lookup, so header names with different casing are not matched.",
+      "file": "src/headers.py",
+      "search": "    return headers.get(name)",
+      "replace": "    return next((value for key, value in headers.items() if key.lower() == name.lower()), None)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/headers.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect get_header implementation and determine whether header-name comparison is case-sensitive.",
+        "output": "0001: def get_header(headers, name):\n0002:     return headers.get(name)\n0003: \n0004: def normalized_headers(headers):\n0005:     return dict(headers)"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_headers.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Confirm the complete expected header API behavior and whether existing tests constrain the smallest safe change.",
+        "output": "0001: from src.headers import get_header, normalized_headers\n0002: \n0003: def test_lookup_accepts_lowercase_request():\n0004:     assert get_header({\"Content-Type\": \"application/json\"}, \"content-type\") == \"application/json\"\n0005: \n0006: def test_lookup_accepts_mixed_case_storage():\n0007:     assert get_header({\"x-request-id\": \"abc\"}, \"X-Request-Id\") == \"abc\"\n0008: \n0009: def test_normalized_headers_preserves_original_keys():\n0010:     headers = {\"Content-Type\": \"application/json\"}\n0011:     assert normalized_headers(headers) == headers"
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "get_header performs a direct case-sensitive dictionary lookup via headers.get(name), so differently cased HTTP header names are not matched.",
+          "evidence": [
+            "src/headers.py line 2 returns headers.get(name) without normalizing or comparing keys case-insensitively.",
+            "tests/test_headers.py requires lowercase lookup of stored 'Content-Type' and mixed-case lookup of stored 'x-request-id'.",
+            "normalized_headers is tested to preserve original keys, so changing that function is outside the failure scope."
+          ],
+          "target_files": [
+            "src/headers.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_015",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected {'timeout_ms': 30000} but received {'timeout_ms': 30}.",
+        "The failing test is named test_config_serializes_timeout_in_milliseconds.",
+        "The assertion failure occurred in tests/test_timeout.py:6."
+      ],
+      "target_files": [
+        "src/config_writer.py",
+        "tests/test_timeout.py"
+      ],
+      "suspected_root_cause": "build_config is assigning the timeout value directly instead of converting 30 seconds to 30000 milliseconds.",
+      "next_step": "Inspect build_config in src/config_writer.py and trace how the timeout argument is transformed before serialization; use tests/test_timeout.py to confirm the expected units."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "serialize_timeout in src/config_writer.py assigns the input seconds directly to the timeout_ms field, so build_config(30) produces 30 instead of converting 30 seconds to 30000 milliseconds. build_config delegates serialization to this function and then validates the resulting millisecond value.",
+      "evidence": [
+        "src/config_writer.py:1-2 shows serialize_timeout(seconds) returning {'timeout_ms': seconds} without conversion.",
+        "src/service.py:3-5 shows build_config passes seconds directly to serialize_timeout and validates the serialized config.",
+        "tests/test_timeout.py:5-6 expects build_config(30) to return {'timeout_ms': 30000}.",
+        "tests/test_timeout.py:8-13 confirms timeout_ms is interpreted in milliseconds by the validator-facing tests."
+      ],
+      "target_files": [
+        "src/config_writer.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/config_writer.py",
+      "src/validator.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": false,
+    "proposal": {
+      "root_cause": "serialize_timeout assigns seconds directly to timeout_ms instead of converting seconds to milliseconds.",
+      "file": "src/config_writer.py",
+      "search": "return {\"timeout_ms\": seconds}",
+      "replace": "return {\"timeout_ms\": seconds * 1000}",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/config_writer.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect build_config implementation and determine whether timeout units are converted before serialization.",
+        "output": "0001: def serialize_timeout(seconds):\n0002:     return {\"timeout_ms\": seconds}"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_timeout.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Confirm the expected timeout input units and the function under test.",
+        "output": "0001: import pytest\n0002: from src.service import build_config\n0003: from src.validator import validate_timeout\n0004: \n0005: def test_config_serializes_timeout_in_milliseconds():\n0006:     assert build_config(30) == {\"timeout_ms\": 30000}\n0007: \n0008: def test_validator_accepts_millisecond_range():\n0009:     assert validate_timeout({\"timeout_ms\": 30000}) is True\n0010: \n0011: def test_validator_rejects_more_than_two_minutes():\n0012:     with pytest.raises(ValueError):\n0013:         validate_timeout({\"timeout_ms\": 121000})"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/service.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Trace build_config to determine how it calls serialize_timeout and whether the fix belongs in the service or serializer.",
+        "output": "0001: from src.config_writer import serialize_timeout\n0002: from src.validator import validate_timeout\n0003: def build_config(seconds):\n0004:     config = serialize_timeout(seconds)\n0005:     validate_timeout(config)\n0006:     return config"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "serialize_timeout in src/config_writer.py assigns the input seconds directly to the timeout_ms field, so build_config(30) produces 30 instead of converting 30 seconds to 30000 milliseconds. build_config delegates serialization to this function and then validates the resulting millisecond value.",
+          "evidence": [
+            "src/config_writer.py:1-2 shows serialize_timeout(seconds) returning {'timeout_ms': seconds} without conversion.",
+            "src/service.py:3-5 shows build_config passes seconds directly to serialize_timeout and validates the serialized config.",
+            "tests/test_timeout.py:5-6 expects build_config(30) to return {'timeout_ms': 30000}.",
+            "tests/test_timeout.py:8-13 confirms timeout_ms is interpreted in milliseconds by the validator-facing tests."
+          ],
+          "target_files": [
+            "src/config_writer.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_016",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The first get_user(\"u1\") returns the expected name \"Ada\".",
+        "After update_user(\"u1\", {\"name\": \"Grace\"}), the second get_user(\"u1\") still returns \"Ada\".",
+        "The failing test is specifically named test_update_is_visible_after_cached_read."
+      ],
+      "target_files": [
+        "src/users.py",
+        "src/store.py",
+        "tests/test_users_cache.py"
+      ],
+      "suspected_root_cause": "A cached user value is not invalidated or refreshed after update_user modifies the stored record.",
+      "next_step": "Inspect get_user and update_user in src/users.py, then trace the underlying storage and cache behavior in src/store.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "`get_user` caches each user record in `src/users.py`, but `update_user` writes the new record via `write_user` without invalidating or refreshing the corresponding cache entry. The second `get_user(\"u1\")` therefore returns the stale cached `{ \"name\": \"Ada\" }` instead of rereading the updated store value.",
+      "evidence": [
+        "`src/users.py:4-6` only calls `read_user` when the user ID is absent from `_CACHE`, then returns the cached record.",
+        "`src/users.py:7-8` calls `write_user` but does not modify or clear `_CACHE`.",
+        "`src/store.py:4-5` updates `USERS[user_id]` to the supplied data, so storage contains the new value while the cache remains stale.",
+        "The failing test observes `Ada` after `update_user(\"u1\", {\"name\": \"Grace\"})`, matching a stale-cache failure."
+      ],
+      "target_files": [
+        "src/users.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/users.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "update_user writes the new record but leaves the corresponding stale entry in _CACHE, so get_user returns the old value.",
+      "file": "src/users.py",
+      "search": "def update_user(user_id, data):\n    write_user(user_id, data)",
+      "replace": "def update_user(user_id, data):\n    write_user(user_id, data)\n    _CACHE.pop(user_id, None)",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/users.py",
+          "target_line": 1,
+          "window": 120
+        },
+        "reason": "Inspect get_user and update_user implementations and their cache interaction.",
+        "output": "TOOL_ERROR: window must be between 1 and 80"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/users.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect get_user and update_user implementations and their cache interaction.",
+        "output": "0001: from src.store import read_user, write_user\n0002: _CACHE = {}\n0003: def get_user(user_id):\n0004:     if user_id not in _CACHE:\n0005:         _CACHE[user_id] = read_user(user_id)\n0006:     return dict(_CACHE[user_id])\n0007: def update_user(user_id, data):\n0008:     write_user(user_id, data)\n0009: def clear_cache():\n0010:     _CACHE.clear()"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/store.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect whether write_user merges or replaces records and determine the correct cache update contract.",
+        "output": "0001: USERS = {\"u1\": {\"name\": \"Ada\"}}\n0002: def read_user(user_id):\n0003:     return dict(USERS[user_id])\n0004: def write_user(user_id, data):\n0005:     USERS[user_id] = dict(data)"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "`get_user` caches each user record in `src/users.py`, but `update_user` writes the new record via `write_user` without invalidating or refreshing the corresponding cache entry. The second `get_user(\"u1\")` therefore returns the stale cached `{ \"name\": \"Ada\" }` instead of rereading the updated store value.",
+          "evidence": [
+            "`src/users.py:4-6` only calls `read_user` when the user ID is absent from `_CACHE`, then returns the cached record.",
+            "`src/users.py:7-8` calls `write_user` but does not modify or clear `_CACHE`.",
+            "`src/store.py:4-5` updates `USERS[user_id]` to the supplied data, so storage contains the new value while the cache remains stale.",
+            "The failing test observes `Ada` after `update_user(\"u1\", {\"name\": \"Grace\"})`, matching a stale-cache failure."
+          ],
+          "target_files": [
+            "src/users.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_017",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "test_sibling_with_shared_prefix_is_rejected failed because is_within_workspace(workspace, sibling) returned True",
+        "The sibling path is work_backup/secret.txt, which shares the string prefix work but is not inside the workspace directory work"
+      ],
+      "target_files": [
+        "src/paths.py",
+        "tests/test_paths.py"
+      ],
+      "suspected_root_cause": "The workspace containment check likely uses naive string-prefix matching instead of path-aware directory containment.",
+      "next_step": "Inspect is_within_workspace in src/paths.py and compare its path normalization and containment logic against the failing test in tests/test_paths.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "is_within_workspace resolves both paths to strings and uses naive string-prefix matching. This incorrectly treats the sibling directory work_backup as inside the workspace directory work because its resolved string starts with the workspace string.",
+      "evidence": [
+        "src/paths.py lines 3-5 convert resolved paths to strings and return candidate.startswith(workspace).",
+        "tests/test_paths.py lines 10-15 require tmp_path/work_backup/secret.txt to be rejected even though it shares the string prefix work.",
+        "tests/test_paths.py lines 3-8 require a genuine descendant under workspace/src to be accepted."
+      ],
+      "target_files": [
+        "src/paths.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/paths.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "The containment check uses naive string-prefix matching, so the sibling path work_backup is incorrectly treated as inside work.",
+      "file": "src/paths.py",
+      "search": "return candidate.startswith(workspace)",
+      "replace": "return Path(candidate).is_relative_to(Path(workspace))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.03s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/paths.py",
+          "target_line": 1,
+          "window": 120
+        },
+        "reason": "Inspect the containment implementation and surrounding path-handling contracts.",
+        "output": "TOOL_ERROR: window must be between 1 and 80"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/paths.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the containment implementation and surrounding path-handling contracts.",
+        "output": "0001: from pathlib import Path\n0002: def is_within_workspace(workspace, candidate):\n0003:     workspace = str(Path(workspace).resolve())\n0004:     candidate = str(Path(candidate).resolve())\n0005:     return candidate.startswith(workspace)"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "tests/test_paths.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect all path containment tests to confirm the intended behavior and whether related cases constrain the change.",
+        "output": "0001: from src.paths import is_within_workspace\n0002: \n0003: def test_child_path_is_allowed(tmp_path):\n0004:     workspace = tmp_path / \"work\"\n0005:     child = workspace / \"src\" / \"a.py\"\n0006:     child.parent.mkdir(parents=True)\n0007:     child.write_text(\"x\")\n0008:     assert is_within_workspace(workspace, child) is True\n0009: \n0010: def test_sibling_with_shared_prefix_is_rejected(tmp_path):\n0011:     workspace = tmp_path / \"work\"\n0012:     sibling = tmp_path / \"work_backup\" / \"secret.txt\"\n0013:     sibling.parent.mkdir(parents=True)\n0014:     sibling.write_text(\"secret\")\n0015:     assert is_within_workspace(workspace, sibling) is False"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "is_within_workspace resolves both paths to strings and uses naive string-prefix matching. This incorrectly treats the sibling directory work_backup as inside the workspace directory work because its resolved string starts with the workspace string.",
+          "evidence": [
+            "src/paths.py lines 3-5 convert resolved paths to strings and return candidate.startswith(workspace).",
+            "tests/test_paths.py lines 10-15 require tmp_path/work_backup/secret.txt to be rejected even though it shares the string prefix work.",
+            "tests/test_paths.py lines 3-8 require a genuine descendant under workspace/src to be accepted."
+          ],
+          "target_files": [
+            "src/paths.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_018",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The test expected ['read', 'write', 'audit'] but received ['audit', 'read', 'write'].",
+        "The failing test is named test_first_source_wins_and_order_is_preserved.",
+        "Pytest completed and reported an assertion mismatch rather than an environment or dependency error."
+      ],
+      "target_files": [
+        "src/permissions.py",
+        "tests/test_permissions.py"
+      ],
+      "suspected_root_cause": "merge_permissions combines unique permissions in an order that does not preserve the first source's ordering, likely by sorting or otherwise placing the second-source-only item first.",
+      "next_step": "Inspect merge_permissions in src/permissions.py and compare its iteration/deduplication order against the expected behavior asserted in tests/test_permissions.py."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "merge_permissions concatenates the inputs, removes duplicates with set(), and then sorts the result. Sorting changes the required first-source order, producing ['audit', 'read', 'write'] instead of retaining primary order and appending only new inherited permissions.",
+      "evidence": [
+        "src/permissions.py:2 implements `sorted(set(primary + inherited))`, which alphabetically sorts the merged permissions.",
+        "The failing assertion expects ['read', 'write', 'audit'], preserving primary order and adding the second-source-only item afterward.",
+        "The observed result ['audit', 'read', 'write'] directly matches sorted ordering."
+      ],
+      "target_files": [
+        "src/permissions.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 1,
+    "ground_truth_root_files": [
+      "src/permissions.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "merge_permissions sorts the deduplicated combined permissions, which breaks first-source ordering.",
+      "file": "src/permissions.py",
+      "search": "    return sorted(set(primary + inherited))",
+      "replace": "    return list(dict.fromkeys(primary + inherited))",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.00s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/permissions.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the implementation of merge_permissions and determine how ordering and deduplication are performed.",
+        "output": "0001: def merge_permissions(primary, inherited):\n0002:     return sorted(set(primary + inherited))"
+      },
+      {
+        "turn": 2,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "merge_permissions concatenates the inputs, removes duplicates with set(), and then sorts the result. Sorting changes the required first-source order, producing ['audit', 'read', 'write'] instead of retaining primary order and appending only new inherited permissions.",
+          "evidence": [
+            "src/permissions.py:2 implements `sorted(set(primary + inherited))`, which alphabetically sorts the merged permissions.",
+            "The failing assertion expects ['read', 'write', 'audit'], preserving primary order and adding the second-source-only item afterward.",
+            "The observed result ['audit', 'read', 'write'] directly matches sorted ordering."
+          ],
+          "target_files": [
+            "src/permissions.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_019",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "The test expects normalize_timestamp(\"2026-08-28T12:00:00Z\") to return a string ending in Z.",
+        "The actual result is \"2026-08-28T12:00:00+00:00\", indicating equivalent UTC semantics but incorrect required formatting.",
+        "The failure is an AssertionError in tests/test_time_contract.py::test_round_trip_uses_z_suffix."
+      ],
+      "target_files": [
+        "src/formatter.py",
+        "src/parser.py",
+        "tests/test_time_contract.py"
+      ],
+      "suspected_root_cause": "Timestamp normalization converts the UTC Z suffix to the equivalent +00:00 representation instead of preserving or emitting the contract-required Z suffix.",
+      "next_step": "Inspect the normalize_timestamp implementation and its parsing/formatting helpers in src/formatter.py and src/parser.py, then compare their output rules with the test contract."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "normalize_timestamp parses the input into a datetime and then formats it with datetime.isoformat(). For a UTC datetime, isoformat() emits the equivalent \"+00:00\" offset rather than the contract-required trailing \"Z\" suffix.",
+      "evidence": [
+        "src/events.py: normalize_timestamp composes parse_timestamp(value) with format_timestamp(...).",
+        "src/parser.py: parse_timestamp uses datetime.fromisoformat(value), which accepts the Z input and produces a UTC-aware datetime.",
+        "src/formatter.py: format_timestamp returns dt.isoformat(), causing UTC output to be formatted as \"+00:00\".",
+        "The failing test requires \"2026-08-28T12:00:00Z\" but receives \"2026-08-28T12:00:00+00:00\"."
+      ],
+      "target_files": [
+        "src/formatter.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 5,
+    "ground_truth_root_files": [
+      "src/formatter.py",
+      "src/parser.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": false,
+    "proposal": {
+      "root_cause": "format_timestamp uses datetime.isoformat(), which emits UTC as +00:00 instead of the required Z suffix.",
+      "file": "src/formatter.py",
+      "search": "    return dt.isoformat()",
+      "replace": "    return dt.isoformat().replace('+00:00', 'Z')",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/formatter.py",
+          "target_line": 1,
+          "window": 120
+        },
+        "reason": "Inspect timestamp normalization and formatting behavior.",
+        "output": "TOOL_ERROR: window must be between 1 and 80"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/formatter.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect timestamp normalization and formatting behavior.",
+        "output": "0001: def format_timestamp(dt):\n0002:     return dt.isoformat()"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/parser.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect parsing and normalization flow to determine where the UTC suffix is converted.",
+        "output": "0001: from datetime import datetime\n0002: def parse_timestamp(value):\n0003:     return datetime.fromisoformat(value)"
+      },
+      {
+        "turn": 4,
+        "action": "tool",
+        "tool": "search_text",
+        "arguments": {
+          "query": "normalize_timestamp",
+          "max_results": 10
+        },
+        "reason": "Locate the normalization function and determine how parser and formatter are composed.",
+        "output": "src/events.py:3: def normalize_timestamp(value):\ntests/test_time_contract.py:1: from src.events import normalize_timestamp\ntests/test_time_contract.py:5: assert normalize_timestamp(\"2026-08-28T12:00:00Z\") == \"2026-08-28T12:00:00Z\""
+      },
+      {
+        "turn": 5,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/events.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect the normalization composition and identify the minimal implementation file involved.",
+        "output": "0001: from src.parser import parse_timestamp\n0002: from src.formatter import format_timestamp\n0003: def normalize_timestamp(value):\n0004:     return format_timestamp(parse_timestamp(value))"
+      },
+      {
+        "turn": 6,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "normalize_timestamp parses the input into a datetime and then formats it with datetime.isoformat(). For a UTC datetime, isoformat() emits the equivalent \"+00:00\" offset rather than the contract-required trailing \"Z\" suffix.",
+          "evidence": [
+            "src/events.py: normalize_timestamp composes parse_timestamp(value) with format_timestamp(...).",
+            "src/parser.py: parse_timestamp uses datetime.fromisoformat(value), which accepts the Z input and produces a UTC-aware datetime.",
+            "src/formatter.py: format_timestamp returns dt.isoformat(), causing UTC output to be formatted as \"+00:00\".",
+            "The failing test requires \"2026-08-28T12:00:00Z\" but receives \"2026-08-28T12:00:00+00:00\"."
+          ],
+          "target_files": [
+            "src/formatter.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  {
+    "case_id": "case_020",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.98,
+      "evidence": [
+        "test_missing_issuer_uses_default expects configured_issuer() to return \"ci-repair\" when TOKEN_ISSUER is absent",
+        "src/auth.py:4 calls validate_issuer(token_issuer())",
+        "validate_issuer receives value=None and raises ValueError(\"untrusted issuer\")"
+      ],
+      "target_files": [
+        "src/auth.py",
+        "src/settings.py",
+        "src/validator.py"
+      ],
+      "suspected_root_cause": "Missing TOKEN_ISSUER is converted to None and passed directly to validation instead of resolving the expected default issuer \"ci-repair\".",
+      "next_step": "Inspect token_issuer and configured_issuer in src/auth.py and the default configuration in src/settings.py, then verify whether validation should receive the resolved default."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "When TOKEN_ISSUER is absent, token_issuer() returns None because it calls os.getenv without a default. configured_issuer() passes that None directly to validate_issuer(), which rejects it. The configured DEFAULT_ISSUER constant is therefore unused, and it is also not currently included among ALLOWED_ISSUERS.",
+      "evidence": [
+        "src/settings.py defines DEFAULT_ISSUER = \"ci-repair\" but token_issuer() returns os.getenv(\"TOKEN_ISSUER\") with no fallback, yielding None when the variable is absent.",
+        "src/auth.py passes token_issuer() directly to validate_issuer().",
+        "src/validator.py rejects any value not in {\"internal\", \"partner\"}, so the expected default \"ci-repair\" would also fail validation unless the validation contract is updated.",
+        "The failing test expects configured_issuer() to return \"ci-repair\" when TOKEN_ISSUER is unset."
+      ],
+      "target_files": [
+        "src/settings.py",
+        "src/validator.py"
+      ],
+      "recommended_change_scope": "multi_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 3,
+    "ground_truth_root_files": [
+      "src/settings.py",
+      "src/validator.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "The default issuer is not used when TOKEN_ISSUER is missing, and validation does not recognize the expected default.",
+      "file": "src/validator.py",
+      "search": "ALLOWED_ISSUERS = {\"internal\", \"partner\"}\ndef validate_issuer(value):\n    if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "replace": "ALLOWED_ISSUERS = {\"internal\", \"partner\", \"ci-repair\"}\ndef validate_issuer(value):\n    if value is None:\n        return \"ci-repair\"\n    if value not in ALLOWED_ISSUERS:\n        raise ValueError(\"untrusted issuer\")\n    return value",
+      "confidence": 0.99
+    },
+    "patch_error": null,
+    "regression_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/auth.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect issuer resolution and validation flow.",
+        "output": "0001: from src.settings import token_issuer\n0002: from src.validator import validate_issuer\n0003: def configured_issuer():\n0004:     return validate_issuer(token_issuer())"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/settings.py",
+          "target_line": 1,
+          "window": 40
+        },
+        "reason": "Inspect the configured default and behavior when TOKEN_ISSUER is absent.",
+        "output": "0001: import os\n0002: DEFAULT_ISSUER = \"ci-repair\"\n0003: def token_issuer():\n0004:     return os.getenv(\"TOKEN_ISSUER\")"
+      },
+      {
+        "turn": 3,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/validator.py",
+          "target_line": 1,
+          "window": 30
+        },
+        "reason": "Confirm the validator contract and whether it already permits or normalizes missing values.",
+        "output": "0001: ALLOWED_ISSUERS = {\"internal\", \"partner\"}\n0002: def validate_issuer(value):\n0003:     if value not in ALLOWED_ISSUERS:\n0004:         raise ValueError(\"untrusted issuer\")\n0005:     return value"
+      },
+      {
+        "turn": 4,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "When TOKEN_ISSUER is absent, token_issuer() returns None because it calls os.getenv without a default. configured_issuer() passes that None directly to validate_issuer(), which rejects it. The configured DEFAULT_ISSUER constant is therefore unused, and it is also not currently included among ALLOWED_ISSUERS.",
+          "evidence": [
+            "src/settings.py defines DEFAULT_ISSUER = \"ci-repair\" but token_issuer() returns os.getenv(\"TOKEN_ISSUER\") with no fallback, yielding None when the variable is absent.",
+            "src/auth.py passes token_issuer() directly to validate_issuer().",
+            "src/validator.py rejects any value not in {\"internal\", \"partner\"}, so the expected default \"ci-repair\" would also fail validation unless the validation contract is updated.",
+            "The failing test expects configured_issuer() to return \"ci-repair\" when TOKEN_ISSUER is unset."
+          ],
+          "target_files": [
+            "src/settings.py",
+            "src/validator.py"
+          ],
+          "recommended_change_scope": "multi_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  }
+]

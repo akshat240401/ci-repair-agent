@@ -1,0 +1,97 @@
+{
+  "benchmark_cases": 20,
+  "baseline_mean_vrr": 0.8833333333333333,
+  "baseline_range": [
+    0.85,
+    0.9
+  ],
+  "final_vrr": 1.0,
+  "absolute_improvement_pp": 11.66666666666667,
+  "relative_error_reduction": 1.0,
+  "keep_remove_decisions": [
+    {
+      "experiment": "log_preprocessor",
+      "decision": "REMOVE_AS_PRIMARY_IMPROVEMENT",
+      "evidence": "Repeated quality gate showed 88.3% mean VRR versus 88.3% baseline (0.0 pp)."
+    },
+    {
+      "experiment": "triage_agent",
+      "decision": "KEEP_AS_ROUTING_COMPONENT",
+      "evidence": "Triage classification accuracy was 75.0%, but repair VRR was 85.0%; useful for structured routing, not sufficient as a standalone repair improvement."
+    },
+    {
+      "experiment": "investigation_agent",
+      "decision": "KEEP",
+      "evidence": "Root-file hit rate reached 100.0% with 2.20 mean tool calls."
+    },
+    {
+      "experiment": "multi_file_patch_agent",
+      "decision": "KEEP_PRIMARY_WIN",
+      "evidence": "Verified Repair Rate reached 100.0% with 20/20 verified repairs."
+    },
+    {
+      "experiment": "verified_repair_loop",
+      "decision": "KEEP_FOR_SAFETY_AND_ROBUSTNESS",
+      "evidence": "Verified Repair Rate was 100.0%. Retry/circuit-breaker behavior is separately demonstrated by deterministic tests."
+    }
+  ],
+  "hard_case_results": {
+    "case_003": {
+      "patch_agent_status": "VERIFIED_REPAIR",
+      "repair_loop_status": "VERIFIED_REPAIR",
+      "repair_loop_attempts": 1
+    },
+    "case_010": {
+      "patch_agent_status": "VERIFIED_REPAIR",
+      "repair_loop_status": "VERIFIED_REPAIR",
+      "repair_loop_attempts": 1
+    },
+    "case_013": {
+      "patch_agent_status": "VERIFIED_REPAIR",
+      "repair_loop_status": "VERIFIED_REPAIR",
+      "repair_loop_attempts": 1
+    },
+    "case_015": {
+      "patch_agent_status": "VERIFIED_REPAIR",
+      "repair_loop_status": "VERIFIED_REPAIR",
+      "repair_loop_attempts": 1
+    },
+    "case_020": {
+      "patch_agent_status": "VERIFIED_REPAIR",
+      "repair_loop_status": "VERIFIED_REPAIR",
+      "repair_loop_attempts": 1
+    }
+  },
+  "failure_mode_analysis": [
+    {
+      "mode": "one-shot single-file repair cannot express cross-file contracts",
+      "observed_in": [
+        "case_013",
+        "case_015"
+      ],
+      "resolution": "multi-file transactional patch planning"
+    },
+    {
+      "mode": "targeted test can pass while regression suite fails",
+      "observed_in": [
+        "case_010"
+      ],
+      "resolution": "full-suite verification gate plus retry feedback path"
+    },
+    {
+      "mode": "model vocabulary can violate strict schemas despite correct semantics",
+      "observed_in": [
+        "case_020"
+      ],
+      "resolution": "canonical schema normalization with deterministic fallback"
+    },
+    {
+      "mode": "stochastic LLM runs can make apparent improvements misleading",
+      "observed_in": [
+        "quality_gate"
+      ],
+      "resolution": "repeated baseline/experiment runs before accepting a change"
+    }
+  ],
+  "hot_take": "The strongest reliability gains did not come from adding more prompting. They came from separating judgment from proof: agents investigate and propose, while deterministic code applies exact edits, runs syntax/targeted/regression checks, and stops loops. Multi-file transactional repair was the decisive capability."
+}

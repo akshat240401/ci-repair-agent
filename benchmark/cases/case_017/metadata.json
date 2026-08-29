@@ -1,0 +1,13 @@
+{
+  "case_id": "case_017",
+  "title": "Workspace path guard allows sibling-prefix escape",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "path_containment",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_paths.py::test_sibling_with_shared_prefix_is_rejected",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "hard benchmark expansion"
+}

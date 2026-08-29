@@ -1,0 +1,151 @@
+{
+  "artifact_type": "representative_agent_trajectory",
+  "source": "recorded benchmark diagnostics",
+  "case_id": "case_010",
+  "agents": [
+    "triage",
+    "investigation",
+    "patch"
+  ],
+  "investigation": {
+    "case_id": "case_010",
+    "triage": {
+      "failure_type": "LOGIC_BUG",
+      "confidence": 0.99,
+      "evidence": [
+        "The assertion expected 'https://example.com/#done' but the parser returned 'https://example.com/'.",
+        "The failing test is named test_hash_inside_quotes_is_preserved.",
+        "The test command completed with one assertion failure in 0.10s, without syntax, dependency, or environment errors."
+      ],
+      "target_files": [
+        "src/config_parser.py",
+        "tests/test_config_parser.py"
+      ],
+      "suspected_root_cause": "The configuration parser treats '#' as a comment delimiter even when it appears inside a quoted value.",
+      "next_step": "Inspect the parsing logic in src/config_parser.py for comment stripping and verify its quote-handling behavior against the failing test and nearby parser tests."
+    },
+    "investigation": {
+      "action": "final",
+      "root_cause": "`parse_line` unconditionally splits the input at the first `#` (`line.split(\"#\", 1)`), so a hash inside a quoted value is incorrectly treated as a comment delimiter and removed before value parsing.",
+      "evidence": [
+        "`src/config_parser.py:2` uses `line.split(\"#\", 1)[0]`, with no quote-state handling.",
+        "The failing input `callback=\"https://example.com/#done\"` is therefore truncated to `callback=\"https://example.com/`, producing `https://example.com/` instead of the expected `https://example.com/#done`.",
+        "The value is stripped of surrounding double quotes only after comment removal at `src/config_parser.py:6`."
+      ],
+      "target_files": [
+        "src/config_parser.py"
+      ],
+      "recommended_change_scope": "single_file",
+      "confidence": 0.99
+    },
+    "tool_calls": 2,
+    "ground_truth_root_files": [
+      "src/config_parser.py"
+    ],
+    "root_file_hit": true,
+    "all_root_files_found": true,
+    "proposal": {
+      "root_cause": "parse_line unconditionally treats the first '#' as a comment delimiter, removing hashes that occur inside quoted values.",
+      "file": "src/config_parser.py",
+      "search": "    clean = line.split(\"#\", 1)[0].strip()",
+      "replace": "    clean = line.split('\"', 2)[0] if line.count('\"') < 2 else line[:line.rfind('\"') + 1] + line[line.rfind('\"') + 1:].split('#', 1)[0]\n    clean = clean.strip()",
+      "confidence": 0.98
+    },
+    "patch_error": null,
+    "regression_stdout": "..F                                                                      [100%]\n================================== FAILURES ===================================\n______________________ test_full_line_comment_is_ignored ______________________\n\n    def test_full_line_comment_is_ignored():\n>       assert parse_line(\"# comment only\") is None\n\nC:\\Users\\aksha\\Desktop\\FILES\\MY-WORK\\ci-repair-agent\\benchmark\\cases\\case_010\\repo\\tests\\test_config_parser.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nline = '# comment only'\n\n    def parse_line(line):\n        clean = line.split('\"', 2)[0] if line.count('\"') < 2 else line[:line.rfind('\"') + 1] + line[line.rfind('\"') + 1:].split('#', 1)[0]\n        clean = clean.strip()\n        if not clean:\n            return None\n>       key, value = clean.split(\"=\", 1)\nE       ValueError: not enough values to unpack (expected 2, got 1)\n\nsrc\\config_parser.py:6: ValueError\n=========================== short test summary info ===========================\nFAILED tests/test_config_parser.py::test_full_line_comment_is_ignored - Value...\n1 failed, 2 passed in 0.10s\n",
+    "trajectory": [
+      {
+        "turn": 1,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/config_parser.py",
+          "target_line": 1,
+          "window": 120
+        },
+        "reason": "Inspect the parser's comment and quote handling to confirm the suspected root cause.",
+        "output": "TOOL_ERROR: window must be between 1 and 80"
+      },
+      {
+        "turn": 2,
+        "action": "tool",
+        "tool": "read_code_chunk",
+        "arguments": {
+          "file_path": "src/config_parser.py",
+          "target_line": 1,
+          "window": 80
+        },
+        "reason": "Inspect the parser's comment and quote handling to confirm the suspected root cause.",
+        "output": "0001: def parse_line(line):\n0002:     clean = line.split(\"#\", 1)[0].strip()\n0003:     if not clean:\n0004:         return None\n0005:     key, value = clean.split(\"=\", 1)\n0006:     return key.strip(), value.strip().strip('\"')"
+      },
+      {
+        "turn": 3,
+        "action": "final",
+        "result": {
+          "action": "final",
+          "root_cause": "`parse_line` unconditionally splits the input at the first `#` (`line.split(\"#\", 1)`), so a hash inside a quoted value is incorrectly treated as a comment delimiter and removed before value parsing.",
+          "evidence": [
+            "`src/config_parser.py:2` uses `line.split(\"#\", 1)[0]`, with no quote-state handling.",
+            "The failing input `callback=\"https://example.com/#done\"` is therefore truncated to `callback=\"https://example.com/`, producing `https://example.com/` instead of the expected `https://example.com/#done`.",
+            "The value is stripped of surrounding double quotes only after comment removal at `src/config_parser.py:6`."
+          ],
+          "target_files": [
+            "src/config_parser.py"
+          ],
+          "recommended_change_scope": "single_file",
+          "confidence": 0.99
+        }
+      }
+    ]
+  },
+  "repair_loop": {
+    "case_id": "case_010",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "4af963eb1e56972a19c01c23ac2f627d469a1539ebbcf023fab3cca94147fa43",
+        "patch_plan": {
+          "root_cause": "parse_line splits at the first '#' without tracking whether it is inside a quoted value, removing quoted URL fragments.",
+          "edits": [
+            {
+              "file": "src/config_parser.py",
+              "search": "def parse_line(line):\n    clean = line.split(\"#\", 1)[0].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
+              "replace": "def parse_line(line):\n    in_quotes = False\n    comment_start = len(line)\n    for index, character in enumerate(line):\n        if character == '\"':\n            in_quotes = not in_quotes\n        elif character == \"#\" and not in_quotes:\n            comment_start = index\n            break\n    clean = line[:comment_start].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
+              "reason": "Only treat '#' as a comment delimiter when it occurs outside quoted values, preserving fragments such as '#done' while retaining trailing-comment behavior."
+            }
+          ],
+          "confidence": 1.0
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  "result": {
+    "case_id": "case_010",
+    "mode": "advanced",
+    "final_status": "VERIFIED_REPAIR",
+    "patch_applied": true,
+    "syntax_passed": true,
+    "targeted_test_passed": true,
+    "full_suite_passed": true,
+    "attempts": 1,
+    "latency_seconds": 36.58594530005939,
+    "input_tokens": 6118,
+    "output_tokens": 1305,
+    "estimated_cost_usd": 0.0027895999999999997,
+    "files_modified": 1,
+    "lines_added": 0,
+    "lines_removed": 0
+  }
+}

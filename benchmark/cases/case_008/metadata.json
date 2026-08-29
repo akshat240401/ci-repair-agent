@@ -1,0 +1,13 @@
+{
+  "case_id": "case_008",
+  "title": "Cache key omits request region",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "cache_key_collision",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_pricing.py::test_cache_does_not_leak_price_between_regions",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "expanded synthetic benchmark"
+}

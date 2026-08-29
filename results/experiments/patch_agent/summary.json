@@ -1,0 +1,12 @@
+{
+  "experiment": "multi_file_patch_agent",
+  "cases": 20,
+  "verified_repairs": 20,
+  "verified_repair_rate": 1.0,
+  "unresolved_cases": [],
+  "mean_files_modified": 1.15,
+  "mean_tool_calls": 2.05,
+  "total_input_tokens": 100540,
+  "total_output_tokens": 21177,
+  "estimated_total_cost_usd": 0.04552040000000001
+}

@@ -1,0 +1,20 @@
+$ python -m pytest -q tests/test_flags.py::test_false_string_disables_cache
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________________ test_false_string_disables_cache _______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000015A90DD1410>
+
+    def test_false_string_disables_cache(monkeypatch):
+        monkeypatch.setenv("USE_CACHE", "false")
+>       assert cache_enabled() is False
+E       assert True is False
+E        +  where True = cache_enabled()
+
+tests\test_flags.py:5: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_flags.py::test_false_string_disables_cache - assert True is...
+1 failed in 0.10s
+
+[exit_code=1]

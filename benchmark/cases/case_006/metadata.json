@@ -1,0 +1,13 @@
+{
+  "case_id": "case_006",
+  "title": "Boolean environment flag parsed by truthiness",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "env_boolean_parsing",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_flags.py::test_false_string_disables_cache",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "expanded synthetic benchmark"
+}

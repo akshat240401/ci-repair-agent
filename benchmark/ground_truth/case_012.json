@@ -1,0 +1,5 @@
+{
+  "case_id": "case_012",
+  "root_cause": "Merge order gives file configuration higher precedence than environment configuration; documented precedence requires defaults < file < environment",
+  "root_cause_file": "src/settings.py"
+}

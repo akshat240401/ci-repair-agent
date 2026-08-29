@@ -1,0 +1,24 @@
+$ python -m pytest -q tests/test_api_contract.py::test_payload_uses_display_name_contract
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________________ test_payload_uses_display_name_contract ___________________
+
+    def test_payload_uses_display_name_contract():
+        payload, message = render_user({"id": 7, "name": "Ada"})
+>       assert payload == {"id": 7, "display_name": "Ada"}
+E       AssertionError: assert {'id': 7, 'username': 'Ada'} == {'display_nam...Ada', 'id': 7}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Left contains 1 more item:
+E         {'username': 'Ada'}
+E         Right contains 1 more item:
+E         {'display_name': 'Ada'}
+E         Use -v to get more diff
+
+tests\test_api_contract.py:6: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_api_contract.py::test_payload_uses_display_name_contract - ...
+1 failed in 0.09s
+
+[exit_code=1]

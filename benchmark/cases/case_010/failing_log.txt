@@ -1,0 +1,22 @@
+$ python -m pytest -q tests/test_config_parser.py::test_hash_inside_quotes_is_preserved
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_hash_inside_quotes_is_preserved _____________________
+
+    def test_hash_inside_quotes_is_preserved():
+>       assert parse_line('callback="https://example.com/#done"') == (
+            "callback",
+            "https://example.com/#done",
+        )
+E       AssertionError: assert ('callback', ...example.com/') == ('callback', ...le.com/#done')
+E         
+E         At index 1 diff: 'https://example.com/' != 'https://example.com/#done'
+E         Use -v to get more diff
+
+tests\test_config_parser.py:4: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_config_parser.py::test_hash_inside_quotes_is_preserved - As...
+1 failed in 0.10s
+
+[exit_code=1]

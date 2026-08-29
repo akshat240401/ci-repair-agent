@@ -1,0 +1,13 @@
+{
+  "case_id": "case_019",
+  "title": "UTC timestamp contract inconsistent between parser and formatter",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "multi_file_datetime_contract",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_time_contract.py::test_round_trip_uses_z_suffix",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "hard benchmark expansion"
+}

@@ -1,0 +1,20 @@
+{
+  "artifact_type": "deterministic_behavioral_proof",
+  "source": "tests/test_no_code_patch_policy.py",
+  "profile": "config-only no-code bypass",
+  "input_triage": {
+    "failure_type": "ENVIRONMENT_CONFIG",
+    "target_files": [],
+    "example_evidence": "CI runner is missing required environment variable SERVICE_TOKEN"
+  },
+  "policy": "Only ENVIRONMENT_CONFIG failures with zero repository target files are eligible for deterministic bypass.",
+  "result": {
+    "status": "NO_CODE_PATCH_REQUIRED",
+    "code_patch_attempted": false
+  },
+  "negative_controls": [
+    "ENVIRONMENT_CONFIG with repository target files continues through normal repair.",
+    "LOGIC_BUG never uses the no-code bypass."
+  ],
+  "note": "Deterministic policy proof, labeled separately from live benchmark trajectories."
+}

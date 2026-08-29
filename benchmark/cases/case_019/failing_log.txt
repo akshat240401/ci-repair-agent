@@ -1,0 +1,21 @@
+$ python -m pytest -q tests/test_time_contract.py::test_round_trip_uses_z_suffix
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________________ test_round_trip_uses_z_suffix ________________________
+
+    def test_round_trip_uses_z_suffix():
+>       assert normalize_timestamp("2026-08-28T12:00:00Z") == "2026-08-28T12:00:00Z"
+E       AssertionError: assert '2026-08-28T12:00:00+00:00' == '2026-08-28T12:00:00Z'
+E         
+E         - 2026-08-28T12:00:00Z
+E         ?                    ^
+E         + 2026-08-28T12:00:00+00:00
+E         ?                    ^^^^^^
+
+tests\test_time_contract.py:5: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_time_contract.py::test_round_trip_uses_z_suffix - Assertion...
+1 failed in 0.10s
+
+[exit_code=1]

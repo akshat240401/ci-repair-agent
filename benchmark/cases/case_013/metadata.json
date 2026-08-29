@@ -1,0 +1,13 @@
+{
+  "case_id": "case_013",
+  "title": "API field rename requires producer and consumer migration",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "multi_file_contract_migration",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_api_contract.py::test_payload_uses_display_name_contract",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": true,
+  "notes": "hard benchmark expansion"
+}

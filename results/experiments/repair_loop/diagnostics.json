@@ -1,0 +1,680 @@
+[
+  {
+    "case_id": "case_001",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "f932da448f9c3732c30a21a94b40e9a35a3efc85195abd6407df05eb05e0cdeb",
+        "patch_plan": {
+          "root_cause": "page_count unconditionally adds one page after integer division, causing an extra page for exact multiples of page_size.",
+          "edits": [
+            {
+              "file": "src/pagination.py",
+              "search": "    return total_items // page_size + 1",
+              "replace": "    return (total_items + page_size - 1) // page_size",
+              "reason": "Use ceiling division so partial pages round up while exact multiples do not receive an extra page."
+            }
+          ],
+          "confidence": 1.0
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_002",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "cd3db69e5328540afeedfff03767a305243558e4c613e5580f61d18b3e5340b0",
+        "patch_plan": {
+          "root_cause": "get_user_name unconditionally subscripts the None returned for a missing user.",
+          "edits": [
+            {
+              "file": "src/users.py",
+              "search": "    return user[\"name\"]",
+              "replace": "    return user[\"name\"] if user is not None else None",
+              "reason": "Return None when the requested user does not exist while preserving the known-user behavior."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_003",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "7dae61c6f76497cc14e4b0e937bf698a07295dbb5516c5b3ed1e7e85beb62e3a",
+        "patch_plan": {
+          "root_cause": "TOKEN_TTL is set to None when the environment variable is unset, causing int(TOKEN_TTL) to raise a TypeError instead of using the required 3600-second default.",
+          "edits": [
+            {
+              "file": "src/settings.py",
+              "search": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\")",
+              "replace": "TOKEN_TTL = os.getenv(\"TOKEN_TTL\", \"3600\")",
+              "reason": "Provide the required default token TTL when TOKEN_TTL is not defined in the environment."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_004",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "9bc0373b84d68d74de30e4f63b18ffeacc8e3d8a75210098f215cefce57d63e8",
+        "patch_plan": {
+          "root_cause": "serialize_profile uses the username field instead of preferring the available display_name field.",
+          "edits": [
+            {
+              "file": "src/profile.py",
+              "search": "    return {\"id\":record[\"id\"],\"name\":record[\"username\"]}",
+              "replace": "    return {\"id\":record[\"id\"],\"name\":record[\"display_name\"]}",
+              "reason": "Map the serialized name to display_name as required by the test."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_005",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "63d25824795211c55339f08401f002edf477168f3580f2ddcaabb86a33d42926",
+        "patch_plan": {
+          "root_cause": "discounted_total sorts the caller-provided prices list in place, violating the function's non-mutation contract.",
+          "edits": [
+            {
+              "file": "src/cart.py",
+              "search": "    prices.sort()\n    return sum(prices)*(1-discount)",
+              "replace": "    return sum(prices)*(1-discount)",
+              "reason": "Sorting is unnecessary for calculating the discounted total and mutates the input list."
+            }
+          ],
+          "confidence": 1.0
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_006",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "3a409b6e4c46c8560cd15cbe501d220010b890d3d09700457e34bbe764e5f0e7",
+        "patch_plan": {
+          "root_cause": "cache_enabled() applies bool() directly to the environment-variable string, so the non-empty value \"false\" evaluates to True.",
+          "edits": [
+            {
+              "file": "src/flags.py",
+              "search": "    return bool(os.getenv(\"USE_CACHE\", \"false\"))",
+              "replace": "    return os.getenv(\"USE_CACHE\", \"false\").lower() == \"true\"",
+              "reason": "Interpret the string value \"false\" as disabled and \"true\" as enabled."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_007",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "5d740fb3e7f7776699e073db57b13feb373273a1ae512d98aef4c2cb6e284231",
+        "patch_plan": {
+          "root_cause": "latest_version compares version strings lexicographically instead of comparing their numeric dotted components.",
+          "edits": [
+            {
+              "file": "src/release.py",
+              "search": "def latest_version(versions):\n    return max(versions)",
+              "replace": "def latest_version(versions):\n    return max(versions, key=lambda version: tuple(map(int, version.split(\".\"))))",
+              "reason": "Parse each dotted version component as an integer so multi-digit minor and patch versions are ordered numerically."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_008",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "63bb507e65f05ca320d2a47446bd4da40b1ce342ca26f4d8038b92493e1c4e56",
+        "patch_plan": {
+          "root_cause": "The price cache is keyed only by product_id, so a price cached for one region is reused for another region.",
+          "edits": [
+            {
+              "file": "src/pricing.py",
+              "search": "    key = product_id",
+              "replace": "    key = (product_id, region)",
+              "reason": "Include region in the cache key so regional prices remain isolated."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_009",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "ceca7ffb04f6bb56bafb0a74a0c5d72f4766cfcf73e103014abe9c2f383884b3",
+        "patch_plan": {
+          "root_cause": "call_with_retries treats max_retries as the total number of attempts instead of retries after the initial attempt.",
+          "edits": [
+            {
+              "file": "src/retry.py",
+              "search": "    for _ in range(max_retries):",
+              "replace": "    for _ in range(max_retries + 1):",
+              "reason": "Allow the initial attempt plus up to max_retries additional attempts."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_010",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "4af963eb1e56972a19c01c23ac2f627d469a1539ebbcf023fab3cca94147fa43",
+        "patch_plan": {
+          "root_cause": "parse_line splits at the first '#' without tracking whether it is inside a quoted value, removing quoted URL fragments.",
+          "edits": [
+            {
+              "file": "src/config_parser.py",
+              "search": "def parse_line(line):\n    clean = line.split(\"#\", 1)[0].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
+              "replace": "def parse_line(line):\n    in_quotes = False\n    comment_start = len(line)\n    for index, character in enumerate(line):\n        if character == '\"':\n            in_quotes = not in_quotes\n        elif character == \"#\" and not in_quotes:\n            comment_start = index\n            break\n    clean = line[:comment_start].strip()\n    if not clean:\n        return None\n    key, value = clean.split(\"=\", 1)\n    return key.strip(), value.strip().strip('\"')\n",
+              "reason": "Only treat '#' as a comment delimiter when it occurs outside quoted values, preserving fragments such as '#done' while retaining trailing-comment behavior."
+            }
+          ],
+          "confidence": 1.0
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_011",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "da3c5037800307f0240ae0f5d0d6a1a877faefd4d14f1e930cf776496504fbf3",
+        "patch_plan": {
+          "root_cause": "`output_path` unconditionally adds a separator, producing a doubled slash when `root` already ends with one.",
+          "edits": [
+            {
+              "file": "src/artifact.py",
+              "search": "    return f\"{root}/{filename}\"",
+              "replace": "    return f\"{root.rstrip('/')}/{filename}\"",
+              "reason": "Normalize trailing separators on the root before joining it with the filename."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_012",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "e19eea583df9ea54b263ffb6980af96727707bbfdb7c042fda039bd26180621a",
+        "patch_plan": {
+          "root_cause": "resolve_settings applies file configuration after environment configuration, causing file values to override environment values despite the documented precedence.",
+          "edits": [
+            {
+              "file": "src/settings.py",
+              "search": "    return {**DEFAULTS, **env_config, **file_config}",
+              "replace": "    return {**DEFAULTS, **file_config, **env_config}",
+              "reason": "Make precedence defaults < file < environment so environment settings override conflicting file settings."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_013",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "676bd38f4b22cdaf0e0adb6ecf2f4934254787f81e58329da27292183fab72d4",
+        "patch_plan": {
+          "root_cause": "The API contract uses the field name \"display_name\", but both payload construction and greeting lookup still use \"username\".",
+          "edits": [
+            {
+              "file": "src/producer.py",
+              "search": "    return {\"id\": user[\"id\"], \"username\": user[\"name\"]}",
+              "replace": "    return {\"id\": user[\"id\"], \"display_name\": user[\"name\"]}",
+              "reason": "Construct payloads with the required display_name field."
+            },
+            {
+              "file": "src/consumer.py",
+              "search": "    return f\"Hello {payload['username']}\"",
+              "replace": "    return f\"Hello {payload['display_name']}\"",
+              "reason": "Read the display_name field required by the updated API contract."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_014",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "c982240d7c269f9a4bfd94a8f7286b9fcd2b2cecde6ac759a7d57f9e112071fe",
+        "patch_plan": {
+          "root_cause": "get_header uses a case-sensitive dictionary lookup, but HTTP header names must be matched case-insensitively.",
+          "edits": [
+            {
+              "file": "src/headers.py",
+              "search": "    return headers.get(name)",
+              "replace": "    return next((value for key, value in headers.items() if key.lower() == name.lower()), None)",
+              "reason": "Match stored and requested header names without changing the original key casing."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.00s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_015",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "32da1cc9fcc50c5db510d5dcc6a36bc7d19e3c25d5d60a8bf5fcfb2b42f73bb6",
+        "patch_plan": {
+          "root_cause": "Timeout values are serialized as seconds while the configuration contract requires milliseconds, and validation still uses second-based bounds.",
+          "edits": [
+            {
+              "file": "src/config_writer.py",
+              "search": "def serialize_timeout(seconds):\n    return {\"timeout_ms\": seconds}",
+              "replace": "def serialize_timeout(seconds):\n    return {\"timeout_ms\": seconds * 1000}",
+              "reason": "Convert the input timeout from seconds to milliseconds before writing the timeout_ms field."
+            },
+            {
+              "file": "src/validator.py",
+              "search": "    if not 1 <= timeout <= 120:",
+              "replace": "    if not 1000 <= timeout <= 120000:",
+              "reason": "Validate timeout_ms using the equivalent one-second to two-minute range in milliseconds."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_016",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "4a083b93146b94f8461abcb8ce226303e72f464f00a8388d08587f4d66dea7ab",
+        "patch_plan": {
+          "root_cause": "update_user updates persistent storage but leaves the user's stale entry in the in-memory cache.",
+          "edits": [
+            {
+              "file": "src/users.py",
+              "search": "def update_user(user_id, data):\n    write_user(user_id, data)",
+              "replace": "def update_user(user_id, data):\n    write_user(user_id, data)\n    _CACHE.pop(user_id, None)",
+              "reason": "Invalidate the cached user after persistence is updated so subsequent reads fetch the new data."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_017",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "b7270438f1d8c16f13d368019fbe853dec0d7c34edf466c042d90552f00db3c3",
+        "patch_plan": {
+          "root_cause": "Workspace containment uses a raw string-prefix check, so sibling paths such as work_backup are incorrectly treated as descendants of work.",
+          "edits": [
+            {
+              "file": "src/paths.py",
+              "search": "def is_within_workspace(workspace, candidate):\n    workspace = str(Path(workspace).resolve())\n    candidate = str(Path(candidate).resolve())\n    return candidate.startswith(workspace)",
+              "replace": "def is_within_workspace(workspace, candidate):\n    workspace = Path(workspace).resolve()\n    candidate = Path(candidate).resolve()\n    return candidate == workspace or workspace in candidate.parents",
+              "reason": "Compare normalized path components instead of string prefixes, allowing the workspace itself and descendants while rejecting similarly prefixed sibling paths."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.04s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_018",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "37e7a0da25c7a993023de93e1c8309273ee0d06c787bf622b1e0b2a364a8cbd0",
+        "patch_plan": {
+          "root_cause": "merge_permissions sorts a set of combined permissions, which removes duplicates but breaks stable first-seen ordering.",
+          "edits": [
+            {
+              "file": "src/permissions.py",
+              "search": "def merge_permissions(primary, inherited):\n    return sorted(set(primary + inherited))",
+              "replace": "def merge_permissions(primary, inherited):\n    return list(dict.fromkeys(primary + inherited))",
+              "reason": "Preserve the first occurrence order from primary followed by inherited while removing duplicates."
+            }
+          ],
+          "confidence": 1.0
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_019",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "4cbf9abb6b576292ffdfd3a65ab2868f1db7875c73601070cfa70b56254dfa55",
+        "patch_plan": {
+          "root_cause": "UTC datetimes are serialized with datetime.isoformat(), producing '+00:00' instead of the required 'Z' suffix.",
+          "edits": [
+            {
+              "file": "src/formatter.py",
+              "search": "def format_timestamp(dt):\n    return dt.isoformat()",
+              "replace": "def format_timestamp(dt):\n    return dt.isoformat().replace(\"+00:00\", \"Z\")",
+              "reason": "Serialize UTC timestamps using the contract-required Z suffix while preserving existing formatting for non-UTC offsets."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.02s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "..                                                                       [100%]\n2 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  },
+  {
+    "case_id": "case_020",
+    "attempts": [
+      {
+        "attempt": 1,
+        "patch_hash": "cbba6be58c33aa693e5793d622638d392f5dc967bc64d62f9fa298fe9f102c40",
+        "patch_plan": {
+          "root_cause": "A missing TOKEN_ISSUER returns None instead of the configured default, and the default issuer is not included in the validator allowlist.",
+          "edits": [
+            {
+              "file": "src/settings.py",
+              "search": "    return os.getenv(\"TOKEN_ISSUER\")",
+              "replace": "    return os.getenv(\"TOKEN_ISSUER\", DEFAULT_ISSUER)",
+              "reason": "Use DEFAULT_ISSUER when TOKEN_ISSUER is absent."
+            },
+            {
+              "file": "src/validator.py",
+              "search": "ALLOWED_ISSUERS = {\"internal\", \"partner\"}",
+              "replace": "ALLOWED_ISSUERS = {\"internal\", \"partner\", \"ci-repair\"}",
+              "reason": "Allow the configured default issuer to pass validation."
+            }
+          ],
+          "confidence": 0.99
+        },
+        "verification": {
+          "syntax_passed": true,
+          "targeted_test_passed": true,
+          "full_suite_passed": true,
+          "syntax_stdout": "",
+          "syntax_stderr": "",
+          "targeted_stdout": ".                                                                        [100%]\n1 passed in 0.00s\n",
+          "targeted_stderr": "",
+          "full_suite_stdout": "...                                                                      [100%]\n3 passed in 0.02s\n",
+          "full_suite_stderr": ""
+        }
+      }
+    ],
+    "stopped_reason": "VERIFIED_REPAIR"
+  }
+]

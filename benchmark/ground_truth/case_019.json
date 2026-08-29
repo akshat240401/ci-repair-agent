@@ -1,0 +1,8 @@
+{
+  "case_id": "case_019",
+  "root_cause": "The canonical UTC-Z contract is inconsistent across parser and formatter.",
+  "root_cause_files": [
+    "src/parser.py",
+    "src/formatter.py"
+  ]
+}

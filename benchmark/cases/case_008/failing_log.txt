@@ -1,0 +1,18 @@
+$ python -m pytest -q tests/test_pricing.py::test_cache_does_not_leak_price_between_regions
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_cache_does_not_leak_price_between_regions ________________
+
+    def test_cache_does_not_leak_price_between_regions():
+        assert get_price("sku-1", "US") == 10
+>       assert get_price("sku-1", "EU") == 12
+E       AssertionError: assert 10 == 12
+E        +  where 10 = get_price('sku-1', 'EU')
+
+tests\test_pricing.py:8: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_pricing.py::test_cache_does_not_leak_price_between_regions
+1 failed in 0.10s
+
+[exit_code=1]

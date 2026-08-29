@@ -1,0 +1,8 @@
+{
+  "case_id": "case_015",
+  "root_cause": "The timeout field migrated to milliseconds, but writer and validator still use seconds-scale semantics.",
+  "root_cause_files": [
+    "src/config_writer.py",
+    "src/validator.py"
+  ]
+}

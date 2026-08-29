@@ -1,0 +1,31 @@
+$ python -m pytest -q tests/test_token_config.py::test_missing_issuer_uses_default
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________________ test_missing_issuer_uses_default _______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000212699E3D90>
+
+    def test_missing_issuer_uses_default(monkeypatch):
+        monkeypatch.delenv("TOKEN_ISSUER", raising=False)
+>       assert configured_issuer() == "ci-repair"
+
+tests\test_token_config.py:7: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\auth.py:4: in configured_issuer
+    return validate_issuer(token_issuer())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = None
+
+    def validate_issuer(value):
+        if value not in ALLOWED_ISSUERS:
+>           raise ValueError("untrusted issuer")
+E           ValueError: untrusted issuer
+
+src\validator.py:4: ValueError
+=========================== short test summary info ===========================
+FAILED tests\test_token_config.py::test_missing_issuer_uses_default - ValueEr...
+1 failed in 0.12s
+
+[exit_code=1]

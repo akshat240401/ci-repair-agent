@@ -1,0 +1,12 @@
+{
+  "experiment": "log_preprocessor",
+  "cases": 12,
+  "verified_repairs": 12,
+  "verified_repair_rate": 1.0,
+  "total_input_tokens": 7261,
+  "total_output_tokens": 1313,
+  "estimated_total_cost_usd": 0.0030277999999999998,
+  "raw_context_chars": 19979,
+  "processed_context_chars": 18953,
+  "context_reduction_percent": 5.135392161769858
+}

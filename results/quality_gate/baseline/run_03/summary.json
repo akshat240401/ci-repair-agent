@@ -1,0 +1,13 @@
+{
+  "run": 3,
+  "cases": 20,
+  "verified_repairs": 18,
+  "verified_repair_rate": 0.9,
+  "input_tokens": 12664,
+  "output_tokens": 4281,
+  "estimated_cost_usd": 0.00767,
+  "unresolved_cases": [
+    "case_013",
+    "case_015"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "case_id": "case_011",
+  "title": "Artifact path contains duplicated separator",
+  "language": "python",
+  "python_version": "3.11",
+  "failure_family": "path_joining",
+  "expected_failure_type": "LOGIC_BUG",
+  "targeted_test": "tests/test_artifact.py::test_output_path_handles_root_with_trailing_separator",
+  "full_test_command": "pytest -q",
+  "repairable": true,
+  "challenging": false,
+  "notes": "expanded synthetic benchmark"
+}

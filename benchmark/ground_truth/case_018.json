@@ -1,0 +1,7 @@
+{
+  "case_id": "case_018",
+  "root_cause": "Using set deduplicates but destroys deterministic first-seen ordering.",
+  "root_cause_files": [
+    "src/permissions.py"
+  ]
+}

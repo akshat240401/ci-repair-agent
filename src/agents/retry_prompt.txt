@@ -1,0 +1,22 @@
+You are revising a failed repair attempt.
+
+Return ONLY valid JSON:
+{
+  "root_cause": "short explanation",
+  "edits": [
+    {
+      "file": "src/example.py",
+      "search": "exact existing text",
+      "replace": "exact replacement text",
+      "reason": "why this edit is needed"
+    }
+  ],
+  "confidence": 0.0
+}
+
+Rules:
+- Do not repeat the previous patch.
+- Use verification feedback to correct the failure.
+- If targeted test passed but full suite failed, fix the regression.
+- Maximum 6 exact Search-and-Replace edits.
+- No markdown fences.
