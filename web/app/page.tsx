@@ -46,10 +46,12 @@ export default function Home() {
   const [result, setResult] = useState<RepairResult | null>(null);
   const [running, setRunning] = useState(false);
   const [loadingSample, setLoadingSample] = useState(false);
+  const [sampleMode, setSampleMode] = useState(false);
   const [error, setError] = useState("");
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
 
   const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const publicDemoOnly = process.env.NEXT_PUBLIC_DEMO_ONLY === "true";
   const reached = useMemo(() => new Set(events.map((e) => e.stage).filter(Boolean)), [events]);
 
   async function loadSample() {
@@ -62,6 +64,7 @@ export default function Home() {
       const bytes = Uint8Array.from(atob(sample.repository_zip_b64), (c) => c.charCodeAt(0));
       const file = new File([bytes], sample.filename, { type: "application/zip" });
       setRepo(file);
+      setSampleMode(true);
       setTarget(sample.targeted_test);
       setLog(sample.failing_log);
       setEvents([]);
@@ -75,7 +78,7 @@ export default function Home() {
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (!repo) return setError("Choose a repository ZIP first.");
+    if (!repo) return setError(publicDemoOnly ? "Load the sample case first." : "Choose a repository ZIP first.");
     if (!target.trim()) return setError("Enter the targeted failing pytest node id.");
     if (!log.trim()) return setError("Paste the failing CI / pytest log.");
     setError("");
@@ -90,7 +93,9 @@ export default function Home() {
     form.set("targeted_test", target);
 
     try {
-      const response = await fetch(`${api}/api/repair/stream`, { method: "POST", body: form });
+      const response = sampleMode
+        ? await fetch(`${api}/api/sample/case-013/repair/stream`, { method: "POST" })
+        : await fetch(`${api}/api/repair/stream`, { method: "POST", body: form });
       if (!response.ok || !response.body) throw new Error(`Backend returned HTTP ${response.status}`);
 
       const reader = response.body.getReader();
@@ -149,7 +154,7 @@ export default function Home() {
         <div>
           <div className="eyebrow">AGENTIC CI FAILURE INVESTIGATOR</div>
           <h1>From failing CI logs to <span>verified repairs.</span></h1>
-          <p>Upload a small Python repository, provide the failing pytest log, and let the agent investigate, repair, and prove the result.</p>
+          <p>{publicDemoOnly ? "Run a real agentic repair on a trusted built-in CI failure case, with deterministic verification." : "Upload a small Python repository, provide the failing pytest log, and let the agent investigate, repair, and prove the result."}</p>
         </div>
         <div className="metric">
           <strong>86.7% → 100%</strong>
@@ -161,6 +166,7 @@ export default function Home() {
         <form className="panel inputPanel" onSubmit={submit}>
           <div className="panelHeader">
             <div className="panelTitle"><span>01</span> Repair input</div>
+            {publicDemoOnly && <span className="demoBadge">Public demo · sample execution only</span>}
             <button className="sampleButton" type="button" disabled={running || loadingSample} onClick={loadSample}>
               {loadingSample ? "Loading…" : "Try sample case"}
             </button>
@@ -168,21 +174,21 @@ export default function Home() {
 
           <label>Repository ZIP <small>Python 3.11 / pytest, max 5 MB</small></label>
           <div className="fileBox">
-            <input id="repo" type="file" accept=".zip,application/zip" onChange={(e) => setRepo(e.target.files?.[0] || null)} />
+            <input id="repo" type="file" accept=".zip,application/zip" disabled={publicDemoOnly} onChange={(e) => { setRepo(e.target.files?.[0] || null); setSampleMode(false); }} />
             <label htmlFor="repo">
-              <span>{repo ? repo.name : "Choose repository .zip"}</span>
+              <span>{repo ? repo.name : publicDemoOnly ? "Custom uploads disabled on public demo" : "Choose repository .zip"}</span>
               {repo && <small>{formatBytes(repo.size)}</small>}
             </label>
           </div>
 
           <label>Targeted failing test <small>pytest node id</small></label>
-          <input value={target} onChange={(e) => setTarget(e.target.value)} placeholder="tests/test_api.py::test_payload_contract" />
+          <input value={target} disabled={publicDemoOnly && sampleMode} onChange={(e) => { setTarget(e.target.value); setSampleMode(false); }} placeholder="tests/test_api.py::test_payload_contract" />
 
           <label>Failing CI / pytest log</label>
-          <textarea value={log} onChange={(e) => setLog(e.target.value)} placeholder="$ python -m pytest -q ...\nFAILED ..." rows={12} />
+          <textarea value={log} disabled={publicDemoOnly && sampleMode} onChange={(e) => { setLog(e.target.value); setSampleMode(false); }} placeholder="$ python -m pytest -q ...\nFAILED ..." rows={12} />
 
-          <button disabled={running}>{running ? "Investigating…" : "Investigate & Repair"}</button>
-          <p className="notice">Trusted-repository demo: uploaded code is executed by the verifier. Public arbitrary-code execution should use a dedicated sandbox worker.</p>
+          <button disabled={running || (publicDemoOnly && !sampleMode)}>{running ? "Investigating…" : publicDemoOnly && !sampleMode ? "Load sample case to run" : "Investigate & Repair"}</button>
+          <p className="notice">{publicDemoOnly ? "Public demo mode executes only the repository bundled with this application. Arbitrary uploads remain disabled until verification is moved to a dedicated untrusted-code sandbox." : "Trusted-repository mode: uploaded code is executed by the verifier. Use only repositories you trust until a dedicated untrusted-code sandbox is connected."}</p>
           {error && <div className="error">{error}</div>}
         </form>
 

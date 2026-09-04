@@ -40,6 +40,7 @@ $env:OPENAI_API_KEY="YOUR_KEY"
 $env:MODEL_NAME="gpt-5.6-luna"
 $env:MODEL_REASONING_EFFORT="low"
 $env:WEB_ORIGINS="http://localhost:3000"
+$env:PUBLIC_DEMO_ONLY="false"
 
 uvicorn web_backend.app:app --reload --host 127.0.0.1 --port 8000
 ```
@@ -56,6 +57,7 @@ Remove-Item .\node_modules -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item .\package-lock.json -Force -ErrorAction SilentlyContinue
 npm install
 Copy-Item .\.env.example .\.env.local -Force
+# .env.local should contain NEXT_PUBLIC_DEMO_ONLY=false for local trusted-repository mode
 npm run dev
 ```
 
@@ -66,7 +68,32 @@ Open `http://localhost:3000`.
 - `web/` -> Vercel.
 - Python project + `web_backend/` -> a container host.
 - Set `NEXT_PUBLIC_API_URL` on Vercel to the backend origin.
+- Set `NEXT_PUBLIC_DEMO_ONLY=true` on Vercel for the public demo.
+- Set `PUBLIC_DEMO_ONLY=true` on the backend for the public demo.
 - Set `OPENAI_API_KEY`, `MODEL_NAME`, `MODEL_REASONING_EFFORT`, and `WEB_ORIGINS` only on the backend.
+
+### Public deployment mode
+
+Use these backend environment variables:
+
+```text
+OPENAI_API_KEY=<secret>
+MODEL_NAME=gpt-5.6-luna
+MODEL_REASONING_EFFORT=low
+PUBLIC_DEMO_ONLY=true
+WEB_ORIGINS=https://<your-vercel-domain>
+```
+
+Use these Vercel environment variables:
+
+```text
+NEXT_PUBLIC_API_URL=https://<your-backend-domain>
+NEXT_PUBLIC_DEMO_ONLY=true
+```
+
+With public demo mode enabled, `/api/repair/stream` rejects arbitrary uploads with HTTP 403. The browser's **Try sample case** flow uses `/api/sample/case-013/repair/stream`, which loads and executes only the repository bundled with this application.
+
+For local trusted-repository development, keep both demo flags false.
 
 ## Important security boundary
 
