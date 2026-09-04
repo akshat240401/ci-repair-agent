@@ -58,7 +58,7 @@ download repaired repository.zip
 
 ---
 
-## Problem and user value
+## Problem & user value
 
 ### Who has this problem?
 
@@ -133,6 +133,8 @@ Canonical frozen artifacts:
 results/frozen_final/FROZEN_SUMMARY.md
 results/frozen_final/frozen_summary.json
 ```
+
+## Current measured development result
 
 ### Development evidence retained for auditability
 
@@ -302,6 +304,8 @@ Log preprocessing was tested as an improvement, but repeated evaluation showed *
 ### 4. LLM output needs deterministic boundaries
 
 Structured schemas, exact edits, state hashes, retry limits, and circuit breakers convert model proposals into a bounded engineering workflow.
+
+## Hot take
 
 > **Key insight:** the strongest reliability improvement did not come from adding more prompting. It came from separating judgment from proof.
 
@@ -489,7 +493,7 @@ WEB_APP_README.md         web-app deployment and local-run notes
 
 ---
 
-## Reproducibility
+## Reproducibility status
 
 A separate clean checkout and clean Python 3.11 virtual environment has successfully reproduced:
 
